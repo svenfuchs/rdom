@@ -1,0 +1,7 @@
+libxml-ruby does not seem to have any callback for decorating nodes that are
+created by libxml (e.g. while parsing a document). So, client code does not
+have any opportunity to extend nodes or even use a different class.
+
+
+
+
