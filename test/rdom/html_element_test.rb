@@ -24,7 +24,7 @@ class HtmlElementTest < Test::Unit::TestCase
   # DOM-Level-1-Core
   # http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-745549614
   test "tagName The name of the tag for the given element", :dom_1_core do
-    assert_equal 'div', div.nodeName
+    assert_equal 'DIV', div.nodeName
   end
 
   test "getAttribute(name) retrieves the value of the named attribute from the current node", :dom_1_core do
@@ -57,7 +57,7 @@ class HtmlElementTest < Test::Unit::TestCase
   test "getElementsByTagName(name) retrieves a set of all descendant elements, of a particular tag name, from the current element", :dom_1_core do
     elements = body.getElementsByTagName('div')
     assert_equal 1, elements.size
-    assert_equal 'div', elements.first.nodeName
+    assert_equal 'DIV', elements.first.nodeName
   end
 
   # DOM-Level-1-Html

@@ -1,6 +1,6 @@
 module RDom
   module Node
-    include Properties, RDom::Element, RDom::Event::Target
+    include Element, Event::Target
     
     PROPERTIES = [
       :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, :firstChild, 
@@ -12,6 +12,11 @@ module RDom
       doc.import LibXML::XML::Node.new('#document_fragment')
     end
 
+    # returns the top-level document object for this node (null if already is the document)
+    def ownerDocument
+      doc
+    end
+
     # returns a node type constant (9 for document)
     def nodeType
       node_type
@@ -19,7 +24,7 @@ module RDom
     
     # returns the node's name (#document for document)
     def nodeName
-      name
+      libxml_name.upcase
     end
 
     # returns the node's value (null for document)
@@ -40,6 +45,17 @@ module RDom
     
     def textContent
       content
+    end
+    alias :text :textContent
+
+    # returns a collection of attributes of the given element
+    def attributes
+      super
+    end
+
+    # indicates whether the node possesses attributes
+    def hasAttributes
+      attributes?
     end
 
     # returns the parent of the specified node in the DOM tree (null for document)
@@ -72,16 +88,6 @@ module RDom
     # returns the node immediately following the specified one in its parent's childNodes list, or null if the specified node is the last node in that list (null for documents)
     def nextSibling
       parent.children[parent.children.index(self) + 1] if parent
-    end
-
-    # returns a collection of attributes of the given element
-    def attributes
-      super
-    end
-
-    # returns the top-level document object for this node (null if already is the document)
-    def ownerDocument
-      doc
     end
 
     # inserts the specified node before a reference node as a child of the current node
@@ -126,11 +132,6 @@ module RDom
     # makes a copy of a node or document
     def cloneNode(deep)
       copy(deep)
-    end
-
-    # indicates whether the node possesses attributes
-    def hasAttributes
-      attributes?
     end
 
     protected

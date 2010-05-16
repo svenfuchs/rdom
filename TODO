@@ -1,0 +1,9 @@
+execute <script> tags after appendChild
+execute scripts appended as text nodes to <script> tags
+parse styles
+
+make sure jQuery.makeArray() works
+
+clean up properties/attributes
+implement specified, e.g. in jquery: return (elem.attributes.value || {}).specified ? elem.value : elem.text;
+

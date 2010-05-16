@@ -139,7 +139,7 @@ class EventsTest < Test::Unit::TestCase
     event.initEvent('click')
     foo.dispatchEvent(event)
     
-    assert_equal %w(body), triggered
+    assert_equal %w(BODY), triggered
   end
 
   # The chain of EventTargets from the event target to the top of the tree is
@@ -160,7 +160,7 @@ class EventsTest < Test::Unit::TestCase
     event.initEvent('click')
     foo.dispatchEvent(event)
     
-    assert_equal %w(body), triggered
+    assert_equal %w(BODY), triggered
   end
 
   # Both capturing and bubbling:

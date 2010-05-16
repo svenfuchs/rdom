@@ -18,6 +18,6 @@ class DocumentFragmentTest < Test::Unit::TestCase
     fragment.insertBefore(span, div)
     body.appendChild(fragment)
     
-    assert_equal %w(span div), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(SPAN DIV), body.childNodes.map { |child| child.nodeName }
   end
 end

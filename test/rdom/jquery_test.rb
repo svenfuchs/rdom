@@ -186,7 +186,6 @@ class JQueryTest < Test::Unit::TestCase
   end
   
   test "jquery html()" do
-    # window.load(File.expand_path('../../fixtures/jquery_test_runner.html', __FILE__))
     window.load <<-html
       <html>
         <head><script src="/jquery.js"></script></head>

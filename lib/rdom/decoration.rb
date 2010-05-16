@@ -18,7 +18,7 @@ module RDom
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
         extensions = [RDom::Element]
-        extensions << Element.const_get(node.name.titleize) rescue NameError
+        extensions << Element.const_get(node.nodeName.titleize) rescue NameError
         extensions.each { |extension| node.extend(extension) }
       when LibXML::XML::Node::ATTRIBUTE_NODE
         # ?
@@ -32,8 +32,8 @@ module RDom
     end
 
     def decorate!
-      RDom.decorate(self)
       @decorated = true
+      RDom.decorate(self)
     end
 
     def respond_to?(name)

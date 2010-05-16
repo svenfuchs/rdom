@@ -1,8 +1,16 @@
 module RDom
   module NamedNodeMap
-    include Decoration
+    include Properties, Decoration
 
     PROPERTIES = [:length]
+    
+    def [](name)
+      getNamedItem(name).value
+    end
+    
+    def key?(name)
+      !!getNamedItem(name)
+    end
     
     # retrieves a node specified by name
     def getNamedItem(name)

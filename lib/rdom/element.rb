@@ -41,7 +41,7 @@ module RDom
     end
     
     def style
-      get_attribute('style') || { }
+      libxml_read_attribute('style') || { }
     end
   
     def innerHTML
@@ -63,7 +63,9 @@ module RDom
     end
   
     def getAttribute(name)
-      get_attribute(name)
+      # node = getAttributeNode(name)
+      # node.value if node
+      libxml_read_attribute(name)
     end
   
     def getAttributeNode(name)
@@ -71,7 +73,7 @@ module RDom
     end
   
     def setAttribute(name, value)
-      set_attribute(name, value)
+      libxml_write_attribute(name, value)
     end
   
     def setAttributeNode(attribute)
@@ -79,7 +81,8 @@ module RDom
     end
   
     def removeAttribute(name)
-      attributes.get_attribute(name).remove!
+      attribute = attributes.get_attribute(name)
+      attribute.remove! if attribute
     end
   end
 end

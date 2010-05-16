@@ -1,6 +1,6 @@
 module RDom
   class Attr
-    include Decoration, Properties
+    include Properties, Decoration
     
     PROPERTIES = [
       :nodeType, :document, :name, :value

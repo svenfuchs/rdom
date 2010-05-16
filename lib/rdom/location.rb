@@ -2,7 +2,7 @@ require 'uri'
 
 module RDom
   class Location
-    include Decoration, Properties
+    include Properties, Decoration
 
     PROPERTIES = [
       :history, :href, :hash, :host, :hostname, :pathname, :port, :protocol, 

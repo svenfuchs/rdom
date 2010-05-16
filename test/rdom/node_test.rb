@@ -22,7 +22,7 @@ class NodeTest < Test::Unit::TestCase
   # http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html
 
   test "Node.nodeName returns the node's name (#document for document)", :dom_1_core do
-    assert_equal 'div', div.nodeName
+    assert_equal 'DIV', div.nodeName
   end
 
   test "Node.nodeValue returns the node's value (null for document)", :dom_1_core do
@@ -51,7 +51,7 @@ class NodeTest < Test::Unit::TestCase
   end
 
   test "Node.parentNode returns the parent of the specified node in the DOM tree (null for document)", :dom_1_core do
-    assert_equal 'body', div.parent.nodeName
+    assert_equal 'BODY', div.parent.nodeName
   end
 
   test "Node.childNodes returns a collection of child nodes of the given node NodeList", :dom_1_core do
@@ -60,19 +60,19 @@ class NodeTest < Test::Unit::TestCase
   end
 
   test "Node.firstChild returns the first node in the list of direct children of the document", :dom_1_core do
-    assert_equal 'div', body.firstChild.nodeName
+    assert_equal 'DIV', body.firstChild.nodeName
   end
 
   test "Node.lastChild returns the last child of a node Node", :dom_1_core do
-    assert_equal 'p', body.lastChild.nodeName
+    assert_equal 'P', body.lastChild.nodeName
   end
 
   test "Node.previousSibling returns the node immediately preceding the specified one in its parent's childNodes list, null if the specified node is the first in that list (null for document)", :dom_1_core do
-    assert_equal 'div', body.lastChild.previousSibling.nodeName
+    assert_equal 'DIV', body.lastChild.previousSibling.nodeName
   end
 
   test "Node.nextSibling returns the node immediately following the specified one in its parent's childNodes list, or null if the specified node is the last node in that list (null for documents)", :dom_1_core do
-    assert_equal 'p', body.firstChild.nextSibling.nodeName
+    assert_equal 'P', body.firstChild.nextSibling.nodeName
   end
 
   test "Node.attributes returns a collection of attributes of the given element", :dom_1_core do
@@ -85,32 +85,32 @@ class NodeTest < Test::Unit::TestCase
 
   test "Node.insertBefore inserts the specified node before a reference node as a child of the current node", :dom_1_core do
     body.insertBefore(document.createElement('span'), body.lastChild)
-    assert_equal %w(div span p), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(DIV SPAN P), body.childNodes.map { |child| child.nodeName }
 
     body.insertBefore(document.createElement('span'), nil)
-    assert_equal %w(div span p span), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(DIV SPAN P SPAN), body.childNodes.map { |child| child.nodeName }
   end
 
   test "Node.replaceChild replaces one child node of the specified node with another", :dom_1_core do
     body.replaceChild(document.createElement('span'), div)
-    assert_equal %w(span p), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(SPAN P), body.childNodes.map { |child| child.nodeName }
   end
 
   test "Node.appendChild adds a node to the end of the list of children of a specified parent node", :dom_1_core do
     # body.appendChild(document.createElement('span'))
-    # assert_equal %w(div p span), body.childNodes.map { |child| child.nodeName }
+    # assert_equal %w(DIV P SPAN), body.childNodes.map { |child| child.nodeName }
   end
 
   test "Node.removeChild removes an existing child node from the DOM", :dom_1_core do
     body.removeChild(div)
-    assert_equal %w(p), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(P), body.childNodes.map { |child| child.nodeName }
   end
     
   test "Node.removeChild removes a new child node from the DOM", :dom_1_core do
     a = document.createElement('a')
 		document.body.appendChild(a)
 		document.body.removeChild(a)
-    assert_equal %w(div p), body.childNodes.map { |child| child.nodeName }
+    assert_equal %w(DIV P), body.childNodes.map { |child| child.nodeName }
   end
 
   test "Node.hasChildNodes returns a Boolean value indicating whether the current element has child nodes or not", :dom_1_core do

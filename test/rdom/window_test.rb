@@ -27,7 +27,7 @@ class WindowTest < Test::Unit::TestCase
   end
 
   test "executes scripts", :implementation do
-    window.load('<html><head><title></title><script>document.title = "foo"</script></head></html>')
+    window.load('<html><head><title></title><script>document.title = "foo";</script></head></html>')
     assert_equal 'foo', window.document.title
   end
 

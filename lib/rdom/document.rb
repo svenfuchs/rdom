@@ -1,6 +1,6 @@
 module RDom
   module Document
-    include Properties, Event::Target
+    include Event::Target
     
     class << self
       def new(window, html, options = {})
@@ -109,19 +109,19 @@ module RDom
     end
     
     def images
-      find('//img')
+      find('//img').to_a
     end
     
     def links
-      find('//a[@href]|//area[@href]')
+      find('//a[@href]|//area[@href]').to_a
     end
     
     def forms
-      find('//form')
+      find('//form').to_a
     end
     
     def anchors
-      find('//a[@name]')
+      find('//a[@name]').to_a
     end
     
     def importNode(node)

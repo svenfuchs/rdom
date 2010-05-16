@@ -96,23 +96,23 @@ class DocumentTest < Test::Unit::TestCase
   end
 
   test "document.body returns the BODY node of the current document", :dom_1_html do
-    assert_equal 'body', document.body.nodeName
+    assert_equal 'BODY', document.body.nodeName
   end
 
   test "document.images returns a list of the images in the current document", :dom_1_html do
-    assert_equal %w(img), document.images.map { |node| node.nodeName }
+    assert_equal %w(IMG), document.images.map { |node| node.nodeName }
   end
 
   test "document.links returns a list of all the hyperlinks in the document", :dom_1_html do
-    assert_equal %w(a area), document.links.map { |node| node.nodeName }
+    assert_equal %w(A AREA), document.links.map { |node| node.nodeName }
   end
 
   test "document.forms returns a list of the FORM elements within the current document", :dom_1_html do
-    assert_equal %w(form), document.forms.map { |node| node.nodeName }
+    assert_equal %w(FORM), document.forms.map { |node| node.nodeName }
   end
 
   test "document.anchors returns a list of all of the anchors in the document", :dom_1_html do
-    assert_equal %w(a), document.anchors.map { |node| node.nodeName }
+    assert_equal %w(A), document.anchors.map { |node| node.nodeName }
   end
 
   # test "document.cookie returns a semicolon-separated list of the cookies for that document or sets a single cookie", :dom_1_html do
@@ -146,7 +146,7 @@ class DocumentTest < Test::Unit::TestCase
   # end
 
   test "document.documentElement returns the Element that is a direct child of document", :dom_2_core do
-    assert_equal 'html', document.documentElement.nodeName
+    assert_equal 'HTML', document.documentElement.nodeName
   end
 
   test "document.importNode returns a clone of a node from an external document", :dom_2_core do

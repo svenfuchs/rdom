@@ -14,7 +14,7 @@ module RDom
       :childNodes, :firstChild, :lastChild
     ]
     
-    attr_reader :doc, :children
+    attr_accessor :doc, :children
     
     def initialize(document, children = [])
       @doc = document
@@ -61,7 +61,7 @@ module RDom
     end
     
     def appendChild(child)
-      child.parent = self
+      # child.parent = self
       children << child
       child
     end

@@ -1,6 +1,6 @@
 class String
   def titleize
     string = dup
-    string[0, 1].upcase + string[1..-1]
+    string.gsub(/\b('?[a-z])/) { $1.capitalize }
   end
 end unless String.method_defined?(:titleize)

@@ -11,7 +11,7 @@ module RDom
     autoload :Screen,    'rdom/window/screen.rb'
     autoload :Timers,    'rdom/window/timers.rb'
     
-    include Decoration, Properties, Event::Target, Window::Timers
+    include Properties, Decoration, Event::Target, Window::Timers
 
     PROPERTIES = [
       :location, :navigator, :url, :console, :parent, :name, :document, 
@@ -53,7 +53,6 @@ module RDom
       uri, html = uri?(arg) || file?(arg) ? [arg, open(arg).read] : [args.last, arg]
       load_document(html, uri)
       load_scripts
-      # evaluate('print($.toString())')
       load_frames
       trigger_load_event
       Window::Timers::Task.run_all
@@ -110,7 +109,8 @@ module RDom
 
       def load_scripts
         document.getElementsByTagName('script').each do |script|
-          script['src'] ? load_script(script['src']) : evaluate(script.textContent)
+          src = script.getAttribute('src')
+          src && !src.empty? ? load_script(src) : evaluate(script.textContent)
         end
       end
 
@@ -126,8 +126,8 @@ module RDom
       end
 
       def load_frame(node)
-        frame = Frame.new(node['name'], self)
-        frame.location.href = normalize_uri(node['src']) if node['src']
+        frame = Frame.new(node.getAttribute('name'), self)
+        frame.location.href = normalize_uri(node.getAttribute('src')) if node.getAttribute('src')
         frames << frame
       end
 

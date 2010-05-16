@@ -13,7 +13,7 @@ class NodeListTest < Test::Unit::TestCase
   # http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html
 
   test "item() returns the indexth item in the collection", :dom_1_core do
-    assert_equal 'p', body.childNodes.item(1).nodeName
+    assert_equal 'P', body.childNodes.item(1).nodeName
   end
 
   test "length returns the number of nodes in the list", :dom_1_core do

@@ -1,13 +1,3 @@
-libxml-ruby does not seem to have any callback for decorating nodes that are
-created by libxml (e.g. while parsing a document). So, client code does not
-have any opportunity to extend nodes or even use a different class.
-
-
-execute <script> tags after appendChild
-execute scripts appended as text nodes to <script> tags
-parse styles
-
-
 bugs/oddities
   
   - Error: Tag foo_bar invalid at :32.
@@ -18,3 +8,36 @@ bugs/oddities
     when the parsed snippet is big enough it will get garbage collected and
     segfault
 
+  - libxml-ruby does not seem to have any callback for decorating nodes that
+    are created by libxml (e.g. while parsing a document). So, client code
+    does not have any opportunity to extend nodes or even use a different
+    class.
+
+
+Johnson get/read call to ruby:
+
+  if arg is numeric index and self.respond_to?(:[])
+    call self[0]
+  elsif self.autovivified?('foo')
+    call self.autovified('foo')
+  elsif foo is a global
+    return the global
+  elsif foo is an attribute (i.e. an attr_reader?) on self || self.js_property?('foo')
+    call self.foo
+  elsif self.respond_to?(:[]) && self.respond_to?(:key?) && self.key?('foo')
+    call self['foo']
+  elsif self.respond_to?('foo')
+    return the method foo as a lambda
+  else
+    return JS_VOID
+    
+Johnson set/write call to ruby:
+
+  if arg is numeric index and self respond_to [] 
+    call self[0] = value
+  elsif self.respond_to?('foo=')
+    call self.foo = value
+  elsif self.respond_to?('[]=')
+    call self['foo'] = value
+  else
+    call self.autovivify('foo')

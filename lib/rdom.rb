@@ -25,4 +25,4 @@ end
   LibXML::XML::Node, 
   LibXML::XML::Attr,
   LibXML::XML::Attributes
-].each { |const| const.send(:include, RDom::Decoration) }
+].each { |const| const.send(:include, RDom::Properties, RDom::Decoration) }
