@@ -5,7 +5,7 @@ class PropertiesTest < Test::Unit::TestCase
 
   def setup
     @window = RDom::Window.new
-    window.load('<html><head><title></title></head><body><span id="foo"></span><a href=""></a></body></html>')
+    window.load('<html><head><title></title></head><body><span id="foo"></span><a href=""></a></body></html>', 'http://example.org')
     @document = @window.document
     @anchor = document.find_first('//a')
     @span = document.find_first('//span')
@@ -111,6 +111,10 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'bar', span.className
     assert_equal 'bar', span.getAttribute('class')
     assert_equal '<span id="foo" class="bar"/>', span.to_s
+  end
+  
+  test "window.location.search" do
+    assert_equal 'example.org', window.evaluate('window.location.hostname')
   end
   
   def assert_has_property(node, name)

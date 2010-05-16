@@ -2,7 +2,7 @@ require 'uri'
 
 module RDom
   class Location
-    include Decoration
+    include Decoration, Properties
 
     PROPERTIES = [
       :history, :href, :hash, :host, :hostname, :pathname, :port, :protocol, 
@@ -98,7 +98,7 @@ module RDom
     end
   
     def search
-      "?#{uri.query}"
+      uri.query ? "?#{uri.query}" : ''
     end
   
     def search=(search)

@@ -5,7 +5,7 @@ class EventsTest < Test::Unit::TestCase
 
   def setup
     html   = '<html><body><a id="foo" href="#"></a></body></html>'
-    @doc   = LibXML::XML::HTMLParser.string(html).parse
+    @doc   = RDom::Document.parse(html)
     @foo   = doc.getElementById('foo')
     @body  = doc.getElementsByTagName('body').first
     @event = doc.createEvent('MouseEvents')

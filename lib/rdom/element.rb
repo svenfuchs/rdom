@@ -41,19 +41,17 @@ module RDom
     end
     
     def style
-      get_attribute('style') || {}
+      get_attribute('style') || { }
     end
   
     def innerHTML
-      child.to_s
+      # child.to_s
+      inner_xml
     end
   
     def innerHTML=(html)
       children.each { |child| child.remove! }
-      unless html.empty?
-        parser = XML::HTMLParser.string(html).parse
-        parser.find_first('//body').children.each { |node| self << doc.import(node) }
-      end
+      appendChild(DocumentFragment.parse(html)) unless html.nil? || html.empty?
     end
   
     def getElementsByTagName(tag_name)

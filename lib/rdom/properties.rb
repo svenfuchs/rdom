@@ -42,7 +42,7 @@ module RDom
 
     def property_names
       @property_names ||= begin
-        decorate! unless decorated?
+        decorate! unless decorated? if respond_to?(:decorated?)
         consts = self.class.ancestors + (class << self; self; end).included_modules
         consts.uniq.map { |const| const::PROPERTIES rescue [] }.flatten.uniq
       end

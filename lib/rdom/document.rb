@@ -4,12 +4,15 @@ module RDom
     
     class << self
       def new(window, html, options = {})
-        parse_options = XML::Parser::Options::RECOVER
-        document = LibXML::XML::HTMLParser.string(html, :options => parse_options).parse
+        document = parse(html)
         document.instance_variable_set(:@window, window)
         document.instance_variable_set(:@url, options[:url])
         document.instance_variable_set(:@referrer, options[:referrer])
         document
+      end
+      
+      def parse(html)
+        LibXML::XML::HTMLParser.string(html, :options => HTML_PARSE_OPTIONS).parse
       end
     end
 
@@ -20,7 +23,7 @@ module RDom
     ]
 
     def createDocumentFragment
-      createElement('document_fragment') # TODO ask libxml how to do this appropriately, doc has to be set
+      DocumentFragment.new(self)
     end
     
     def createElement(name)
@@ -84,7 +87,7 @@ module RDom
     end
 
     def getElementById(id)
-      find_first("//*[@id='#{id}']")
+      find_first(".//*[@id='#{id}']")
     end
     
     def getElementsByName(name)

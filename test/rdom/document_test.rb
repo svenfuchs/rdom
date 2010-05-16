@@ -40,7 +40,7 @@ class DocumentTest < Test::Unit::TestCase
 
   test "document.createDocumentFragment creates a new document fragment", :dom_1_core do
     node = document.createDocumentFragment
-    # assert_equal XML::Node::DOCUMENT_FRAG_NODE, node.nodeType
+    assert_equal XML::Node::DOCUMENT_FRAG_NODE, node.nodeType
   end
 
   test "document.createTextNode creates a text node", :dom_1_core do
@@ -151,7 +151,7 @@ class DocumentTest < Test::Unit::TestCase
 
   test "document.importNode returns a clone of a node from an external document", :dom_2_core do
     html  = '<span>span</span>'
-    other = LibXML::XML::HTMLParser.string(html).parse
+    other = RDom::Document.parse(html)
     span  = other.getElementsByTagName('span').first
     clone = document.importNode(span)
     

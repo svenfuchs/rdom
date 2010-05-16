@@ -878,7 +878,7 @@ function now() {
 
 		// Make sure that a selected-by-default option has a working selected property.
 		// (WebKit defaults to false instead of true, IE too, if it's in an optgroup)
-		optSelected: document.createElement("select").appendChild( document.createElement("option") ).selected,
+		optSelected: document.createElement("select").appendChild(document.createElement("option")).selected,
 
 		parentNode: div.removeChild( div.appendChild( document.createElement("div") ) ).parentNode === null,
 
@@ -4188,25 +4188,25 @@ jQuery.fn.extend({
 				null;
 
 		// See if we can take a shortcut and just use innerHTML
-		} else if ( typeof value === "string" && !rnocache.test( value ) &&
-			(jQuery.support.leadingWhitespace || !rleadingWhitespace.test( value )) &&
-			!wrapMap[ (rtagName.exec( value ) || ["", ""])[1].toLowerCase() ] ) {
-
-			value = value.replace(rxhtmlTag, fcloseTag);
-
-			try {
-				for ( var i = 0, l = this.length; i < l; i++ ) {
-					// Remove element nodes and prevent memory leaks
-					if ( this[i].nodeType === 1 ) {
-						jQuery.cleanData( this[i].getElementsByTagName("*") );
-						this[i].innerHTML = value;
-					}
-				}
-
-			// If using innerHTML throws an exception, use the fallback method
-			} catch(e) {
-				this.empty().append( value );
-			}
+    } else if ( typeof value === "string" && !rnocache.test( value ) &&
+     (jQuery.support.leadingWhitespace || !rleadingWhitespace.test( value )) &&
+     !wrapMap[ (rtagName.exec( value ) || ["", ""])[1].toLowerCase() ] ) {
+    
+     value = value.replace(rxhtmlTag, fcloseTag);
+    
+     try {
+       for ( var i = 0, l = this.length; i < l; i++ ) {
+         // Remove element nodes and prevent memory leaks
+         if ( this[i].nodeType === 1 ) {
+           jQuery.cleanData( this[i].getElementsByTagName("*") );
+           this[i].innerHTML = value;
+         }
+       }
+    
+     // If using innerHTML throws an exception, use the fallback method
+     } catch(e) {
+       this.empty().append( value );
+     }
 
 		} else if ( jQuery.isFunction( value ) ) {
 			this.each(function(i){
@@ -4439,7 +4439,10 @@ jQuery.extend({
 					wrap = wrapMap[ tag ] || wrapMap._default,
 					depth = wrap[0],
 					div = context.createElement("div");
-
+print(tag)
+print(wrapMap[tag])
+print(typeof wrapMap._default)
+print(wrap[1])
 				// Go to html and back, then peel off extra wrappers
 				div.innerHTML = wrap[1] + elem + wrap[2];
 

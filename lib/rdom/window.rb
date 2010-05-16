@@ -34,8 +34,8 @@ module RDom
       console.log(line)
     end
 
-    def print(line)
-      puts line
+    def print(output)
+      puts output
     end
 
     def runtime
@@ -48,11 +48,12 @@ module RDom
       end
     end
 
-    def load(arg)
-      arg = arg.gsub(%r(^file://), '')
-      uri, html = uri?(arg) || file?(arg) ? [arg, open(arg).read] : ['', arg]
+    def load(*args)
+      arg = args.shift.gsub(%r(^file://), '')
+      uri, html = uri?(arg) || file?(arg) ? [arg, open(arg).read] : [args.last, arg]
       load_document(html, uri)
       load_scripts
+      # evaluate('print($.toString())')
       load_frames
       trigger_load_event
       Window::Timers::Task.run_all
@@ -103,7 +104,8 @@ module RDom
 
       def load_document(html, uri)
         flags = 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6
-        self.document = Document.new(self, html, :url => uri)
+        @document = Document.new(self, html, :url => uri)
+        @location ||= Location.new(self, uri) if uri
       end
 
       def load_scripts

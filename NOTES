@@ -3,5 +3,18 @@ created by libxml (e.g. while parsing a document). So, client code does not
 have any opportunity to extend nodes or even use a different class.
 
 
+execute <script> tags after appendChild
+execute scripts appended as text nodes to <script> tags
+parse styles
 
+
+bugs/oddities
+  
+  - Error: Tag foo_bar invalid at :32.
+
+  - libxml seems to have gc problems when it has implicitely inserted a <p>
+    node while parsing text that is not wrapped into a tag (e.g. jquery tried
+    to parse 'div<div>' which resulted in '<p>div</p><div/>' or similar). now
+    when the parsed snippet is big enough it will get garbage collected and
+    segfault
 

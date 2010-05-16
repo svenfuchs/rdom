@@ -5,7 +5,7 @@ class NodeTest < Test::Unit::TestCase
   
   def setup
     html = '<html><body><div id="foo">FOO</div><p class="bar">BAR</p></body></html>'
-    @document = LibXML::XML::HTMLParser.string(html).parse
+    @document = RDom::Document.parse(html)
     @body = document.find_first('//body')
     @div = document.find_first('//div')
   end

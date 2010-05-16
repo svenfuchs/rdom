@@ -5,7 +5,7 @@ class DecorationTest < Test::Unit::TestCase
 
   def setup
     html = '<html><body><span></span><a href=""></a></body></html>'
-    @document = LibXML::XML::HTMLParser.string(html).parse
+    @document = RDom::Document.parse(html)
     @span   = document.find_first('//span')
     @anchor = document.find_first('//a')
   end

@@ -102,4 +102,103 @@ class JQueryTest < Test::Unit::TestCase
     assert_equal nil, window.evaluate('jQuery.parseJSON(null)')
     assert_equal 1,   window.evaluate('jQuery.parseJSON(\'{"test":1}\')')['test']
   end
+  
+  test "jQuery.support.leadingWhitespace" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.leadingWhitespace')
+  end
+  
+  test "jQuery.support.tbody" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.tbody')
+  end
+  
+  test "jQuery.support.htmlSerialize" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.htmlSerialize')
+  end
+  
+  test "jQuery.support.style" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.style')
+  end
+  
+  test "jQuery.support.hrefNormalized" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.hrefNormalized')
+  end
+  
+  # TODO gotta parse styles
+  test "jQuery.support.opacity == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.opacity')
+  end
+  
+  # TODO gotta parse styles
+  test "jQuery.support.cssFloat == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.cssFloat')
+  end
+  
+  # seems ok as jquery says webkit doesn't do this either
+  test "jQuery.support.checkOn == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.checkOn')
+  end
+  
+  # seems ok as jquery says webkit doesn't do this either
+  test "jQuery.support.optSelected == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.optSelected')
+  end
+  
+  test "jQuery.support.parentNode" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.parentNode')
+  end
+  
+  test "jQuery.support.deleteExpando" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.deleteExpando')
+  end
+  
+  # seems ok as jquery says webkit doesn't do this either
+  test "jQuery.support.checkClone == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.checkClone')
+  end
+  
+  # TODO
+  test "jQuery.support.scriptEval == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.scriptEval')
+  end
+  
+  test "jQuery.support.noCloneEvent" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert window.evaluate('jQuery.support.noCloneEvent')
+  end
+  
+  # seems ok as we'd need to implement the full box model for this?
+  test "jQuery.support.boxModel == false" do
+    window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
+    assert !window.evaluate('jQuery.support.boxModel')
+  end
+  
+  test "jquery html()" do
+    # window.load(File.expand_path('../../fixtures/jquery_test_runner.html', __FILE__))
+    window.load <<-html
+      <html>
+        <head><script src="/jquery.js"></script></head>
+        <body><div id="wrap">#{'<div>foo</div>' * 100}</div></body>
+      </html>
+    html
+    window.evaluate <<-js
+      var html = $('#wrap')[0].innerHTML;
+      function reset() { $('#wrap').html(html); }
+			reset();
+			reset();
+    js
+    assert_equal 100, window.evaluate("$('#wrap div').length")
+  end
 end

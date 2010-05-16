@@ -5,7 +5,7 @@ class NamedNodeMapTest < Test::Unit::TestCase
 
   def setup
     html = '<html><body><div id="foo">FOO</div></body></html>'
-    @document = LibXML::XML::HTMLParser.string(html).parse
+    @document = RDom::Document.parse(html)
     @div = document.find_first('//div')
   end
 

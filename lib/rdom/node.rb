@@ -5,7 +5,7 @@ module RDom
     PROPERTIES = [
       :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, :firstChild, 
       :lastChild, :previousSibling, :nextSibling, :attributes, :hasAttributes, 
-      :ownerDocument, :hasChildNodes, :textContent
+      :ownerDocument, :hasChildNodes, :textContent, :name
     ]
     
     def createDocumentFragment
@@ -85,10 +85,12 @@ module RDom
     end
 
     # inserts the specified node before a reference node as a child of the current node
-    def insertBefore(new_child, ref_child)
-      if ref_child
-        doc.import(child) if doc
-        ref_child.prev = new_child
+    def insertBefore(new_child, next_child)
+      if next_child
+        siblings = [next_child]
+        siblings << next_child while next_child = next_child.next
+        appendChild(new_child)
+        siblings.each { |sibling| appendChild(sibling) }
       else
         appendChild(new_child)
       end
@@ -102,8 +104,12 @@ module RDom
 
     # adds a node to the end of the list of children of a specified parent node
     def appendChild(child)
-      # child = (doc ? doc.import(child) : child) # TODO libxml doesn't seem to set the node's parent this way?
-      self << child
+      if child.nodeType == XML::Node::DOCUMENT_FRAG_NODE
+        child.childNodes.each { |child| appendChild(child) }
+      else
+        child = doc.import(child) if doc && doc != child.doc # gosh. importing seems to alter the tree, somehow.
+        self << child
+      end
       child
     end
 
