@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Li
-      PROPERTIES = [
-        :type, :value
-      ]
+      properties :type, :value
     end
   end
 end

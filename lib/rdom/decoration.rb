@@ -37,11 +37,15 @@ module RDom
     end
 
     def respond_to?(name)
-      decorated? ? super : decorate! && respond_to?(name)
+      return super if decorated?
+      decorate!
+      respond_to?(name)
     end
     
     def method_missing(name, *args, &block)
-      decorated? ? super : decorate! && send(name, *args, &block)
+      return super if decorated?
+      decorate!
+      send(name, *args, &block)
     end
   end
 end

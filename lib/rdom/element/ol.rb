@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Ol
-      PROPERTIES = [
-        :compact, :start, :type
-      ]
+      properties :compact, :start, :type
     end
   end
 end

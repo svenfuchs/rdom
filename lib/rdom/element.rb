@@ -31,10 +31,9 @@ module RDom
     autoload :Frame,    'rdom/element/frame'
     autoload :IFrame,   'rdom/element/iframe'
   
-    PROPERTIES = [
-      :tagName, :innerHTML, :id, :title, :lang, :dir, :className, :style, 
-      :documentElement
-    ]
+    properties :tagName, :innerHTML, :id, :title, :lang, :dir, :className,
+               :style, :documentElement
+
     
     def tagName
       nodeName.upcase

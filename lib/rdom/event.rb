@@ -6,11 +6,10 @@ module RDom
     autoload :Mutation,  'rdom/event/mutation'
     autoload :Ui,        'rdom/event/ui'
 
-    include Properties, Decoration
+    include Decoration
 
-    PROPERTIES = [
-      :bubbles, :cancelable, :target, :currentTarget, :eventPhase, :timeStamp, :type
-    ]
+    properties :bubbles, :cancelable, :target, :currentTarget, :eventPhase, 
+               :timeStamp, :type
     
     attr_accessor *PROPERTIES
 

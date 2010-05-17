@@ -20,9 +20,12 @@ module RDom
     XML::Parser::Options::NOWARNING
 end
 
+Module.send :include, RDom::Properties
+Class.send :include, RDom::Properties
+
 [
   LibXML::XML::Document, 
   LibXML::XML::Node, 
   LibXML::XML::Attr,
   LibXML::XML::Attributes
-].each { |const| const.send(:include, RDom::Properties, RDom::Decoration) }
+].each { |const| const.send(:include, RDom::Decoration) }

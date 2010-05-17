@@ -1,7 +1,5 @@
 module RDom
   class DocumentFragment
-    include Properties
-    
     class << self
       def parse(html)
         document = Document.parse("<div id='__fragment__'>#{html}</div>") # urghs ... TODO
@@ -9,10 +7,8 @@ module RDom
       end
     end
     
-    PROPERTIES = [
-      :ownerDocument, :nodeType, :nodeName, :nodeValue, :attributes, :parentNode,
-      :childNodes, :firstChild, :lastChild
-    ]
+    properties :ownerDocument, :nodeType, :nodeName, :nodeValue, :attributes,
+               :parentNode, :childNodes, :firstChild, :lastChild
     
     attr_accessor :doc, :children
     

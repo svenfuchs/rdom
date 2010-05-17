@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Style
-      PROPERTIES = [
-        :disabled, :media, :type
-      ]
+      properties :disabled, :media, :type
     end
   end
 end

@@ -1,7 +1,7 @@
 module RDom
   module Document
     include Event::Target
-    
+
     class << self
       def new(window, html, options = {})
         document = parse(html)
@@ -10,22 +10,20 @@ module RDom
         document.instance_variable_set(:@referrer, options[:referrer])
         document
       end
-      
+
       def parse(html)
         LibXML::XML::HTMLParser.string(html, :options => HTML_PARSE_OPTIONS).parse
       end
     end
 
-    PROPERTIES = [
-      :nodeType, :nodeName, :nodeValue, :documentElement, :defaultView, 
-      :location, :URL, :referrer, :domain, :title, :body, :images, :links,
-      :forms, :anchors
-    ]
+    properties :nodeType, :nodeName, :nodeValue, :documentElement, :defaultView,
+               :location, :URL, :referrer, :domain, :title, :body, :images,
+               :links, :forms, :anchors
 
     def createDocumentFragment
       DocumentFragment.new(self)
     end
-    
+
     def createElement(name)
       import XML::Node.new(name)
     end
@@ -33,11 +31,11 @@ module RDom
     def createAttribute(name)
       Attr.new(self, name)
     end
-    
+
     def createComment(data)
       import XML::Node.new_comment(data)
     end
-    
+
     def createTextNode(data)
       import XML::Node.new_text(data)
     end
@@ -49,7 +47,7 @@ module RDom
     def nodeType
       XML::Node::DOCUMENT_NODE
     end
-    
+
     def nodeName
       '#document'
     end
@@ -61,23 +59,23 @@ module RDom
     def documentElement
       root
     end
-    
+
     def defaultView
       @window
     end
-    
+
     def location
       @location ||= Location.new(defaultView, @url)
     end
-    
+
     def URL
       @url
     end
-    
+
     def referrer
       @referrer
     end
-    
+
     def domain
       location.hostname
     end
@@ -89,41 +87,41 @@ module RDom
     def getElementById(id)
       find_first(".//*[@id='#{id}']")
     end
-    
+
     def getElementsByName(name)
       find_first("//*[@name='#{name}']")
     end
-    
+
     def title
       node = find_first('//title')
       node ? node.content : ''
     end
-    
+
     def title=(title)
       node = find_first('//title')
       node.content = title # TODO implicitely create head/title tags unless present
     end
-    
+
     def body
       find_first('//body')
     end
-    
+
     def images
       find('//img').to_a
     end
-    
+
     def links
       find('//a[@href]|//area[@href]').to_a
     end
-    
+
     def forms
       find('//form').to_a
     end
-    
+
     def anchors
       find('//a[@name]').to_a
     end
-    
+
     def importNode(node)
       import node.cloneNode(true)
     end

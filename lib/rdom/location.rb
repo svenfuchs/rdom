@@ -2,12 +2,10 @@ require 'uri'
 
 module RDom
   class Location
-    include Properties, Decoration
+    include Decoration
 
-    PROPERTIES = [
-      :history, :href, :hash, :host, :hostname, :pathname, :port, :protocol, 
-      :search
-    ]
+    properties :history, :href, :hash, :host, :hostname, :pathname, :port, 
+               :protocol, :search
 
     attr_reader :uri, :href, :window
   

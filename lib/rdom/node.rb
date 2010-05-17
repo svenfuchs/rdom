@@ -1,12 +1,11 @@
 module RDom
   module Node
     include Element, Event::Target
-    
-    PROPERTIES = [
-      :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, :firstChild, 
-      :lastChild, :previousSibling, :nextSibling, :attributes, :hasAttributes, 
-      :ownerDocument, :hasChildNodes, :textContent, :name
-    ]
+
+    properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, 
+               :firstChild, :lastChild, :previousSibling, :nextSibling, 
+               :attributes, :hasAttributes, :ownerDocument, :hasChildNodes, 
+               :textContent
     
     def createDocumentFragment
       doc.import LibXML::XML::Node.new('#document_fragment')
@@ -133,7 +132,7 @@ module RDom
     def cloneNode(deep)
       copy(deep)
     end
-
+    
     protected
 
       def ancestors

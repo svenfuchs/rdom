@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Fieldset
-      PROPERTIES = [
-        :form
-      ]
+      properties :form
     end
   end
 end

@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Label
-      PROPERTIES = [
-        :form, :accessKey, :htmlFor
-      ]
+      properties :form, :accessKey, :htmlFor
     end
   end
 end

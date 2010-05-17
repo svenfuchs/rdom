@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Meta
-      PROPERTIES = [
-        :content, :httpEquiv, :name, :scheme
-      ]
+      properties :content, :httpEquiv, :name, :scheme
     end
   end
 end

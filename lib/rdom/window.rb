@@ -11,14 +11,13 @@ module RDom
     autoload :Screen,    'rdom/window/screen.rb'
     autoload :Timers,    'rdom/window/timers.rb'
     
-    include Properties, Decoration, Event::Target, Window::Timers
+    include Decoration, Event::Target, Window::Timers
 
-    PROPERTIES = [
-      :location, :navigator, :url, :console, :parent, :name, :document, 
-      :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth, 
-      :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX, 
-      :screenY, :screenLeft, :screenTop
-    ]
+    properties :location, :navigator, :url, :console, :parent, :name, :document, 
+               :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth, 
+               :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX, 
+               :screenY, :screenLeft, :screenTop
+
     attr_accessor *PROPERTIES
 
     def initialize(name = 'window', parent = nil, opener = nil)

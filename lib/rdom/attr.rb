@@ -1,10 +1,9 @@
 module RDom
   class Attr
-    include Properties, Decoration
+    include Decoration
     
-    PROPERTIES = [
-      :nodeType, :document, :name, :value
-    ]
+    properties :nodeType, :document, :name, :value
+
     attr_accessor *PROPERTIES
     
     def initialize(document, name)

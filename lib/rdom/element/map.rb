@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Map
-      PROPERTIES = [
-        :areas, :name
-      ]
+      properties :areas, :name
     end
   end
 end

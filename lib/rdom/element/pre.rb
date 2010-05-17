@@ -1,9 +1,7 @@
 module RDom
   module Element
     module Pre
-      PROPERTIES = [
-        :width
-      ]
+      properties :width
     end
   end
 end
