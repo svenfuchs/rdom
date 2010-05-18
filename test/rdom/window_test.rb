@@ -83,40 +83,4 @@ class WindowTest < Test::Unit::TestCase
   # none
   test "window.frameElement", :window_object_1 do
   end
-
-  # // must be on an object that also implements dom::Element
-  # interface EmbeddingElement {
-  #     readonly attribute dom::Document contentDocument;
-  #     readonly attribute Window contentWindow;
-  # };
-
-
-  # interface Window {
-  #     // should timers allow more than long, maybe a floating point type?
-  #     // don't think anyone's timers have more precision
-  #
-  #     // one-shot timer
-  #     long setTimeout(in TimerListener listener, in long milliseconds);
-  #     void clearTimeout(in long timerID);
-  #
-  #     // repeating timer
-  #     long setInterval(in TimerListener listener, in long milliseconds);
-  #     void clearInterval(in long timerID);
-  # };
-  # setTimeout(function, milliseconds)
-  # This method calls the function once after a specified number of milliseconds elapses, until canceled by a call to clearTimeout. The methods returns a timerID which may be used in a subsequent call to clearTimeout to cancel the interval.
-  # setInterval(function, milliseconds)
-  # This method calls the function every time a specified number of milliseconds elapses, until canceled by a call to clearInterval. The methods returns an intervalID which may be used in a subsequent call to clearInterval to cancel the interval.
-  # clearTimeout(timerID)
-  # Cancels a timeout that was set with the setTimeout method.
-  # clearInterval(intervalID)
-  # Cancels an interval that was set with the setTimeout method.
-
-  # // behavior is always special in ECMAScript, this is defined only for the benefit
-  # // of other languages
-  # interface TimerListener {
-  #     // what to put here?
-  # };
-
-
 end

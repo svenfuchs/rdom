@@ -254,12 +254,13 @@ class NodeTest < Test::Unit::TestCase
   end
 
   test "ruby: Node.cloneNode makes a copy of a node or document", :ruby, :dom_1_core do
-    assert div.object_id != div.clone.object_id
+    assert_equal '<body/>', body.cloneNode.to_s
+    assert_equal 'FOO', body.cloneNode(true).firstChild.textContent
+    assert div.object_id != div.cloneNode.object_id
   end
 
   test "js: Node.cloneNode makes a copy of a node or document", :js, :dom_1_core do
-    # TODO
-    # assert div.object_id != div.clone.object_id
+    assert_equal 'FOO', window.evaluate("body.cloneNode(true).firstChild.textContent")
   end
 
   # DOM-Level-2-Core
@@ -289,16 +290,3 @@ class NodeTest < Test::Unit::TestCase
     assert !window.evaluate("body.hasAttributes()")
   end
 end
-
-
-# "Node.compareDocumentPosition compares the position of the current node against another node in any other document"
-# "Node.getFeature"
-# "Node.getUserData returns any data previously set on the node via setUserData() by key"
-# "Node.isDefaultNamespace returns true if the namespace is the default namespace on the given node"
-# "Node.isEqualNode indicates whether the node is equal to the given node"
-# "Node.isSameNode indicates whether the node is the same as the given node"
-# "Node.lookupNamespaceURI returns the namespaceURI associated with a given prefix on the given node object"
-# "Node.lookupPrefix returns the prefix for a given namespaceURI on the given node if present"
-# "Node.setUserData attaches arbitrary data to a node, along with a user-defined key and an optional handler to be triggered upon events such as cloning of the node upon which the data was attached"
-# "Node.baseURI baseURI gets the base URI for the document", :dom_3
-# "Node.textContent returns null (returns other values for other nodes)", :dom_3

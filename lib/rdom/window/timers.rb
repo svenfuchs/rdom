@@ -58,18 +58,28 @@ module RDom
         end
       end
       
+      # This method calls the function once after a specified number of
+      # milliseconds elapses, until canceled by a call to clearTimeout. The
+      # methods returns a timerID which may be used in a subsequent call to
+      # clearTimeout to cancel the interval.
       def setTimeout(handler, delay, *args)
         Window::Timers::Task.schedule(handler, delay, *args)
       end
       
+      # Cancels a timeout that was set with the setTimeout method.
       def clearTimeout(handle)
         Window::Timers::Task.remove(handle)
       end
       
+      # This method calls the function every time a specified number of
+      # milliseconds elapses, until canceled by a call to clearInterval. The
+      # methods returns an intervalID which may be used in a subsequent call
+      # to clearInterval to cancel the interval.
       def setInterval(handler, timeout, *args)
         raise(NotImplementedError.new("not implemented: #{self.class.name}#setInterval"))
       end
       
+      # Cancels an interval that was set with the setTimeout method.
       def clearInterval(handle)
         raise(NotImplementedError.new("not implemented: #{self.class.name}#clearInterval"))
       end

@@ -8,11 +8,8 @@ class LocationTest < Test::Unit::TestCase
 
     @google = 'http://www.google.com:80/search?q=foo#test'
     @github = 'http://github.com:80'
-
     @window = RDom::Window.new(google)
     @location = window.location
-    # @location = RDom::Location.new(RDom::Window.new)
-    # location.href = google
 
     window.evaluate("var location = window.location")
   end

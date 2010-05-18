@@ -7,3 +7,63 @@ make sure jQuery.makeArray() works
 clean up properties/attributes
 implement specified, e.g. in jquery: return (elem.attributes.value || {}).specified ? elem.value : elem.text;
 
+
+implement event default actions? or leave this to the user?
+jQuery.support.scriptEval
+
+
+"Node.compareDocumentPosition compares the position of the current node against another node in any other document"
+"Node.getFeature"
+"Node.getUserData returns any data previously set on the node via setUserData() by key"
+"Node.isDefaultNamespace returns true if the namespace is the default namespace on the given node"
+"Node.isEqualNode indicates whether the node is equal to the given node"
+"Node.isSameNode indicates whether the node is the same as the given node"
+"Node.lookupNamespaceURI returns the namespaceURI associated with a given prefix on the given node object"
+"Node.lookupPrefix returns the prefix for a given namespaceURI on the given node if present"
+"Node.setUserData attaches arbitrary data to a node, along with a user-defined key and an optional handler to be triggered upon events such as cloning of the node upon which the data was attached"
+"Node.baseURI baseURI gets the base URI for the document", :dom_3
+"Node.textContent returns null (returns other values for other nodes)", :dom_3
+
+"Element.clientHeight The inner height of an element"
+"Element.clientLeft The width of the left border of an element"
+"Element.clientTop The width of the top border of an element"
+"Element.clientWidth The inner width of an element"
+"Element.offsetHeight The height of an element, relative to the layout"
+"Element.offsetLeft The distance from this element's left border to its offsetParent's left border"
+"Element.offsetParent The element from which all offset calculations are currently computed"
+"Element.offsetTop The distance from this element's top border to its offsetParent's top border"
+"Element.offsetWidth The width of an element, relative to the layout"
+"Element.scrollHeight The scroll view height of an element"
+"Element.scrollLeft Gets/sets the left scroll offset of an element"
+"Element.scrollTop Gets/sets the top scroll offset of an element"
+"Element.scrollWidth The scroll view width of an element"
+"Element.style An object representing the declarations of an element's style attributes"
+"Element.tabIndex Gets/sets the position of the element in the tabbing order"
+"Element.textContent Gets/sets the textual contents of an element and all its descendants"
+
+"Element.blur() Removes keyboard focus from the current element"
+"Element.click() Simulates a click on the current element"
+"Element.compareDocumentPosition(otherNode)"
+"Element.focus() Gives keyboard focus to the current element"
+"Element.getBoundingClientRect()"
+"Element.getClientRects() Returns a collection of rectangles that indicate the bounding rectangles for each line of text in a client"
+"Element.getElementsByClassName()"
+"Element.getElementsByTagNameNS(namespace, name) Retrieve a set of all descendant elements, of a particular tag name and namespace, from the current element"
+"Element.isEqualNode(nodeArg)"
+"Element.isSameNode(otherNode)"
+"Element.scrollIntoView(alignWithTop) Scrolls the page until the element gets into the view"
+
+
+// must be on an object that also implements dom::Element
+interface EmbeddingElement {
+    readonly attribute dom::Document contentDocument;
+    readonly attribute Window contentWindow;
+};
+
+// behavior is always special in ECMAScript, this is defined only for the benefit
+// of other languages
+interface TimerListener {
+};
+
+Aha? So, is this in Tracemonkey? Can we use it?
+

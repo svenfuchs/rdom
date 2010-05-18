@@ -220,34 +220,3 @@ class ElementTest < Test::Unit::TestCase
   # test "ruby: hasAttributeNS(namespace, name) Check if the element has the specified attribute, in the specified namespace, or not", :ruby, :dom_2_core do
   # end
 end
-
-# TODO
-
-# "clientHeight The inner height of an element"
-# "clientLeft The width of the left border of an element"
-# "clientTop The width of the top border of an element"
-# "clientWidth The inner width of an element"
-# "offsetHeight The height of an element, relative to the layout"
-# "offsetLeft The distance from this element's left border to its offsetParent's left border"
-# "offsetParent The element from which all offset calculations are currently computed"
-# "offsetTop The distance from this element's top border to its offsetParent's top border"
-# "offsetWidth The width of an element, relative to the layout"
-# "scrollHeight The scroll view height of an element"
-# "scrollLeft Gets/sets the left scroll offset of an element"
-# "scrollTop Gets/sets the top scroll offset of an element"
-# "scrollWidth The scroll view width of an element"
-# "style An object representing the declarations of an element's style attributes"
-# "tabIndex Gets/sets the position of the element in the tabbing order"
-# "textContent Gets/sets the textual contents of an element and all its descendants"
-
-# "blur() Removes keyboard focus from the current element"
-# "click() Simulates a click on the current element"
-# "compareDocumentPosition(otherNode)"
-# "focus() Gives keyboard focus to the current element"
-# "getBoundingClientRect()"
-# "getClientRects() Returns a collection of rectangles that indicate the bounding rectangles for each line of text in a client"
-# "getElementsByClassName()"
-# "getElementsByTagNameNS(namespace, name) Retrieve a set of all descendant elements, of a particular tag name and namespace, from the current element"
-# "isEqualNode(nodeArg)"
-# "isSameNode(otherNode)"
-# "scrollIntoView(alignWithTop) Scrolls the page until the element gets into the view"

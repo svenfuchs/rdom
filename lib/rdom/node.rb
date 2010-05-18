@@ -121,7 +121,7 @@ module RDom
     end
 
     # makes a copy of a node or document
-    def cloneNode(deep)
+    def cloneNode(deep = false)
       copy(deep)
     end
     
