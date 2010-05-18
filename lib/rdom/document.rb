@@ -99,7 +99,8 @@ module RDom
 
     def title=(title)
       node = find_first('//title')
-      node.content = title # TODO implicitely create head/title tags unless present
+      node ||= create_title_tag
+      node.content = title
     end
 
     def body
@@ -125,5 +126,16 @@ module RDom
     def importNode(node)
       import node.cloneNode(true)
     end
+
+    protected
+
+      def create_title_tag
+        head = find_first('//head') || create_head_tag
+        head.appendChild(createElement('title'))
+      end
+
+      def create_head_tag
+        documentElement.insertBefore(createElement('head'), documentElement.firstChild)
+      end
   end
 end

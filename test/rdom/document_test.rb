@@ -25,11 +25,17 @@ class DocumentTest < Test::Unit::TestCase
     @div = document.find_first('//div')
   end
 
-  test "ruby: document.location returns the URI of the current document", :ruby, :dom_0, :non_standard do
+  test "ruby: setting document.title implicitely creates head and title tags", :ruby, :dom_0, :no_standard do
+    window.load("<html></html>")
+    window.document.title = "foo"
+    assert_equal 'foo', window.document.getElementsByTagName('title')[0].textContent
+  end
+
+  test "ruby: document.location returns the URI of the current document", :ruby, :dom_0, :no_standard do
     assert_equal RDom::Location, document.location.class
   end
 
-  test "js: document.location returns the URI of the current document", :js, :dom_0, :non_standard do
+  test "js: document.location returns the URI of the current document", :js, :dom_0, :no_standard do
     assert_equal RDom::Location, window.evaluate('document.location').class
   end
 
