@@ -31,14 +31,7 @@ module RDom
     # nodes, the value of the attribute is returned.
     # http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-F68D080
     def nodeValue
-      case true
-      when text?, comment?, cdata?
-        content
-      when attribute?
-        value
-      else
-        nil
-      end
+      content if text? || comment? || cdata?
     end
     
     def textContent
