@@ -1,17 +1,14 @@
 module RDom
-  class Attr
-    include Decoration
-    
-    properties :nodeType, :document, :name, :value
+  module Attr
+    properties :name, :value
 
-    attr_accessor *PROPERTIES
-    
-    def initialize(document, name)
-      @name = name
+    # TODO does not work with Properties unconditionally uses libxml_read_attribute
+    def name
+      super
     end
-    
-    def nodeType
-      XML::Node::ATTRIBUTE_NODE
+
+    def value
+      super
     end
   end
 end

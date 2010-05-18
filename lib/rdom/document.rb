@@ -29,7 +29,7 @@ module RDom
     end
 
     def createAttribute(name)
-      Attr.new(self, name)
+      Attribute.new(self, name)
     end
 
     def createComment(data)

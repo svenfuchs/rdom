@@ -1,6 +1,7 @@
-bugs/oddities
+libxml-ruby bugs/oddities
   
-  - Error: Tag foo_bar invalid at :32.
+  - XML::Parser::Options::NOERROR does not silence parse errors?
+    Error: Tag foo_bar invalid at :32.
 
   - libxml seems to have gc problems when it has implicitely inserted a <p>
     node while parsing text that is not wrapped into a tag (e.g. jquery tried

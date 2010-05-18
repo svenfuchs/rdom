@@ -4,8 +4,7 @@ module RDom
   class Location
     include Decoration
 
-    properties :history, :href, :hash, :host, :hostname, :pathname, :port, 
-               :protocol, :search
+    properties :href, :hash, :host, :hostname, :pathname, :port, :protocol, :search
 
     attr_reader :uri, :href, :window
   
@@ -14,31 +13,22 @@ module RDom
       @uri = URI.parse(uri || '')
     end
 
-    def history
-      window.history
-    end
-
-    def href=(url)
+    def assign(url)
       @uri = parse_uri(url)
-      history << url
+      window.history << url
       reload
     end
-    alias :assign :href=
+    alias :href= :assign
   
     def replace(url)
-      @uri = parse_uri(url)
-      reload
+      window.history.pop
+      assign(url)
     end
   
     def reload
       @href = uri.to_s
       window.load(href)
     end
-    
-    # def set(uri)
-    #   @uri = parse_uri(uri)
-    #   @href = uri.to_s
-    # end
   
     def hash
       "##{uri.fragment}"
@@ -109,6 +99,12 @@ module RDom
     end
 
     protected
+    
+      def set(uri)
+        @uri = parse_uri(uri)
+        @href = uri.to_s
+        window.history << uri unless window.history.last == uri
+      end
   
       def parse_uri(uri)
         uri = uri.is_a?(URI) ? uri : URI.parse(uri)

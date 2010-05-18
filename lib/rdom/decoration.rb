@@ -4,24 +4,23 @@ module RDom
   class << self
     def decorate(node)
       case node
+      when LibXML::XML::Attr
+        node.extend(Attr)
       when LibXML::XML::Document
-        node.extend(RDom::Document)
+        node.extend(Document)
       when LibXML::XML::Node
         decorate_node(node)
       when LibXML::XML::Attributes
-        node.extend(RDom::NamedNodeMap)
+        node.extend(NamedNodeMap)
       end
     end
 
     def decorate_node(node)
-      node.extend(RDom::Node)
+      node.extend(Node)
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
-        extensions = [RDom::Element]
-        extensions << Element.const_get(node.nodeName.titleize) rescue NameError
-        extensions.each { |extension| node.extend(extension) }
-      when LibXML::XML::Node::ATTRIBUTE_NODE
-        # ?
+        node.extend(Element)
+        node.extend(Element.const_get(node.nodeName.titleize)) rescue NameError
       end
     end
   end

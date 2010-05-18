@@ -23,7 +23,7 @@ module RDom
         evaluate_event_attribute(event)
         bubble_event(event) if event.bubbles
         execute_default_behaviour unless event.__cancelled
-      
+
         event.__cancelled
       end
 

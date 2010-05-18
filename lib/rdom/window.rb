@@ -10,23 +10,28 @@ module RDom
     autoload :Navigator, 'rdom/window/navigator.rb'
     autoload :Screen,    'rdom/window/screen.rb'
     autoload :Timers,    'rdom/window/timers.rb'
-    
+
     include Decoration, Event::Target, Window::Timers
 
-    properties :location, :navigator, :url, :console, :parent, :name, :document, 
-               :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth, 
-               :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX, 
+    properties :location, :navigator, :url, :console, :parent, :name, :document,
+               :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth,
+               :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX,
                :screenY, :screenLeft, :screenTop
 
     attr_accessor *PROPERTIES
 
-    def initialize(name = 'window', parent = nil, opener = nil)
-      @name    = name
-      @parent  = parent || self
-      @opener  = opener
+    def initialize(*args)
+      options  = args.last.is_a?(Hash) ? args.pop : {}
+      html     = args.pop
+
+      @name    = options[:name]
+      @parent  = options[:parent] || self
+      @opener  = options[:opener]
       @frames  = []
       @screen  = Screen.new(self)
       @history = History.new
+
+      load(html, options) if html
     end
 
     def log(line)
@@ -34,7 +39,7 @@ module RDom
     end
 
     def print(output)
-      puts output
+      p output
     end
 
     def runtime
@@ -48,9 +53,12 @@ module RDom
     end
 
     def load(*args)
-      arg = args.shift.gsub(%r(^file://), '')
-      uri, html = uri?(arg) || file?(arg) ? [arg, open(arg).read] : [args.last, arg]
-      load_document(html, uri)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      url     = uri?(args.first) || file?(args.first) ? args.shift.gsub(%r(^file://), '') : options[:url]
+      html    = args.shift || (url ? open(url).read : raise("can't load without either html or url"))
+
+      location.send(:set, url) if url
+      load_document(html, url, options)
       load_scripts
       load_frames
       trigger_load_event
@@ -71,20 +79,20 @@ module RDom
     def location
       @location ||= Location.new(self)
     end
-    
+
     def url
       location.href
     end
 
-    def location=(uri)
-      if location.href == uri
-        location.reload
-      elsif location.href == 'about:blank'
-        location.assign(uri)
-      else
-        location.replace(uri)
-      end
-    end
+    # def location=(uri)
+    #   if location.href == uri
+    #     location.reload
+    #   elsif location.href == 'about:blank'
+    #     location.assign(uri)
+    #   else
+    #     location.replace(uri)
+    #   end
+    # end
 
     def navigator
       @navigator ||= Navigator.new
@@ -100,10 +108,10 @@ module RDom
 
     protected
 
-      def load_document(html, uri)
+      def load_document(html, url, options = {})
         flags = 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6
-        @document = Document.new(self, html, :url => uri)
-        @location ||= Location.new(self, uri) if uri
+        @document = Document.new(self, html, options.merge(:url => url))
+        # @location ||= Location.new(self, options[:url]) if options[:url]
       end
 
       def load_scripts
@@ -135,7 +143,7 @@ module RDom
         event.initEvent('load')
         dispatchEvent(event)
       end
-      
+
       def uri?(arg)
         uri = URI.parse(arg)
         %w(file http https).include?(uri.scheme)

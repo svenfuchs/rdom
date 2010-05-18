@@ -4439,10 +4439,10 @@ jQuery.extend({
 					wrap = wrapMap[ tag ] || wrapMap._default,
 					depth = wrap[0],
 					div = context.createElement("div");
-print(tag)
-print(wrapMap[tag])
-print(typeof wrapMap._default)
-print(wrap[1])
+// print(tag)
+// print(wrapMap[tag])
+// print(typeof wrapMap._default)
+// print(wrap[1])
 				// Go to html and back, then peel off extra wrappers
 				div.innerHTML = wrap[1] + elem + wrap[2];
 

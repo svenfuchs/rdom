@@ -1,63 +1,120 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class HtmlElementTest < Test::Unit::TestCase
-  attr_reader :document, :body, :div
+  attr_reader :window, :document, :body, :div
   
   def setup
-    html = '<html><body><div id="foo">FOO</div></body></html>'
-    @document = RDom::Document.parse(html)
+    @window = RDom::Window.new('<html><body><div id="foo">FOO</div></body></html>')
+    @document = window.document
     @body = document.find_first('//body')
     @div = document.find_first('//div')
+    window.evaluate <<-js
+      var body = document.body;
+      var div  = document.getElementsByTagName('div')[0];
+    js
   end
   
-  test 'innerHTML', :dom_0 do
-    assert_equal '<div id="foo">FOO</div>', body.innerHTML
+  test "ruby: innerHTML", :ruby, :dom_0 do
+    assert_equal '<div id="foo">FOO</div>', document.body.innerHTML
     assert_equal 'FOO', div.innerHTML
   end
   
-  test 'innerHTML=', :dom_0 do
+  test "js: innerHTML", :js, :dom_0 do
+    assert_equal '<div id="foo">FOO</div>', window.evaluate("body.innerHTML")
+    assert_equal 'FOO', window.evaluate("div.innerHTML")
+  end
+  
+  test "ruby: innerHTML=", :ruby, :dom_0 do
     div.innerHTML = '<span>bar</span><span>baz</span>'
     # TODO what's with the extra newlines and spaces?
     assert_equal "<div id=\"foo\">\n  <span>bar</span>\n  <span>baz</span>\n</div>", body.innerHTML
   end
   
+  test "js: innerHTML=", :js, :dom_0 do
+    window.evaluate("div.innerHTML = '<span>bar</span><span>baz</span>'")
+    assert_equal "<div id=\"foo\">\n  <span>bar</span>\n  <span>baz</span>\n</div>", window.evaluate("body.innerHTML")
+  end
+  
   # DOM-Level-1-Core
   # http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-745549614
-  test "tagName The name of the tag for the given element", :dom_1_core do
+  test "ruby: tagName The name of the tag for the given element", :ruby, :dom_1_core do
     assert_equal 'DIV', div.nodeName
   end
 
-  test "getAttribute(name) retrieves the value of the named attribute from the current node", :dom_1_core do
+  test "js: tagName The name of the tag for the given element", :js, :dom_1_core do
+    assert_equal 'DIV', window.evaluate("div.nodeName")
+  end
+
+  test "ruby: getAttribute(name) retrieves the value of the named attribute from the current node", :ruby, :dom_1_core do
     assert_equal 'foo', div.getAttribute('id')
   end
 
-  test "getAttributeNode(name) retrieves the node representation of the named attribute from the current node", :dom_1_core do
+  test "js: getAttribute(name) retrieves the value of the named attribute from the current node", :js, :dom_1_core do
+    assert_equal 'foo', window.evaluate("div.getAttribute('id')")
   end
 
-  test "setAttribute(name, value) sets the value of the named attribute from the current node", :dom_1_core do
+  test "ruby: getAttributeNode(name) retrieves the node representation of the named attribute from the current node", :ruby, :dom_1_core do
+    # TODO
+  end
+
+  test "js: getAttributeNode(name) retrieves the node representation of the named attribute from the current node", :js, :dom_1_core do
+    # TODO
+  end
+
+  test "ruby: setAttribute(name, value) sets the value of the named attribute from the current node", :ruby, :dom_1_core do
     div.setAttribute('title', 'bar')
     assert_equal 'bar', div.getAttribute('title')
   end
 
-  test "setAttributeNode(name, attrNode) sets the node representation of the named attribute from the current node", :dom_1_core do
+  test "js: setAttribute(name, value) sets the value of the named attribute from the current node", :js, :dom_1_core do
+    div.setAttribute('title', 'bar')
+    assert_equal 'bar', window.evaluate("div.getAttribute('title')")
+  end
+
+  test "ruby: setAttributeNode(name, attrNode) sets the node representation of the named attribute from the current node", :ruby, :dom_1_core do
     attribute = document.createAttribute('boz')
     attribute.value = 'buz'
     div.setAttributeNode(attribute)
     assert_equal 'buz', div.getAttribute('boz')
   end
 
-  test "removeAttribute(name) removes the named attribute from the current node", :dom_1_core do
-    div.removeAttribute('id')
-    assert_equal '<div>FOO</div>', div.to_s
+  test "js: setAttributeNode(name, attrNode) sets the node representation of the named attribute from the current node", :js, :dom_1_core do
+    window.evaluate <<-js
+      attribute = document.createAttribute('boz')
+      attribute.value = 'buz'
+      div.setAttributeNode(attribute)
+    js
+    assert_equal 'buz', window.evaluate("div.getAttribute('boz')")
   end
 
-  test "removeAttributeNode(attrNode) removes the node representation of the named attribute from the current node", :dom_1_core do
+  test "ruby: removeAttribute(name) removes the named attribute from the current node", :ruby, :dom_1_core do
+    window.evaluate("div.removeAttribute('id')")
+    assert_equal '<div>FOO</div>', window.evaluate("div").to_s
   end
 
-  test "getElementsByTagName(name) retrieves a set of all descendant elements, of a particular tag name, from the current element", :dom_1_core do
+  test "js: removeAttribute(name) removes the named attribute from the current node", :js, :dom_1_core do
+    window.evaluate("div.removeAttribute('id')")
+    assert_equal '<div>FOO</div>', window.evaluate("div").to_s
+  end
+
+  test "ruby: removeAttributeNode(attrNode) removes the node representation of the named attribute from the current node", :ruby, :dom_1_core do
+    # TODO
+  end
+
+  test "js: removeAttributeNode(attrNode) removes the node representation of the named attribute from the current node", :js, :dom_1_core do
+    # TODO
+  end
+
+  test "ruby: getElementsByTagName(name) retrieves a set of all descendant elements, of a particular tag name, from the current element", :ruby, :dom_1_core do
     elements = body.getElementsByTagName('div')
     assert_equal 1, elements.size
     assert_equal 'DIV', elements.first.nodeName
+  end
+
+  test "js: getElementsByTagName(name) retrieves a set of all descendant elements, of a particular tag name, from the current element", :js, :dom_1_core do
+    window.evaluate("elements = body.getElementsByTagName('div')")
+    assert_equal 1, window.evaluate("elements.length")
+    assert_equal 'DIV', window.evaluate("elements[0].nodeName")
   end
 
   # DOM-Level-1-Html
@@ -70,72 +127,111 @@ class HtmlElementTest < Test::Unit::TestCase
   # DFN, CODE, SAMP, KBD, VAR, CITE, ACRONYM, ABBR, DD, DT, NOFRAMES, NOSCRIPT
   # ADDRESS, CENTER
   
-  test "id - the id of the element", :dom_1_html do
+  test "ruby: id - the id of the element", :ruby, :dom_1_html do
     div.id = 'bar'
     assert_equal 'bar', div.id
     assert_equal 'bar', div.getAttribute('id')
   end
 
-  test "title - the title attribute of the element", :dom_1_html do
+  test "js: id - the id of the element", :js, :dom_1_html do
+    window.evaluate("div.id = 'bar'")
+    assert_equal 'bar', window.evaluate("div.id")
+    assert_equal 'bar', window.evaluate("div.getAttribute('id')")
+  end
+
+  test "ruby: title - the title attribute of the element", :ruby, :dom_1_html do
     div.title = 'bar'
     assert_equal 'bar', div.title
     assert_equal 'bar', div.getAttribute('title')
   end
 
-  test "lang - the language of an element's attributes, text, and element contents", :dom_1_html do
+  test "js: title - the title attribute of the element", :js, :dom_1_html do
+    window.evaluate("div.title = 'bar'")
+    assert_equal 'bar', window.evaluate("div.title")
+    assert_equal 'bar', window.evaluate("div.getAttribute('title')")
+  end
+
+  test "ruby: lang - the language of an element's attributes, text, and element contents", :ruby, :dom_1_html do
     div.lang = 'bar'
     assert_equal 'bar', div.lang
     assert_equal 'bar', div.getAttribute('lang')
   end
 
-  test "dir - the directionality of the element", :dom_1_html do
+  test "js: lang - the language of an element's attributes, text, and element contents", :js, :dom_1_html do
+    window.evaluate("div.lang = 'bar'")
+    assert_equal 'bar', window.evaluate("div.lang")
+    assert_equal 'bar', window.evaluate("div.getAttribute('lang')")
+  end
+
+  test "ruby: dir - the directionality of the element", :ruby, :dom_1_html do
     div.dir = 'bar'
     assert_equal 'bar', div.dir
     assert_equal 'bar', div.getAttribute('dir')
   end
 
-  test "className - the class of the element", :dom_1_html do
+  test "js: dir - the directionality of the element", :js, :dom_1_html do
+    window.evaluate("div.dir = 'bar'")
+    assert_equal 'bar', window.evaluate("div.dir")
+    assert_equal 'bar', window.evaluate("div.getAttribute('dir')")
+  end
+
+  test "ruby: className - the class of the element", :ruby, :dom_1_html do
     div.className = 'bar'
     assert_equal 'bar', div.className
     assert_equal 'bar', div.getAttribute('class')
     assert_equal '<div id="foo" class="bar">FOO</div>', div.to_s
   end
 
+  test "js: className - the class of the element", :js, :dom_1_html do
+    window.evaluate("div.className = 'bar'")
+    assert_equal 'bar', window.evaluate("div.className")
+    assert_equal 'bar', window.evaluate("div.getAttribute('class')")
+    assert_equal '<div id="foo" class="bar">FOO</div>', window.evaluate("div").to_s
+  end
+
   # DOM-Level-2-Core
   # http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#i-Document
-  # test "getAttributeNS(namespace, name) Retrieve the value of the attribute with the specified name and namespace, from the current node", :dom_2_core do
+  # test "ruby: getAttributeNS(namespace, name) Retrieve the value of the attribute with the specified name and namespace, from the current node", :ruby, :dom_2_core do
   # end
   # 
-  # test "getAttributeNodeNS(namespace, name) Retrieve the node representation of the attribute with the specified name and namespace, from the current node", :dom_2_core do
+  # test "ruby: getAttributeNodeNS(namespace, name) Retrieve the node representation of the attribute with the specified name and namespace, from the current node", :ruby, :dom_2_core do
   # end
   # 
-  # test "setAttributeNS(namespace, name, value) Set the value of the attribute with the specified name and namespace, from the current node", :dom_2_core do
+  # test "ruby: setAttributeNS(namespace, name, value) Set the value of the attribute with the specified name and namespace, from the current node", :ruby, :dom_2_core do
   # end
   # 
-  # test "setAttributeNodeNS(namespace, name, attrNode) Set the node representation of the attribute with the specified name and namespace, from the current node", :dom_2_core do
+  # test "ruby: setAttributeNodeNS(namespace, name, attrNode) Set the node representation of the attribute with the specified name and namespace, from the current node", :ruby, :dom_2_core do
   # end
   # 
-  # test "removeAttributeNS(namespace, name) Remove the attribute with the specified name and namespace, from the current node", :dom_2_core do
+  # test "ruby: removeAttributeNS(namespace, name) Remove the attribute with the specified name and namespace, from the current node", :ruby, :dom_2_core do
   # end
 
-  test "hasAttribute(name) Check if the element has the specified attribute, or not", :dom_2_core do
+  test "ruby: hasAttribute(name) Check if the element has the specified attribute, or not", :ruby, :dom_2_core do
     assert div.hasAttribute('id')
     assert !div.hasAttribute('class')
   end
 
-  # test "hasAttributeNS(namespace, name) Check if the element has the specified attribute, in the specified namespace, or not", :dom_2_core do
+  test "js: hasAttribute(name) Check if the element has the specified attribute, or not", :js, :dom_2_core do
+    assert window.evaluate("div.hasAttribute('id')")
+    assert !window.evaluate("div.hasAttribute('class')")
+  end
+
+  # test "ruby: hasAttributeNS(namespace, name) Check if the element has the specified attribute, in the specified namespace, or not", :ruby, :dom_2_core do
   # end
 
 
   # DOM-Level-2-Events
   # http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html
-  test "addEventListener(type, listener, useCapture) Register an event handler to a specific event type on the element" do
+  test "ruby: addEventListener(type, listener, useCapture) Register an event handler to a specific event type on the element" do
+    # TODO
   end
 
-  test "removeEventListener(type, handler, useCapture) Removes an event listener from the element" do
+  test "ruby: removeEventListener(type, handler, useCapture) Removes an event listener from the element" do
+    # TODO
   end
 
-  test "dispatchEvent(event) Dispatch an event to this node in the DOM" do
+  test "ruby: dispatchEvent(event) Dispatch an event to this node in the DOM" do
+    # TODO
   end
 end
 

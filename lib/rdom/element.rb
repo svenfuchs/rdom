@@ -31,12 +31,20 @@ module RDom
     autoload :Frame,    'rdom/element/frame'
     autoload :IFrame,   'rdom/element/iframe'
   
-    properties :tagName, :innerHTML, :id, :title, :lang, :dir, :className,
+    properties :tagName, :className, :innerHTML, :id, :title, :lang, :dir,
                :style, :documentElement
 
     
     def tagName
       nodeName.upcase
+    end
+    
+    def className
+      libxml_read_attribute('class') || ''
+    end
+    
+    def className=(value)
+      libxml_write_attribute('class', value.to_s)
     end
     
     def style

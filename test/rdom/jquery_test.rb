@@ -92,7 +92,7 @@ class JQueryTest < Test::Unit::TestCase
         id: "test3"
       })[0];
     js
-    assert_equal 'div', tag.nodeName
+    assert_equal 'DIV', tag.nodeName
     assert_equal 'test', tag.textContent
   end
 

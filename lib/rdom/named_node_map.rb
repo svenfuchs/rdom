@@ -19,7 +19,7 @@ module RDom
     
     # adds a node using its nodeName attribute
     def setNamedItem(item)
-      raise "not implemented" unless item.is_a?(Attr)
+      raise "not implemented" unless item.is_a?(Attribute)
       node.setAttributeNode(item)
     end
     

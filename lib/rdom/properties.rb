@@ -3,7 +3,7 @@ LibXML::XML::Node.class_eval do
   alias :libxml_write_attribute :[]=
   alias :libxml_name :name
 
-  undef :id, :type, :[], :[]=, :name
+  undef :[], :[]=, :name
 end
 
 module RDom

@@ -4,8 +4,7 @@ module RDom
 
     properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, 
                :firstChild, :lastChild, :previousSibling, :nextSibling, 
-               :attributes, :hasAttributes, :ownerDocument, :hasChildNodes, 
-               :textContent
+               :attributes, :ownerDocument, :textContent
     
     def createDocumentFragment
       doc.import LibXML::XML::Node.new('#document_fragment')

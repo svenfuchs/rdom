@@ -13,25 +13,25 @@ class JavascriptTest < Test::Unit::TestCase
     @console  = @window.console
   end
   
-  # test "johnson does not regard instance variables as js properties" do
-  #   window.evaluate 'console.log("foo");'
-  #   window.evaluate 'console.log("foo");'
-  # 
-  #   assert window.evaluate('console.log')
-  #   assert_equal %w(foo foo), window.console.log.flatten
-  # end
-  # 
-  # test "calls to missing methods are treated like js object properties" do
-  #   window.evaluate 'console.log(document.foo)'
-  #   assert_equal nil, console.last_item
-  #   
-  #   window.evaluate 'document.foo = "bar"'
-  #   assert document.respond_to?(:foo)
-  #   assert_equal 'bar', document.foo
-  # 
-  #   window.evaluate 'console.log(document.foo)'
-  #   assert_equal 'bar', console.last_item
-  # end
+  test "johnson does not regard instance variables as js properties" do
+    window.evaluate 'console.log("foo");'
+    window.evaluate 'console.log("foo");'
+  
+    assert window.evaluate('console.log')
+    assert_equal %w(foo foo), window.console.log.flatten
+  end
+  
+  test "calls to missing methods are treated like js object properties" do
+    window.evaluate 'console.log(document.foo)'
+    assert_equal nil, console.last_item
+    
+    window.evaluate 'document.foo = "bar"'
+    assert document.respond_to?(:foo)
+    assert_equal 'bar', document.foo
+  
+    window.evaluate 'console.log(document.foo)'
+    assert_equal 'bar', console.last_item
+  end
   
   test "global $ variable" do
     window.evaluate <<-js
