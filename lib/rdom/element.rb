@@ -40,7 +40,7 @@ module RDom
     end
 
     def className
-      libxml_read_attribute('class') || ''
+      libxml_read_attribute('class')
     end
 
     def className=(value)

@@ -24,12 +24,7 @@ end
 Module.send :include, RDom::Properties
 Class.send :include, RDom::Properties
 
-[
-  LibXML::XML::Document,
-  LibXML::XML::Node,
-  LibXML::XML::Attr,
-  LibXML::XML::Attributes
-].each do |const|
+[LibXML::XML::Document, LibXML::XML::Node, LibXML::XML::Attr, LibXML::XML::Attributes].each do |const|
   const.class_eval do
     include RDom::Decoration
     undef :id, :type

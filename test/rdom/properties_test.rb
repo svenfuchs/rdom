@@ -71,10 +71,13 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'foo', window.evaluate('links[0].getAttribute("title")')
   end
 
-  # TODO
-  # test 'js: given the title attribute is set: attributes.[attr_name] returns the attribute' do
-  #   assert_equal 'foo', window.evaluate('links[0].attributes.title.value')
-  # end
+  test 'ruby: given the title attribute is set: attributes.[attr_name] returns the attribute' do
+    assert_equal 'foo', links[0].attributes.title.value
+  end
+
+  test 'js: given the title attribute is set: attributes.[attr_name] returns the attribute' do
+    assert_equal 'foo', window.evaluate('links[0].attributes.title.value')
+  end
 
   test 'js: given the title attribute is an empty string: read via method call syntax returns an empty string' do
     assert_equal '', window.evaluate('links[1]["title"]')
@@ -88,9 +91,9 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal '', window.evaluate('links[1].getAttribute("title")')
   end
 
-  # test 'js: given the title attribute is an empty string: attributes.[attr_name] returns the attribute' do
-  #   assert_equal '', window.evaluate('links[1].attributes.title.value')
-  # end
+  test 'js: given the title attribute is an empty string: attributes.[attr_name] returns the attribute' do
+    assert_equal '', window.evaluate('links[1].attributes.title.value')
+  end
 
   test 'js: given the title attribute is not set: read via method call syntax returns an empty string' do
     assert_equal '', window.evaluate('links[2].title')
@@ -122,9 +125,9 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'foo', window.evaluate('links[0].getAttribute("name")')
   end
 
-  # test 'js: given the name attribute is set: attributes.[attr_name] returns the attribute' do
-  #   assert_equal 'foo', window.evaluate('links[0].attributes.name.value')
-  # end
+  test 'js: given the name attribute is set: attributes.[attr_name] returns the attribute' do
+    assert_equal 'foo', window.evaluate('links[0].attributes.name.value')
+  end
 
   test 'js: given the name attribute is an empty string: read via method call syntax returns an empty string' do
     assert_equal '', window.evaluate('links[1].name')
@@ -138,9 +141,9 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal '', window.evaluate('links[1].getAttribute("name")')
   end
 
-  # test 'js: given the name attribute is an empty string: attributes.[attr_name] returns the attribute' do
-  #   assert_equal '', window.evaluate('links[1].attributes.name.value')
-  # end
+  test 'js: given the name attribute is an empty string: attributes.[attr_name] returns the attribute' do
+    assert_equal '', window.evaluate('links[1].attributes.name.value')
+  end
 
   test 'js: given the name attribute is not set: read via method call syntax returns an empty string' do
     assert_equal '', window.evaluate('links[2].name')
@@ -172,8 +175,8 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'foo', window.evaluate('links[0].getAttribute("foo")')
   end
 
-  test 'js: given an attribute foo is set: attributes.[attr_name] returns nil' do
-    assert_nil window.evaluate('links[0].attributes.foo.value')
+  test 'js: given an attribute foo is set: attributes.[attr_name] returns the attribute value' do
+    assert_equal 'foo', window.evaluate('links[0].attributes.foo.value')
   end
 
   test 'js: given an attribute foo is an empty string: read via method call syntax returns nil' do
@@ -185,11 +188,11 @@ class PropertiesTest < Test::Unit::TestCase
   end
 
   test 'js: given an attribute foo is an empty string: getAttribute(attr_name) an empty string' do
-    assert_equal 'foo', window.evaluate('links[0].getAttribute("foo")')
+    assert_equal '', window.evaluate('links[1].getAttribute("foo")')
   end
 
-  test 'js: given an attribute foo is an empty string: attributes.[attr_name] returns nil' do
-    assert_nil window.evaluate('links[0].attributes.foo.value')
+  test 'js: given an attribute foo is an empty string: attributes.[attr_name] returns an empty string' do
+    assert_equal '', window.evaluate('links[1].attributes.foo.value')
   end
 
   test 'js: given an attribute foo is not set: read via method call syntax returns nil' do
@@ -240,9 +243,9 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'foo', window.evaluate('links[0].getAttribute("class")')
   end
 
-  # test 'js: given the class attribute is set: attributes["class"] returns the attribute' do
-  #   assert_equal 'foo', window.evaluate('links[0].attributes.class.value')
-  # end
+  test 'js: given the class attribute is set: attributes["class"] returns the attribute' do
+    assert_equal 'foo', window.evaluate('links[0].attributes.class.value')
+  end
 
   test 'js: given the class attribute is an empty string: read via method call syntax returns an empty string' do
     assert_equal '', window.evaluate('links[1].className')
@@ -256,16 +259,16 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal '', window.evaluate('links[1].getAttribute("class")')
   end
 
-  # test 'js: given the class attribute is an empty string: attributes.class returns the attribute' do
-  #   assert_equal '', window.evaluate('links[1].attributes.class.value')
-  # end
-
-  test 'js: given the class attribute is not set: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2].className')
+  test 'js: given the class attribute is an empty string: attributes.class returns an empty string' do
+    assert_equal '', window.evaluate('links[1].attributes.class.value')
   end
 
-  test 'js: given the class attribute is not set: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2]["className"]')
+  test 'js: given the class attribute is not set: read via method call syntax returns nil' do
+    assert_nil window.evaluate('links[2].className')
+  end
+
+  test 'js: given the class attribute is not set: read via hash access syntax returns nil' do
+    assert_nil window.evaluate('links[2]["className"]')
   end
 
   test 'js: given the class attribute is not set: getAttribute("class") returns nil' do
