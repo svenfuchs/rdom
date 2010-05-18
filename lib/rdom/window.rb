@@ -84,15 +84,15 @@ module RDom
       location.href
     end
 
-    # def location=(uri)
-    #   if location.href == uri
-    #     location.reload
-    #   elsif location.href == 'about:blank'
-    #     location.assign(uri)
-    #   else
-    #     location.replace(uri)
-    #   end
-    # end
+    def location=(uri)
+      if location.href == uri
+        location.reload
+      elsif location.href == 'about:blank'
+        location.assign(uri)
+      else
+        location.replace(uri)
+      end
+    end
 
     def navigator
       @navigator ||= Navigator.new
@@ -133,7 +133,7 @@ module RDom
       end
 
       def load_frame(node)
-        frame = Frame.new(node.getAttribute('name'), self)
+        frame = Frame.new(:parent => self, :name => node.getAttribute('name'))
         frame.location.href = normalize_uri(node.getAttribute('src')) if node.getAttribute('src')
         frames << frame
       end

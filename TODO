@@ -1,15 +1,14 @@
+jQuery.support.scriptEval
 execute <script> tags after appendChild
 execute scripts appended as text nodes to <script> tags
 parse styles
 
 make sure jQuery.makeArray() works
 
-clean up properties/attributes
+default values
 implement specified, e.g. in jquery: return (elem.attributes.value || {}).specified ? elem.value : elem.text;
 
-
 implement event default actions? or leave this to the user?
-jQuery.support.scriptEval
 
 
 "Node.compareDocumentPosition compares the position of the current node against another node in any other document"
