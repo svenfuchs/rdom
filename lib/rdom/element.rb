@@ -30,64 +30,68 @@ module RDom
     autoload :Th,       'rdom/element/th'
     autoload :Frame,    'rdom/element/frame'
     autoload :IFrame,   'rdom/element/iframe'
-  
+
     properties :tagName, :className, :innerHTML, :id, :title, :lang, :dir,
                :style, :documentElement
 
-    
+
     def tagName
       nodeName.upcase
     end
-    
+
     def className
       libxml_read_attribute('class') || ''
     end
-    
+
     def className=(value)
       libxml_write_attribute('class', value.to_s)
     end
-    
+
     def style
       libxml_read_attribute('style') || { }
     end
-  
+
     def innerHTML
       # child.to_s
       inner_xml
     end
-  
+
     def innerHTML=(html)
       children.each { |child| child.remove! }
       appendChild(DocumentFragment.parse(html)) unless html.nil? || html.empty?
     end
-  
+
     def getElementsByTagName(tag_name)
       find(".//#{tag_name}").to_a
     end
-  
+
     def hasAttribute(name)
       !!attributes.get_attribute(name)
     end
-  
+
     def getAttribute(name)
       # node = getAttributeNode(name)
       # node.value if node
       libxml_read_attribute(name)
     end
-  
+
     def getAttributeNode(name)
       attributes.get_attribute(name)
     end
-  
+
     def setAttribute(name, value)
       libxml_write_attribute(name, value)
     end
-  
+
     def setAttributeNode(attribute)
       LibXML::XML::Attr.new(self, attribute.name, attribute.value)
     end
-  
+
     def removeAttribute(name)
+      removeAttributeNode(name)
+    end
+
+    def removeAttributeNode(name)
       attribute = attributes.get_attribute(name)
       attribute.remove! if attribute
     end

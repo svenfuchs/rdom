@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class HtmlElementTest < Test::Unit::TestCase
+class ElementTest < Test::Unit::TestCase
   attr_reader :window, :document, :body, :div
   
   def setup
@@ -26,7 +26,6 @@ class HtmlElementTest < Test::Unit::TestCase
   
   test "ruby: innerHTML=", :ruby, :dom_0 do
     div.innerHTML = '<span>bar</span><span>baz</span>'
-    # TODO what's with the extra newlines and spaces?
     assert_equal "<div id=\"foo\">\n  <span>bar</span>\n  <span>baz</span>\n</div>", body.innerHTML
   end
   
@@ -54,11 +53,11 @@ class HtmlElementTest < Test::Unit::TestCase
   end
 
   test "ruby: getAttributeNode(name) retrieves the node representation of the named attribute from the current node", :ruby, :dom_1_core do
-    # TODO
+    assert_equal 'foo', div.getAttributeNode('id').value
   end
 
   test "js: getAttributeNode(name) retrieves the node representation of the named attribute from the current node", :js, :dom_1_core do
-    # TODO
+    assert_equal 'foo', window.evaluate("div.getAttributeNode('id').value")
   end
 
   test "ruby: setAttribute(name, value) sets the value of the named attribute from the current node", :ruby, :dom_1_core do
@@ -98,11 +97,13 @@ class HtmlElementTest < Test::Unit::TestCase
   end
 
   test "ruby: removeAttributeNode(attrNode) removes the node representation of the named attribute from the current node", :ruby, :dom_1_core do
-    # TODO
+    div.removeAttributeNode('id')
+    assert_equal '<div>FOO</div>', div.to_s
   end
 
   test "js: removeAttributeNode(attrNode) removes the node representation of the named attribute from the current node", :js, :dom_1_core do
-    # TODO
+    window.evaluate("div.removeAttribute('id')")
+    assert_equal '<div>FOO</div>', window.evaluate("div").to_s
   end
 
   test "ruby: getElementsByTagName(name) retrieves a set of all descendant elements, of a particular tag name, from the current element", :ruby, :dom_1_core do
@@ -218,23 +219,9 @@ class HtmlElementTest < Test::Unit::TestCase
 
   # test "ruby: hasAttributeNS(namespace, name) Check if the element has the specified attribute, in the specified namespace, or not", :ruby, :dom_2_core do
   # end
-
-
-  # DOM-Level-2-Events
-  # http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html
-  test "ruby: addEventListener(type, listener, useCapture) Register an event handler to a specific event type on the element" do
-    # TODO
-  end
-
-  test "ruby: removeEventListener(type, handler, useCapture) Removes an event listener from the element" do
-    # TODO
-  end
-
-  test "ruby: dispatchEvent(event) Dispatch an event to this node in the DOM" do
-    # TODO
-  end
 end
 
+# TODO
 
 # "clientHeight The inner height of an element"
 # "clientLeft The width of the left border of an element"
