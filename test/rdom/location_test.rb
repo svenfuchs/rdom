@@ -9,7 +9,7 @@ class LocationTest < Test::Unit::TestCase
     @google = 'http://www.google.com:80/search?q=foo#test'
     @github = 'http://github.com:80'
 
-    @window = RDom::Window.new('<html><body></body></html>', :url => google)
+    @window = RDom::Window.new(google)
     @location = window.location
     # @location = RDom::Location.new(RDom::Window.new)
     # location.href = google
@@ -157,80 +157,94 @@ class LocationTest < Test::Unit::TestCase
     assert_equal google, window.evaluate("location.toString()")
   end
 
-  # test "ruby: modifying the url's hash (fragment) loads the resulting url to the window", :ruby, :dom_0 do
-  #   # TODO these do not actually test what the test describes
-  #   location.hash = '#foo'
-  #   assert_equal 'foo', URI.parse(location.href).fragment
-  # end
-  #
-  # test "js: modifying the url's hash (fragment) loads the resulting url to the window", :js, :dom_0 do
-  #   # TODO these do not actually test what the test describes
-  #   location.hash = '#foo'
-  #   assert_equal 'foo', URI.parse(location.href).fragment
-  # end
-  #
-  # test "ruby: modifying the url's host loads the resulting url to the window", :ruby, :dom_0 do
-  #   location.host = 'github.com:3030'
-  #   assert_equal 'github.com', URI.parse(location.href).host
-  #   assert_equal 3030, URI.parse(location.href).port
-  # end
-  #
-  # test "js: modifying the url's host loads the resulting url to the window", :js, :dom_0 do
-  #   location.host = 'github.com:3030'
-  #   assert_equal 'github.com', URI.parse(location.href).host
-  #   assert_equal 3030, URI.parse(location.href).port
-  # end
-  #
-  # test "ruby: modifying the url's hostname loads the resulting url to the window", :ruby, :dom_0 do
-  #   location.hostname = 'github.com'
-  #   assert_equal 'github.com', URI.parse(location.href).host
-  # end
-  #
-  # test "js: modifying the url's hostname loads the resulting url to the window", :js, :dom_0 do
-  #   location.hostname = 'github.com'
-  #   assert_equal 'github.com', URI.parse(location.href).host
-  # end
-  #
-  # test "ruby: modifying the url's href loads the resulting url to the window", :ruby, :dom_0 do
-  #   url = 'http://github.com:8080/home?foo=bar#baz'
-  #   location.href = url
-  #   assert_equal url, location.href
-  # end
-  #
-  # test "js: modifying the url's href loads the resulting url to the window", :js, :dom_0 do
-  #   url = 'http://github.com:8080/home?foo=bar#baz'
-  #   location.href = url
-  #   assert_equal url, location.href
-  # end
-  #
-  # test "ruby: modifying the url's pathname loads the resulting url to the window", :ruby, :dom_0 do
-  #   location.pathname = 'home'
-  #   assert_equal '/home', URI.parse(location.href).path
-  # end
-  #
-  # test "js: modifying the url's pathname loads the resulting url to the window", :js, :dom_0 do
-  #   location.pathname = 'home'
-  #   assert_equal '/home', URI.parse(location.href).path
-  # end
-  #
-  # test "ruby: modifying the url's port loads the resulting url to the window", :ruby, :dom_0 do
-  #   location.port = '8080'
-  #   assert_equal 8080, URI.parse(location.href).port
-  # end
-  #
-  # test "js: modifying the url's port loads the resulting url to the window", :js, :dom_0 do
-  #   location.port = '8080'
-  #   assert_equal 8080, URI.parse(location.href).port
-  # end
-  #
-  # test "ruby: modifying the url's protocol loads the resulting url to the window", :ruby, :dom_0 do
-  #   location.protocol = 'https'
-  #   assert_equal 'https', URI.parse(location.href).scheme
-  # end
-  #
-  # test "js: modifying the url's protocol loads the resulting url to the window", :js, :dom_0 do
-  #   location.protocol = 'https'
-  #   assert_equal 'https', URI.parse(location.href).scheme
-  # end
+  test "ruby: modifying the url's hash (fragment)", :ruby, :dom_0 do
+    location.hash = '#foo'
+    assert_equal 'foo', URI.parse(location.href).fragment
+    # assert_equal 'foo', URI.parse(window.document.body.textContent).fragment # won't be passed through webmock
+  end
+  
+  test "js: modifying the url's hash (fragment) loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.hash = '#foo'")
+    assert_equal 'foo', URI.parse(location.href).fragment
+    # assert_equal 'foo', URI.parse(window.document.body.textContent).fragment # won't be passed through webmock
+  end
+  
+  test "ruby: modifying the url's host loads the resulting url to the window", :ruby, :dom_0 do
+    location.host = 'github.com:8080'
+    assert_equal 'github.com', URI.parse(location.href).host
+    assert_equal 'github.com', URI.parse(window.document.body.textContent).host
+    assert_equal 8080, URI.parse(location.href).port
+    assert_equal 8080, URI.parse(window.document.body.textContent).port
+  end
+  
+  test "js: modifying the url's host loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.host = 'github.com:8080'")
+    assert_equal 'github.com', URI.parse(location.href).host
+    assert_equal 'github.com', URI.parse(window.document.body.textContent).host
+    assert_equal 8080, URI.parse(location.href).port
+    assert_equal 8080, URI.parse(window.document.body.textContent).port
+  end
+  
+  test "ruby: modifying the url's hostname loads the resulting url to the window", :ruby, :dom_0 do
+    location.hostname = 'github.com'
+    assert_equal 'github.com', URI.parse(location.href).host
+    assert_equal 'github.com', URI.parse(window.document.body.textContent).host
+  end
+  
+  test "js: modifying the url's hostname loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.hostname = 'github.com'")
+    assert_equal 'github.com', URI.parse(location.href).host
+    assert_equal 'github.com', URI.parse(window.document.body.textContent).host
+  end
+  
+  test "ruby: modifying the url's href loads the resulting url to the window", :ruby, :dom_0 do
+    url = 'http://github.com:8080/home?foo=bar'
+    location.href = url
+    assert_equal url, location.href
+    assert_equal url, window.document.body.textContent
+  end
+  
+  test "js: modifying the url's href loads the resulting url to the window", :js, :dom_0 do
+    url = 'http://github.com:8080/home?foo=bar'
+    window.evaluate("location.href = '#{url}'")
+    assert_equal url, location.href
+    assert_equal url, window.document.body.textContent
+  end
+  
+  test "ruby: modifying the url's pathname loads the resulting url to the window", :ruby, :dom_0 do
+    location.pathname = 'home'
+    assert_equal '/home', URI.parse(location.href).path
+    assert_equal '/home', URI.parse(window.document.body.textContent).path
+  end
+  
+  test "js: modifying the url's pathname loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.pathname = 'home'")
+    assert_equal '/home', URI.parse(location.href).path
+    assert_equal '/home', URI.parse(window.document.body.textContent).path
+  end
+  
+  test "ruby: modifying the url's port loads the resulting url to the window", :ruby, :dom_0 do
+    location.port = '8080'
+    assert_equal 8080, URI.parse(location.href).port
+    assert_equal 8080, URI.parse(window.document.body.textContent).port
+  end
+  
+  test "js: modifying the url's port loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.port = '8080'")
+    assert_equal 8080, URI.parse(location.href).port
+    assert_equal 8080, URI.parse(window.document.body.textContent).port
+  end
+  
+  test "ruby: modifying the url's protocol loads the resulting url to the window", :ruby, :dom_0 do
+    location.protocol = 'https'
+    assert_equal 'https', URI.parse(location.href).scheme
+    assert_equal 'https', URI.parse(window.document.body.textContent).scheme
+  end
+  
+  test "js: modifying the url's protocol loads the resulting url to the window", :js, :dom_0 do
+    window.evaluate("location.protocol = 'https'")
+    assert_equal 'https', URI.parse(location.href).scheme
+    assert_equal 'https', URI.parse(window.document.body.textContent).scheme
+  end
 end
 
