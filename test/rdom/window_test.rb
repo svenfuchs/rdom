@@ -7,7 +7,7 @@ class WindowTest < Test::Unit::TestCase
 
   def setup
     @window = RDom::Window.new
-    window.location.instance_variable_set(:@uri, URI.parse('http://example.org')) # TODO
+    window.location.set('http://example.org')
   end
 
   test "load loads an html document", :implementation do

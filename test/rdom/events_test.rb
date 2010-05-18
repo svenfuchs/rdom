@@ -1,13 +1,15 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class EventsTest < Test::Unit::TestCase
-  attr_reader :window, :document #, :body
+  attr_reader :window, :document
 
   def setup
     @window = RDom::Window.new('<html><body><a id="foo" href="#"></a></body></html>')
     @document = window.document
-    # @body  = document.getElementsByTagName('body').first
   end
+
+  # DOM-Level-2-Events
+  # http://www.w3.org/TR/2000/REC-DOM-Level-2-Events-20001113/events.html
 
   # Each event has an EventTarget toward which the event is directed by the DOM
   # implementation. This EventTarget is specified in the Event's target

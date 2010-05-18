@@ -12,7 +12,7 @@ module RDom
       end
 
       def dispatchEvent(event)
-        raise 'event can not be nil' if event.nil? # TODO what's a better exception?
+        raise 'event can not be nil' if event.nil? # TODO raise a custom exception type
         if event.type.nil? || event.type.to_s.empty?
           raise RDom::EventException.new(RDom::EventException::UNSPECIFIED_EVENT_TYPE_ERR)
         end

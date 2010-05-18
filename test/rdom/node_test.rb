@@ -41,15 +41,51 @@ class NodeTest < Test::Unit::TestCase
   end
 
   test "ruby: Node.nodeValue returns the node's value (null for document)", :ruby, :dom_1_core do
+    window.load <<-html
+      <html>
+        <body>
+          <div>Foo</div>
+          <input name="input" value="value">
+          <!-- comment -->
+        </body>
+      </html>
+    html
+
+    document = window.document
+    input    = document.getElementsByTagName('input')[0]
+    div      = document.getElementsByTagName('div')[0]
+    comment  = document.body.lastChild
+
     assert_nil document.nodeValue
     assert_nil div.nodeValue
-    # TODO: attributes, comments, cdata
+    assert_nil input.nodeValue
+    assert_equal 'input', input.getAttributeNode('name').nodeValue
+    assert_equal ' comment ', comment.nodeValue
   end
 
   test "js: Node.nodeValue returns the node's value (null for document)", :js, :dom_1_core do
+    window.load <<-html
+      <html>
+        <body>
+          <div>Foo</div>
+          <input name="input" value="value">
+          <!-- comment -->
+        </body>
+      </html>
+    html
+
+    window.evaluate <<-js
+      document = window.document
+      input    = document.getElementsByTagName('input')[0]
+      div      = document.getElementsByTagName('div')[0]
+      comment  = document.body.lastChild
+    js
+
     assert_nil window.evaluate("document.nodeValue")
     assert_nil window.evaluate("div.nodeValue")
-    # TODO: attributes, comments, cdata
+    assert_nil window.evaluate("input.nodeValue")
+    assert_equal 'input', window.evaluate("input.getAttributeNode('name').nodeValue")
+    assert_equal ' comment ', window.evaluate("comment.nodeValue")
   end
 
   test "ruby: Node.nodeType returns a node type constant (9 for document)", :ruby, :dom_1_core do

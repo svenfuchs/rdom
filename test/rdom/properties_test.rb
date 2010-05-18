@@ -71,6 +71,7 @@ class PropertiesTest < Test::Unit::TestCase
     assert_equal 'foo', window.evaluate('links[0].getAttribute("title")')
   end
 
+  # TODO
   # test 'js: given the title attribute is set: attributes.[attr_name] returns the attribute' do
   #   assert_equal 'foo', window.evaluate('links[0].attributes.title.value')
   # end
@@ -226,8 +227,6 @@ class PropertiesTest < Test::Unit::TestCase
   #
   # test 'js: anchor["href"] returns "" for <a/>' do
   # end
-
-  # TODO special case className/class
 
   test 'js: given the class attribute is set: read via method call syntax to className returns the attribute value' do
     assert_equal 'foo', window.evaluate('links[0].className')
