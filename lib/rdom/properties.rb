@@ -1,11 +1,3 @@
-LibXML::XML::Node.class_eval do
-  alias :libxml_read_attribute :[]
-  alias :libxml_write_attribute :[]=
-  alias :libxml_name :name
-
-  undef :[], :[]=, :name
-end
-
 module RDom
   module Properties
     def properties(*names)
@@ -17,8 +9,8 @@ module RDom
     def define_property_accessors!
       self::PROPERTIES.each do |name|
         next if method_defined?(name) || method_defined?(:"#{name}=")
-        define_method(name) { libxml_read_attribute(name.to_s) || '' }
-        define_method(:"#{name}=") { |value| libxml_write_attribute(name.to_s, value.to_s) }
+        define_method(name) { getAttribute(name) || '' }
+        define_method(:"#{name}=") { |value| setAttribute(name, value) }
       end
     end
     

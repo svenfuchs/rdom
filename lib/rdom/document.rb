@@ -25,11 +25,11 @@ module RDom
     end
 
     def createElement(name)
-      import XML::Node.new(name)
+      import XML::Node.new(name.to_s)
     end
 
     def createAttribute(name)
-      Attribute.new(self, name)
+      Attribute.new(self, name.to_s)
     end
 
     def createComment(data)

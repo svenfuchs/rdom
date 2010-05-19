@@ -30,3 +30,12 @@ Class.send :include, RDom::Properties
     undef :id, :type
   end
 end
+
+LibXML::XML::Node.class_eval do
+  alias :node_name :name
+  undef :[], :[]=, :name
+end
+
+LibXML::XML::Attributes.class_eval do
+  undef :[], :[]=
+end

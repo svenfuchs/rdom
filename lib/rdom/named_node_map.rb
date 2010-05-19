@@ -5,7 +5,7 @@ module RDom
     properties :length
 
     def [](name)
-      getNamedItem(name) #.value
+      getNamedItem(name)
     end
 
     def key?(name)

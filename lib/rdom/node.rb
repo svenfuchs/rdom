@@ -22,7 +22,7 @@ module RDom
     
     # returns the node's name (#document for document)
     def nodeName
-      libxml_name.upcase
+      node_name.upcase
     end
 
     # returns the node's value (null for document)

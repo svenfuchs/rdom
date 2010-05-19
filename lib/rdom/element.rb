@@ -39,15 +39,15 @@ module RDom
     end
 
     def className
-      libxml_read_attribute('class')
+      getAttribute('class')
     end
 
     def className=(value)
-      libxml_write_attribute('class', value.to_s)
+      setAttribute('class', value.to_s)
     end
 
     def style
-      libxml_read_attribute('style') || { }
+      getAttribute('style') || { }
     end
 
     def innerHTML
@@ -69,34 +69,42 @@ module RDom
       find(".//#{tag_name}").to_a
     end
 
+    # https://developer.mozilla.org/en/DOM:element.getAttributeNode
+    # When called on an HTML element in a DOM flagged as an HTML document,
+    # getAttributeNode lower-cases its argument before proceeding.
+
     def hasAttribute(name)
-      !!attributes.get_attribute(name)
+      !!attributes.get_attribute(name.downcase)
     end
 
     def getAttribute(name)
-      # node = getAttributeNode(name)
-      # node.value if node
-      libxml_read_attribute(name)
+      node = getAttributeNode(name)
+      node.value if node
     end
 
     def getAttributeNode(name)
-      attributes.get_attribute(name)
+      attributes.get_attribute(name.to_s.downcase)
     end
 
     def setAttribute(name, value)
-      libxml_write_attribute(name, value)
+      node = getAttributeNode(name)
+      node ||= setAttributeNode(ownerDocument.createAttribute(name))
+      node.value = value
     end
 
     def setAttributeNode(attribute)
-      LibXML::XML::Attr.new(self, attribute.name, attribute.value)
+      removeAttributeNode(attribute.name)
+      node = LibXML::XML::Attr.new(self, attribute.name.downcase, attribute.value || '')
+      node.specified = false
+      node
     end
 
     def removeAttribute(name)
-      removeAttributeNode(name)
+      removeAttributeNode(name.downcase)
     end
 
     def removeAttributeNode(name)
-      attribute = attributes.get_attribute(name)
+      attribute = attributes.get_attribute(name.downcase)
       attribute.remove! if attribute
     end
   end

@@ -2,9 +2,6 @@ parse styles
 
 make sure jQuery.makeArray() works
 
-default values
-implement specified, e.g. in jquery: return (elem.attributes.value || {}).specified ? elem.value : elem.text;
-
 implement event default actions? or leave this to the user?
 
 
