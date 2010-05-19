@@ -1,6 +1,3 @@
-jQuery.support.scriptEval
-execute <script> tags after appendChild
-execute scripts appended as text nodes to <script> tags
 parse styles
 
 make sure jQuery.makeArray() works

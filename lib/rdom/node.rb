@@ -106,6 +106,7 @@ module RDom
       else
         child = doc.import(child) if doc && doc != child.doc # gosh. importing seems to alter the tree, somehow.
         self << child
+        Element::Script.process(child) if child.nodeName == "SCRIPT"
       end
       child
     end

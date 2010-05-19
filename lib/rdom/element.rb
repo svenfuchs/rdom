@@ -32,8 +32,7 @@ module RDom
     autoload :IFrame,   'rdom/element/iframe'
 
     properties :tagName, :className, :innerHTML, :id, :title, :lang, :dir,
-               :style, :documentElement
-
+               :style #, :documentElement
 
     def tagName
       nodeName.upcase
@@ -58,7 +57,12 @@ module RDom
 
     def innerHTML=(html)
       children.each { |child| child.remove! }
-      appendChild(DocumentFragment.parse(html)) unless html.nil? || html.empty?
+      unless html.nil? || html.empty?
+        DocumentFragment.parse(html).childNodes.each do |node|
+          node = doc.import(node) if doc && doc != node.doc
+          self << node
+        end
+      end
     end
 
     def getElementsByTagName(tag_name)

@@ -135,7 +135,9 @@ module RDom
       end
 
       def create_head_tag
-        documentElement.insertBefore(createElement('head'), documentElement.firstChild)
+        head = createElement('head')
+        documentElement.insertBefore(head, documentElement.firstChild)
+        head
       end
   end
 end

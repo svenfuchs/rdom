@@ -34,14 +34,6 @@ module RDom
       load(html, options) if html
     end
 
-    def log(line)
-      console.log(line)
-    end
-
-    def print(output)
-      p output
-    end
-
     def runtime
       @runtime ||= Johnson::Runtime.new.tap do |runtime|
         runtime['window']    = self
@@ -106,18 +98,24 @@ module RDom
       @console ||= Console.new
     end
 
+    def log(line)
+      console.log(line)
+    end
+
+    def print(output)
+      p output
+    end
+
     protected
 
       def load_document(html, url, options = {})
         flags = 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6
         @document = Document.new(self, html, options.merge(:url => url))
-        # @location ||= Location.new(self, options[:url]) if options[:url]
       end
 
       def load_scripts
         document.getElementsByTagName('script').each do |script|
-          src = script.getAttribute('src')
-          src && !src.empty? ? load_script(src) : evaluate(script.textContent)
+          process_script(script)
         end
       end
 
@@ -142,6 +140,11 @@ module RDom
         event = document.createEvent('Events')
         event.initEvent('load')
         dispatchEvent(event)
+      end
+      
+      def process_script(script)
+        src = script.getAttribute('src')
+        src && !src.empty? ? load_script(src) : evaluate(script.textContent)
       end
 
       def uri?(arg)
