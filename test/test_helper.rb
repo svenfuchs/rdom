@@ -1,4 +1,5 @@
 $: << File.expand_path('../../lib', __FILE__)
+$: << File.expand_path('../../vendor/css_parser/lib', __FILE__)
 
 require 'rubygems'
 require 'test/unit'

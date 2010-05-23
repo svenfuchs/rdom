@@ -8,36 +8,36 @@ module RDom
 
     include Decoration
 
-    properties :bubbles, :cancelable, :target, :currentTarget, :eventPhase, 
+    properties :bubbles, :cancelable, :target, :currentTarget, :eventPhase,
                :timeStamp, :type
-    
+
     # Used to indicate whether or not an event is a bubbling event. If the
     # event can bubble the value is true, else the value is false.
     attr_accessor :bubbles
-  
+
     # Used to indicate whether or not an event can have its default action
     # prevented. If the default action can be prevented the value is true,
     # else the value is false.
     attr_accessor :cancelable
-  
+
     # Used to indicate the EventTarget to which the event was originally
     # dispatched.
     attr_accessor :target
-  
+
     # Used to indicate the EventTarget whose EventListeners are currently
     # being processed. This is particularly useful during capturing and
     # bubbling.
     attr_accessor :currentTarget
-  
+
     # Used to indicate which phase of event flow is currently being evaluated.
     attr_accessor :eventPhase
-  
+
     # Used to specify the time (in milliseconds relative to the epoch) at
     # which the event was created. Due to the fact that some systems may not
     # provide this information the value of timeStamp may be not available for
     # all events. When not available, a value of 0 will be returned.
     attr_accessor :timeStamp
-  
+
     # The name of the event (case-insensitive). The name must be an XML name.
     attr_accessor :type
 
@@ -48,11 +48,11 @@ module RDom
     BUBBLING_PHASE  = :bubbling
 
     # internal use, how to other UAs implement these?
-    attr_reader :__cancelled, :__propagation_stopped
-                  
+    attr_reader :kind, :__cancelled, :__propagation_stopped
+
     def initialize(kind)
-      raise EventException.new(EventException::NOT_SUPPORTED_ERR) unless TYPES.include?(kind)
-      @kind = kind || raise('implementation or platform exception') # TODO what's a more sensible exception here?
+      @kind = kind
+      validate!
     end
 
     def initEvent(type, bubbles = true, cancelable = true)
@@ -72,5 +72,15 @@ module RDom
     def preventDefault
       @__cancelled = true
     end
+
+    protected
+
+      def validate!
+        if kind.nil? || kind.empty?
+          raise EventException.new(EventException::INVALID_EVENT_KIND_ERR)
+        elsif !TYPES.include?(kind)
+          raise EventException.new(EventException::NOT_SUPPORTED_ERR)
+        end
+      end
   end
 end

@@ -146,10 +146,9 @@ class JQueryTest < Test::Unit::TestCase
     assert !window.evaluate('jQuery.support.checkOn')
   end
   
-  # seems ok as jquery says webkit doesn't do this either
   test "jQuery.support.optSelected == false" do
     window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
-    assert !window.evaluate('jQuery.support.optSelected')
+    assert window.evaluate('jQuery.support.optSelected')
   end
   
   test "jQuery.support.parentNode" do
@@ -162,16 +161,14 @@ class JQueryTest < Test::Unit::TestCase
     assert window.evaluate('jQuery.support.deleteExpando')
   end
   
-  # seems ok as jquery says webkit doesn't do this either
   test "jQuery.support.checkClone == false" do
     window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
-    assert !window.evaluate('jQuery.support.checkClone')
+    assert window.evaluate('jQuery.support.checkClone')
   end
   
-  # TODO
   test "jQuery.support.scriptEval == false" do
     window.load('<html><head><script src="/jquery.js"></script></head><body></body></html>')
-    assert !window.evaluate('jQuery.support.scriptEval')
+    assert window.evaluate('jQuery.support.scriptEval')
   end
   
   test "jQuery.support.noCloneEvent" do

@@ -8,31 +8,31 @@ class JavascriptTest < Test::Unit::TestCase
   def setup
     @window = RDom::Window.new
     window.load("<html></html>")
-    
+
     @document = @window.document
     @console  = @window.console
   end
-  
+
   test "johnson does not regard instance variables as js properties" do
     window.evaluate 'console.log("foo");'
     window.evaluate 'console.log("foo");'
-  
+
     assert window.evaluate('console.log')
     assert_equal %w(foo foo), window.console.log.flatten
   end
-  
+
   test "calls to missing methods are treated like js object properties" do
     window.evaluate 'console.log(document.foo)'
     assert_equal nil, console.last_item
-    
+
     window.evaluate 'document.foo = "bar"'
     assert document.respond_to?(:foo)
     assert_equal 'bar', document.foo
-  
+
     window.evaluate 'console.log(document.foo)'
     assert_equal 'bar', console.last_item
   end
-  
+
   test "global $ variable" do
     window.evaluate <<-js
       jQuery = function(selector, context) {};
@@ -40,5 +40,15 @@ class JavascriptTest < Test::Unit::TestCase
       _$('');
     js
     assert_equal "function (selector, context) {\n}", window.evaluate('_$').to_s
+  end
+
+  test "calling a ruby method with an argument that is a javascript function" do
+    class << window; def foo(bar); end; end
+    assert_nothing_raised do
+      window.evaluate <<-js
+        jQuery = function(selector, context) {};
+        foo(jQuery)
+      js
+    end
   end
 end
