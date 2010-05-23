@@ -1,9 +1,11 @@
 require 'xml'
 require 'libxml'
+require 'treetop_css'
 
 module RDom
   autoload :Attr,             'rdom/attr'
   autoload :Attribute,        'rdom/attribute'
+  autoload :Css,              'rdom/css'
   autoload :Document,         'rdom/document'
   autoload :DocumentFragment, 'rdom/document_fragment'
   autoload :Decoration,       'rdom/decoration'
@@ -24,7 +26,11 @@ end
 Module.send :include, RDom::Properties
 Class.send :include, RDom::Properties
 
-[LibXML::XML::Document, LibXML::XML::Node, LibXML::XML::Attr, LibXML::XML::Attributes].each do |const|
+consts = [
+  LibXML::XML::Document, LibXML::XML::Node, LibXML::XML::Attr, LibXML::XML::Attributes,
+  # CssParser::RuleSet
+]
+consts.each do |const|
   const.class_eval do
     include RDom::Decoration
     undef :id, :type
@@ -38,4 +44,10 @@ end
 
 LibXML::XML::Attributes.class_eval do
   undef :[], :[]=
+end
+
+Exception.class_eval do
+  def js_property?(name)
+    name == :message
+  end
 end

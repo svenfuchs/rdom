@@ -2,10 +2,10 @@ module RDom
   module Node
     include Element, Event::Target
 
-    properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes, 
-               :firstChild, :lastChild, :previousSibling, :nextSibling, 
+    properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes,
+               :firstChild, :lastChild, :previousSibling, :nextSibling,
                :attributes, :ownerDocument, :textContent
-    
+
     def createDocumentFragment
       doc.import LibXML::XML::Node.new('#document_fragment')
     end
@@ -19,7 +19,7 @@ module RDom
     def nodeType
       node_type
     end
-    
+
     # returns the node's name (#document for document)
     def nodeName
       node_name.upcase
@@ -33,7 +33,7 @@ module RDom
     def nodeValue
       content if text? || comment? || cdata?
     end
-    
+
     def textContent
       content
     end
@@ -87,7 +87,7 @@ module RDom
         siblings = [next_child]
         siblings << next_child while next_child = next_child.next
         appendChild(new_child)
-        siblings.each { |sibling| appendChild(sibling) }
+        siblings.each { |sibling| self << sibling }
       else
         appendChild(new_child)
       end
@@ -101,14 +101,18 @@ module RDom
 
     # adds a node to the end of the list of children of a specified parent node
     def appendChild(child)
+      self << child
+      Element::Script.process(child) if child.nodeName == 'SCRIPT'
+      child
+    end
+
+    def <<(child)
       if child.nodeType == XML::Node::DOCUMENT_FRAG_NODE
         child.childNodes.each { |child| appendChild(child) }
       else
         child = doc.import(child) if doc && doc != child.doc # gosh. importing seems to alter the tree, somehow.
-        self << child
-        Element::Script.process(child) if child.nodeName == "SCRIPT"
+        super
       end
-      child
     end
 
     # removes a child node from the DOM
@@ -125,7 +129,7 @@ module RDom
     def cloneNode(deep = false)
       copy(deep)
     end
-    
+
     protected
 
       def ancestors

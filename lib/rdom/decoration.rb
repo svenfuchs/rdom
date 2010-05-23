@@ -2,16 +2,19 @@ require 'core_ext/string/titleize'
 
 module RDom
   class << self
-    def decorate(node)
-      case node
+    def decorate(object)
+      case object
       when LibXML::XML::Attr
-        node.extend(Attr)
+        object.extend(Attr)
       when LibXML::XML::Document
-        node.extend(Document)
+        object.extend(Document)
       when LibXML::XML::Node
-        decorate_node(node)
+        decorate_node(object)
       when LibXML::XML::Attributes
-        node.extend(NamedNodeMap)
+        object.extend(NamedNodeMap)
+      # when CssParser::RuleSet
+      #   object.extend(Css::Rule)
+      #   object.extend(Css::StyleRule)
       end
     end
 
@@ -20,6 +23,7 @@ module RDom
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
         node.extend(Element)
+        node.extend(Css::Element)
         node.extend(Element.const_get(node.nodeName.titleize)) rescue NameError
       end
     end
