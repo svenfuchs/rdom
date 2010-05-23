@@ -31,15 +31,15 @@ module RDom
     autoload :Frame,    'rdom/element/frame'
     autoload :IFrame,   'rdom/element/iframe'
 
-    properties :tagName, :className, :innerHTML
-    dom_attributes :id, :title, :lang, :dir, :style
+    properties :tagName, :className, :innerHTML, :style
+    dom_attributes :id, :title, :lang, :dir
 
     def tagName
       nodeName.upcase
     end
 
     def className
-      getAttribute('class')
+      getAttribute('class').to_s
     end
 
     def className=(value)
@@ -47,7 +47,11 @@ module RDom
     end
 
     def style
-      getAttribute('style') || { }
+      @style ||= Css::StyleDeclaration.new(self, getAttribute('style'))
+    end
+
+    def style=(value)
+      raise "read-only?"
     end
 
     def innerHTML
@@ -83,10 +87,13 @@ module RDom
     end
 
     def getAttributeNode(name)
-      attributes.get_attribute(name.to_s.downcase)
+      node = attributes.get_attribute(name.to_s.downcase)
+      node.decorate! if node
+      node
     end
 
     def setAttribute(name, value)
+      value = value == 'checked' || TrueClass === value if name.to_sym == :checked
       node = getAttributeNode(name)
       node ||= setAttributeNode(ownerDocument.createAttribute(name))
       node.value = value.to_s
@@ -100,12 +107,14 @@ module RDom
     end
 
     def removeAttribute(name)
-      removeAttributeNode(name.downcase)
+      attribute = removeAttributeNode(name.downcase)
+      attribute.value
     end
 
     def removeAttributeNode(name)
       attribute = attributes.get_attribute(name.downcase)
       attribute.remove! if attribute
+      attribute
     end
   end
 end

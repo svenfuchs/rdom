@@ -18,7 +18,7 @@ module RDom
     end
     
     def initialize_copy(copied)
-      children = copied.children.clone
+      self.children = copied.children.clone
     end
     
     def ownerDocument

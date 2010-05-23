@@ -6,7 +6,7 @@
 module RDom
   module Css
     class StyleDeclaration < Hash
-      undef :clear
+      undef :clear, :[], :[]=
 
       # https://developer.mozilla.org/en/DOM/CSS
       properties :azimuth, :background, :backgroundAttachment, :backgroundColor,
@@ -67,21 +67,21 @@ module RDom
 
       # Returns a property name.
       def item(ix)
-        self[keys[ix]]
+        self.fetch(keys[ix])
       end
 
       # Returns the property value.
       def getPropertyValue(name)
-        self[name.to_sym].value if key?(name)
+        self.fetch(name).value if key?(name)
       end
 
       # Returns the optional priority, "important".
       def getPropertyPriority(name)
-        self[name.to_sym].priority if key?(name)
+        self.fetch(name).priority if key?(name)
       end
 
       def setProperty(name, value, priority = '')
-        self[name.to_sym] = StyleProperty.new(name, value, priority)
+        self.store(name, StyleProperty.new(name, value, priority))
       end
 
       def removeProperty(name)
@@ -98,6 +98,14 @@ module RDom
       end
 
       protected
+      
+        def fetch(key)
+          super(key.to_sym)
+        end
+        
+        def store(key, value)
+          super(key.to_sym, value)
+        end
 
         def parse(css)
           PropertiesParser.new.parse(css).elements

@@ -1,6 +1,5 @@
 module RDom
   module Css
-    autoload :Element,          'rdom/css/element'
     autoload :Rule,             'rdom/css/rule'
     autoload :RuleList,         'rdom/css/rule_list'
     autoload :StyleDeclaration, 'rdom/css/style_declaration'

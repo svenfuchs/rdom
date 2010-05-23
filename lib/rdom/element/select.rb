@@ -5,7 +5,14 @@ module RDom
                  :disabled, :multiple, :name, :size, :tabIndex
 
       def selectedIndex
-        options.each_with_index { |option, ix| return ix unless option['selected'].empty? } && -1
+        if options.size == 1
+          options.first.setAttribute('selected', 'selected')
+          0
+        else
+          options.each_with_index do |option, ix| 
+            return ix if option.getAttribute('selected')
+          end && -1
+        end
       end
 
       # def selectedIndex=(index)

@@ -6,6 +6,10 @@ module RDom
                :firstChild, :lastChild, :previousSibling, :nextSibling,
                :attributes, :ownerDocument, :textContent
 
+    def initialize_copy(copied)
+      self.ownerDocument = copied.ownerDocument
+    end
+
     def createDocumentFragment
       doc.import LibXML::XML::Node.new('#document_fragment')
     end

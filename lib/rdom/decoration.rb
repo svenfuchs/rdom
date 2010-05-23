@@ -12,9 +12,6 @@ module RDom
         decorate_node(object)
       when LibXML::XML::Attributes
         object.extend(NamedNodeMap)
-      # when CssParser::RuleSet
-      #   object.extend(Css::Rule)
-      #   object.extend(Css::StyleRule)
       end
     end
 
@@ -23,7 +20,6 @@ module RDom
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
         node.extend(Element)
-        node.extend(Css::Element)
         node.extend(Element.const_get(node.nodeName.titleize)) rescue NameError
       end
     end

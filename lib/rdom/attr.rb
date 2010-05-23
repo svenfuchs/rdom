@@ -8,7 +8,13 @@ module RDom
     end
 
     def value
-      super
+      case value = super
+      when 'true'
+        value = true
+      when 'false'
+        value = false
+      end
+      [:checked, :selected, :readonly].include?(name.to_sym) ? !!value : value.to_s
     end
 
     def value=(value)
