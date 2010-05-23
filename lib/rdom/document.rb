@@ -18,7 +18,7 @@ module RDom
 
     properties :nodeType, :nodeName, :nodeValue, :documentElement, :defaultView,
                :location, :URL, :referrer, :domain, :title, :body, :images,
-               :links, :forms, :anchors
+               :links, :forms, :anchors, :styleSheets
 
     def createDocumentFragment
       DocumentFragment.new(self)
@@ -125,6 +125,12 @@ module RDom
 
     def importNode(node)
       import node.cloneNode(true)
+    end
+    
+    def styleSheets
+      find('//style').inject([]) do |style_sheets, tag|
+        style_sheets << Css::StyleSheet.parse(tag.textContent)
+      end
     end
 
     protected

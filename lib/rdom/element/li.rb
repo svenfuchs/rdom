@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Li
-      properties :type, :value
+      dom_attributes :type, :value
     end
   end
 end

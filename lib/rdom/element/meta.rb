@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Meta
-      properties :content, :httpEquiv, :name, :scheme
+      dom_attributes :content, :httpEquiv, :name, :scheme
     end
   end
 end

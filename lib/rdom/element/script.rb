@@ -7,12 +7,12 @@ module RDom
         end
       end
 
-      properties :text, :htmlFor, :event, :charset, :defer, :src, :type
+      dom_attributes :text, :htmlFor, :event, :charset, :defer, :src, :type
 
-      def appendChild(node)
-        super
-        Element::Script.process(node)
-      end
+      # def appendChild(node)
+      #   super
+      #   Element::Script.process(node)
+      # end
     end
   end
 end

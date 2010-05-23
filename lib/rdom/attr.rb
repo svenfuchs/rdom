@@ -1,6 +1,6 @@
 module RDom
   module Attr
-    properties :name, :value, :nodeValue, :specified, :ownerElement
+    properties :name, :value, :nodeType, :nodeValue, :specified, :ownerElement
 
     # TODO gotta fix this: we need to define :name and :value to keep Properties from defining accessors
     def name
@@ -13,7 +13,11 @@ module RDom
 
     def value=(value)
       self.specified = false
-      super
+      super(value.to_s)
+    end
+    
+    def nodeType
+      LibXML::XML::Node::ATTRIBUTE_NODE
     end
 
     def nodeValue

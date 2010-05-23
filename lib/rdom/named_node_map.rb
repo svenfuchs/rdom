@@ -23,9 +23,8 @@ module RDom
       node.setAttributeNode(item)
     end
 
-    # removes a node specified by name. If the removed node is an Attr with a default value it is immediately replaced
+    # removes a node specified by name
     def removeNamedItem(name)
-      # TODO default values!
       getNamedItem(name).remove!
     end
 

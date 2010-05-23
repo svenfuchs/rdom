@@ -18,7 +18,7 @@ module RDom
                :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX,
                :screenY, :screenLeft, :screenTop
 
-    attr_accessor *PROPERTIES
+    attr_accessor *property_names
 
     def initialize(*args)
       options  = args.last.is_a?(Hash) ? args.pop : {}
@@ -105,6 +105,10 @@ module RDom
     def print(output)
       p output
     end
+    
+    def p_inspect(object)
+      puts "<#{object.class}##{object.object_id}>"
+    end
 
     protected
 
@@ -145,6 +149,10 @@ module RDom
       def process_script(script)
         src = script.getAttribute('src')
         src && !src.empty? ? load_script(src) : evaluate(script.textContent)
+        # if script.textContent == '1 == 1'
+        #   evaluate('p_inspect(jQuery)')
+        #   # evaluate('print(jQuery || "broken")')
+        # end
       end
 
       def uri?(arg)

@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Style
-      properties :disabled, :media, :type
+      dom_attributes :disabled, :media, :type
     end
   end
 end

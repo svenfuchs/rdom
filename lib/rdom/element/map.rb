@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Map
-      properties :areas, :name
+      dom_attributes :areas, :name
     end
   end
 end

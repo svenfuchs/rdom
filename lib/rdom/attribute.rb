@@ -4,7 +4,7 @@ module RDom
     
     properties :nodeType, :document, :name, :value
 
-    attr_accessor *PROPERTIES
+    attr_accessor *property_names
     
     def initialize(document, name)
       @name = name

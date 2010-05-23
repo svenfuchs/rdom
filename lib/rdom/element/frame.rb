@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Frame
-      properties :frameBorder, :longDesc, :marginHeight, :marginWidth, :name,
+      dom_attributes :frameBorder, :longDesc, :marginHeight, :marginWidth, :name,
                  :noResize, :scrolling, :src
     end
   end

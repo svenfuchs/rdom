@@ -31,8 +31,8 @@ module RDom
     autoload :Frame,    'rdom/element/frame'
     autoload :IFrame,   'rdom/element/iframe'
 
-    properties :tagName, :className, :innerHTML, :id, :title, :lang, :dir,
-               :style #, :documentElement
+    properties :tagName, :className, :innerHTML
+    dom_attributes :id, :title, :lang, :dir, :style
 
     def tagName
       nodeName.upcase
@@ -89,7 +89,7 @@ module RDom
     def setAttribute(name, value)
       node = getAttributeNode(name)
       node ||= setAttributeNode(ownerDocument.createAttribute(name))
-      node.value = value
+      node.value = value.to_s
     end
 
     def setAttributeNode(attribute)

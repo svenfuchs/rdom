@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Pre
-      properties :width
+      dom_attributes :width
     end
   end
 end

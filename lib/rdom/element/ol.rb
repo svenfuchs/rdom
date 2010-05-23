@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Ol
-      properties :compact, :start, :type
+      dom_attributes :compact, :start, :type
     end
   end
 end

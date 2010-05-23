@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Select
-      properties :type, :selectedIndex, :value, :length, :form, :options,
+      dom_attributes :type, :selectedIndex, :value, :length, :form, :options,
                  :disabled, :multiple, :name, :size, :tabIndex
 
       def selectedIndex

@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Th
-      properties :align, :ch, :chOff, :vAlign, :rows
+      dom_attributes :align, :ch, :chOff, :vAlign, :rows
     end
   end
 end

@@ -102,15 +102,21 @@ class NodeTest < Test::Unit::TestCase
     assert_equal 11, LibXML::XML::Node::DOCUMENT_FRAG_NODE
     assert_equal 12, LibXML::XML::Node::NOTATION_NODE
 
-    assert_equal 9, document.nodeType
     assert_equal 1, div.nodeType
-    # TODO: attributes, comments, cdata, ...
+    assert_equal 2, div.getAttributeNode('id').nodeType
+    assert_equal 3, div.firstChild.nodeType
+    assert_equal 8, document.createComment('comment').nodeType
+    assert_equal 9, document.nodeType
+    assert_equal 11, document.createDocumentFragment.nodeType
   end
 
   test "js: Node.nodeType returns a node type constant (9 for document)", :js, :dom_1_core do
-    assert_equal 9, window.evaluate("document.nodeType")
     assert_equal 1, window.evaluate("div.nodeType")
-    # TODO: attributes, comments, cdata, ...
+    assert_equal 2, window.evaluate("div.getAttributeNode('id').nodeType")
+    assert_equal 3, window.evaluate("div.firstChild.nodeType")
+    assert_equal 8, window.evaluate("document.createComment('comment').nodeType")
+    assert_equal 9, window.evaluate("document.nodeType")
+    assert_equal 11, window.evaluate("document.createDocumentFragment().nodeType")
   end
 
   test "ruby: Node.parentNode returns the parent of the specified node in the DOM tree (null for document)", :ruby, :dom_1_core do
@@ -245,12 +251,12 @@ class NodeTest < Test::Unit::TestCase
 
   test "ruby: Node.hasChildNodes returns a Boolean value indicating whether the current element has child nodes or not", :ruby, :dom_1_core do
     assert body.hasChildNodes
-    # TODO test an attribute
+    assert !div.firstChild.hasChildNodes
   end
 
   test "js: Node.hasChildNodes returns a Boolean value indicating whether the current element has child nodes or not", :js, :dom_1_core do
     assert window.evaluate("body.hasChildNodes()")
-    # TODO test an attribute
+    assert window.evaluate("!div.firstChild.hasChildNodes()")
   end
 
   test "ruby: Node.cloneNode makes a copy of a node or document", :ruby, :dom_1_core do

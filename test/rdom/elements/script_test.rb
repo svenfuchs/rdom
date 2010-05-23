@@ -14,10 +14,10 @@ class ScriptTest < Test::Unit::TestCase
     @script   = window.evaluate("script")
   end
 
-  test "ruby: appending a text node to a script tag evaluates the text", :ruby do
-    script.appendChild(document.createTextNode('document.title = "FOO"'))
-    assert_equal 'FOO', document.title
-  end
+  # test "ruby: appending a text node to a script tag evaluates the text", :ruby do
+  #   script.appendChild(document.createTextNode('document.title = "FOO"'))
+  #   assert_equal 'FOO', document.title
+  # end
   
   test "ruby: appending a script element with a body evaluates the script", :ruby do
     script = document.createElement('script');

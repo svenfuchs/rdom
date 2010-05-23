@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Fieldset
-      properties :form
+      dom_attributes :form
     end
   end
 end

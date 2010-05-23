@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Param
-      properties :name, :type, :value, :valueType
+      dom_attributes :name, :type, :value, :valueType
     end
   end
 end

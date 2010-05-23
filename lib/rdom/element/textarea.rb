@@ -1,7 +1,7 @@
 module RDom
   module Element
     module Textarea
-      properties :rowIndex, :sectionRowIndex, :cells, :align, :bgColor, :ch,
+      dom_attributes :rowIndex, :sectionRowIndex, :cells, :align, :bgColor, :ch,
                  :chOff, :vAlign
     end
   end
