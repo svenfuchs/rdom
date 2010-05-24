@@ -1,39 +1,33 @@
-# http://www.w3.org/TR/html401/struct/tables.html#edef-TR
-# <!ELEMENT TR       - O (TH|TD)+        -- table row -->
-# <!ATTLIST TR                           -- table row --
+# http://www.w3.org/TR/html401/struct/tables.html#edef-THEAD
+# <!ELEMENT THEAD    - O (TR)+           -- table header -->
+# <!ATTLIST (THEAD|TBODY|TFOOT)          -- table section --
 #   %attrs;                              -- %coreattrs, %i18n, %events --
 #   %cellhalign;                         -- horizontal alignment in cells --
 #   %cellvalign;                         -- vertical alignment in cells --
 #   >
-#
-# http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-6986576
-# interface HTMLTableRowElement : HTMLElement {
-#   // Modified in DOM Level 2:
-#   readonly attribute long            rowIndex;
-#   // Modified in DOM Level 2:
-#   readonly attribute long            sectionRowIndex;
-#   // Modified in DOM Level 2:
-#   readonly attribute HTMLCollection  cells;
+# 
+# http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-67417573
+# interface HTMLTableSectionElement : HTMLElement {
 #            attribute DOMString       align;
-#            attribute DOMString       bgColor;
 #            attribute DOMString       ch;
 #            attribute DOMString       chOff;
 #            attribute DOMString       vAlign;
+#   readonly attribute HTMLCollection  rows;
 #   // Modified in DOM Level 2:
-#   HTMLElement        insertCell(in long index)
+#   HTMLElement        insertRow(in long index)
 #                                         raises(DOMException);
 #   // Modified in DOM Level 2:
-#   void               deleteCell(in long index)
+#   void               deleteRow(in long index)
 #                                         raises(DOMException);
 # };
 module RDom
   module Element
-    module Tr
+    module Thead
       include Element, Node
 
-      html_attributes :bgColor, :vAlign
-
-      properties :rowIndex, :sectionRowIndex, :cells, :ch, :chOff
+      html_attributes :vAlign
+      
+      properties :ch, :chOff, :rows
 
       def ch
         getAttribute('char').to_s
@@ -50,12 +44,10 @@ module RDom
       def chOff=(value)
         setAttribute('charOff', value.to_s)
       end
-
-      def cells
-        find('.//th|.//td').to_a
+      
+      def rows
+        find('.//tr').to_s
       end
-
-      # TODO rowIndes, sectionRowIndex, insertCell, deleteCell
     end
   end
 end

@@ -5,6 +5,7 @@ require 'treetop_css'
 module RDom
   autoload :Attr,             'rdom/attr'
   autoload :Attribute,        'rdom/attribute'
+  autoload :Attributes,       'rdom/attributes'
   autoload :Css,              'rdom/css'
   autoload :Document,         'rdom/document'
   autoload :DocumentFragment, 'rdom/document_fragment'
@@ -12,7 +13,6 @@ module RDom
   autoload :Element,          'rdom/element'
   autoload :Event,            'rdom/event'
   autoload :Location,         'rdom/location.rb'
-  autoload :NamedNodeMap,     'rdom/named_node_map'
   autoload :Node,             'rdom/node'
   autoload :NodeList,         'rdom/node_list'
   autoload :Properties,       'rdom/properties'
@@ -23,12 +23,15 @@ module RDom
     XML::Parser::Options::NOWARNING
 end
 
-Module.send :include, RDom::Properties
 Class.send :include, RDom::Properties
+Module.send :include, RDom::Properties
+Kernel.send :alias_method, :ruby_class, :class
 
 consts = [
-  LibXML::XML::Document, LibXML::XML::Node, LibXML::XML::Attr, LibXML::XML::Attributes,
-  # CssParser::RuleSet
+  LibXML::XML::Document, 
+  LibXML::XML::Node, 
+  LibXML::XML::Attr, 
+  LibXML::XML::Attributes
 ]
 consts.each do |const|
   const.class_eval do
@@ -37,13 +40,14 @@ consts.each do |const|
   end
 end
 
-LibXML::XML::Node.class_eval do
-  alias :node_name :name
-  undef :[], :[]=, :name
+LibXML::XML::Attributes.class_eval do
+  undef :[], :[]=, :class
 end
 
-LibXML::XML::Attributes.class_eval do
-  undef :[], :[]=
+LibXML::XML::Node.class_eval do
+  # alias :node_text :text
+  alias :node_name :name
+  undef :[], :[]=, :name, :class
 end
 
 Exception.class_eval do

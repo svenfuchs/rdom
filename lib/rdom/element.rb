@@ -1,43 +1,24 @@
 module RDom
   module Element
-    autoload :A,        'rdom/element/a'
-    autoload :Link,     'rdom/element/link'
-    autoload :Meta,     'rdom/element/meta'
-    autoload :Style,    'rdom/element/style'
-    autoload :Body,     'rdom/element/body'
-    autoload :Form,     'rdom/element/form'
-    autoload :Select,   'rdom/element/select'
-    autoload :Option,   'rdom/element/option'
-    autoload :Input,    'rdom/element/input'
-    autoload :Textarea, 'rdom/element/textarea'
-    autoload :Button,   'rdom/element/button'
-    autoload :Label,    'rdom/element/label'
-    autoload :Fieldset, 'rdom/element/fieldset'
-    autoload :Legend,   'rdom/element/legend'
-    autoload :Ul,       'rdom/element/ul'
-    autoload :Ol,       'rdom/element/ol'
-    autoload :Li,       'rdom/element/li'
-    autoload :Pre,      'rdom/element/pre'
-    autoload :Image,    'rdom/element/image'
-    autoload :Object,   'rdom/element/object'
-    autoload :Param,    'rdom/element/param'
-    autoload :Map,      'rdom/element/map'
-    autoload :Area,     'rdom/element/area'
-    autoload :Script,   'rdom/element/script'
-    autoload :Table,    'rdom/element/table'
-    autoload :Tr,       'rdom/element/tr'
-    autoload :Td,       'rdom/element/td'
-    autoload :Th,       'rdom/element/th'
-    autoload :Frame,    'rdom/element/frame'
-    autoload :IFrame,   'rdom/element/iframe'
+    Dir[File.expand_path('../element/*.rb', __FILE__)].each do |file|
+      autoload File.basename(file, '.rb').titleize.to_sym, file
+    end
+    
+    ATTRS_CORE   = [:id, :style, :title, :class]
+    ATTRS_I18N   = [:lang, :dir]
+    ATTRS_EVENTS = [:onclick, :ondblclick, :onmousedown, :onmouseup, :onmouseover, 
+                    :onmousemove, :onkeypress, :onkeydown, :onkeyup]
 
-    properties :tagName, :className, :innerHTML, :style
-    dom_attributes :id, :title, :lang, :dir
+    html_attributes :align, *ATTRS_CORE + ATTRS_I18N + ATTRS_EVENTS
+    properties :tagName, :className, :innerHTML
 
     def tagName
       nodeName.upcase
     end
 
+    # # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-213157251
+    # The class attribute of the HTML elements collides with class definitions
+    # naming conventions and is renamed className.
     def className
       getAttribute('class').to_s
     end
@@ -47,9 +28,9 @@ module RDom
     end
 
     def style
-      @style ||= Css::StyleDeclaration.new(self, getAttribute('style'))
+      getAttribute('style') || Css::StyleDeclaration.new(self, '')
     end
-
+    
     def style=(value)
       raise "read-only?"
     end
@@ -87,7 +68,7 @@ module RDom
     end
 
     def getAttributeNode(name)
-      node = attributes.get_attribute(name.to_s.downcase)
+      node = attributes.getNamedItem(name.to_s.downcase)
       node.decorate! if node
       node
     end
@@ -108,7 +89,7 @@ module RDom
 
     def removeAttribute(name)
       attribute = removeAttributeNode(name.downcase)
-      attribute.value
+      attribute.value if attribute
     end
 
     def removeAttributeNode(name)

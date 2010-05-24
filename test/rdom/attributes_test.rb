@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class NamedNodeMapTest < Test::Unit::TestCase
+class AttributesTest < Test::Unit::TestCase
   attr_reader :window, :document, :body, :div
 
   def setup

@@ -1,5 +1,5 @@
 module RDom
-  module NamedNodeMap
+  module Attributes
     include Decoration
 
     properties :length
@@ -14,7 +14,9 @@ module RDom
 
     # retrieves a node specified by name
     def getNamedItem(name)
-      detect { |item| item.name == name }
+      item = get_attribute(name)
+      item = Attribute.new(self, 'style', Css::StyleDeclaration.new(self, item.value)) if item && name == 'style'
+      item
     end
 
     # adds a node using its nodeName attribute
@@ -39,7 +41,7 @@ module RDom
     end
 
     def method_missing(name, *args)
-      self.get_attribute(name) || super
+      self.getNamedItem(name) || super
     end
   end
 end

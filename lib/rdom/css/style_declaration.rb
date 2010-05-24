@@ -34,7 +34,7 @@ module RDom
                  :verticalAlign, :visibility, :voiceFamily, :volume, :whiteSpace, :widows,
                  :width, :wordSpacing, :wordWrap, :zIndex
 
-      @property_names.each do |name|
+      property_names.each do |name|
         define_method(name) { getPropertyValue(name) || '' }
         define_method(:"#{name}=") { |value| setProperty(name, value) }
       end

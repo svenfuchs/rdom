@@ -1,3 +1,30 @@
+attributes:
+  
+  form
+  
+  is :disabled an html dom attribute?
+  
+  :onfocus, :onblur, ... => :onFocus, :onBlur, ...?
+
+  httpEquiv must map to http-equiv
+  
+  # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-213157251
+  1.6.2. Naming Exceptions
+  To avoid namespace conflicts, two attributes with the same name as a keyword
+  in one of our chosen binding languages were prefixed. The for attribute of the
+  LABEL and SCRIPT elements collides with loop construct naming conventions and
+  is renamed htmlFor. The class attribute of the HTML elements collides with
+  class definitions naming conventions and is renamed className.
+
+
+
+
+
+some of the unit tests in jquery/attributes.js and manipulation.js are 
+segfaulting like crazy ... wtf
+jquery/selectors.js nth-child tests run into endless loops
+
+
 "Node.compareDocumentPosition(otherNode) compares the position of the current node against another node in any other document"
 
 "Element.clientHeight The inner height of an element"

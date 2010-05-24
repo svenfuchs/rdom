@@ -41,7 +41,6 @@ module RDom
     def textContent
       content
     end
-    alias :text :textContent
 
     # returns a collection of attributes of the given element
     def attributes

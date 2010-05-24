@@ -12,6 +12,7 @@ module RDom
       end
 
       def parse(html)
+        html = '<html />' if html.nil? || html.empty?
         LibXML::XML::HTMLParser.string(html, :options => HTML_PARSE_OPTIONS).parse
       end
     end
@@ -85,7 +86,7 @@ module RDom
     end
 
     def getElementById(id)
-      find_first(".//*[@id='#{id}']")
+      find_first("//*[@id='#{id}']")
     end
 
     def getElementsByName(name)

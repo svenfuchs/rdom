@@ -6,12 +6,12 @@ module RDom
       case object
       when LibXML::XML::Attr
         object.extend(Attr)
+      when LibXML::XML::Attributes
+        object.extend(Attributes)
       when LibXML::XML::Document
         object.extend(Document)
       when LibXML::XML::Node
         decorate_node(object)
-      when LibXML::XML::Attributes
-        object.extend(NamedNodeMap)
       end
     end
 
@@ -19,8 +19,8 @@ module RDom
       node.extend(Node)
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
-        node.extend(Element)
-        node.extend(Element.const_get(node.nodeName.titleize)) rescue NameError
+        extension = Element.const_get(node.nodeName.titleize) rescue Element
+        node.extend(extension)
       end
     end
   end

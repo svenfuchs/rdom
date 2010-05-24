@@ -1,12 +1,21 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class PropertiesTest < Test::Unit::TestCase
-  attr_reader :window, :document, :links
+  TEST_ALL_ELEMENTS_PROPERTIES = false
 
+  attr_reader :window, :document, :links
+  
   def setup
+    stub_request(:any, /./).to_return { |request| { :body => '' } }
+
     @window = RDom::Window.new
     window.load(File.expand_path('../../fixtures/properties.html', __FILE__), :url => 'http://example.org')
+    window.evaluate('function find_tag(tag_name) { return window.document.getElementsByTagName(tag_name)[0]; }')
     @links = window.evaluate('links = document.getElementsByTagName("a");')
+  end
+  
+  def find_tag(tag_name)
+    window.document.getElementsByTagName(tag_name)[0]
   end
 
   test "js: attribute values written using . show up in the markup" do
@@ -57,160 +66,225 @@ class PropertiesTest < Test::Unit::TestCase
     assert_nil window.evaluate('links[0].attributes.nodeName')
   end
 
-  # standard html attribute: title
-
-  test 'js: given the title attribute is set: read via method call syntax returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].title')
+  # standard html attributes
+  
+  def load_html_tag_with_attribute(tag, attribute = nil, value = nil)
+    attribute = "#{attribute}=\"#{value}\"" if attribute
+    html = case tag
+    when 'head'
+      "<html><head #{attribute}></head></html>"
+    when 'body'
+      "<html><body #{attribute}></body></html>"
+    else
+      "<html><body><#{tag} #{attribute} /></body></html>"
+    end
+    window.load(html)
   end
 
-  test 'js: given the title attribute is set: read via hash access syntax returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0]["title"]')
+  SKIP_ATTRIBUTES = [:checked, :selected, :readOnly] # these behave differently
+
+  def self.test_tags(*tag_names)
+    tag_names.each { |tag_name| test_tag(tag_name) }
+  end
+  
+  def self.test_tag(tag_name)
+    attributes = RDom::Element.const_get(tag_name.titleize).ancestors.uniq.map do |const|
+      const.const_defined?(:HTML_ATTRIBUTES) ? const.const_get(:HTML_ATTRIBUTES) : []
+    end.flatten.uniq
+    attributes += [:className]
+
+    attributes.each do |attribute|
+      next if SKIP_ATTRIBUTES.include?(attribute)
+      attribute = attribute.to_s
+      test_attribute(tag_name, attribute, attribute == 'className' ? 'class' : nil)
+    end
+  end
+  
+  def self.test_attribute(tag_name, dom_name, html_name = nil)
+    html_name ||= dom_name.to_s.downcase
+    html_value  = 'foo'
+    expect_value     = 'foo'
+    empty_value      = ''
+
+    if %w(href src).include?(dom_name)
+      html_value = "http://example.org/#{html_value}" 
+      expect_value    = html_value
+    elsif dom_name == 'style'
+      html_value = 'font-size: 1px;'
+      empty_value     = {}
+      expect_value    = RDom::Css::StyleDeclaration.new(nil, html_value)
+    end
+
+    test "js: #{tag_name} - given the #{dom_name} attribute is set: element.#{dom_name} returns the string value" do
+      load_html_tag_with_attribute(tag_name, html_name, html_value)
+      assert_equal expect_value, window.evaluate("find_tag('#{tag_name}').#{dom_name}")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is set: element['#{dom_name}'] returns the string value" do
+      load_html_tag_with_attribute(tag_name, html_name, html_value)
+      assert_equal expect_value, window.evaluate("find_tag('#{tag_name}')['#{dom_name}']")
+    end
+
+    test "js: #{tag_name} - given the #{dom_name} attribute is set: element.getAttribute('#{html_name}') returns the string value" do
+      load_html_tag_with_attribute(tag_name, html_name, html_value)
+      assert_equal expect_value, window.evaluate("find_tag('#{tag_name}').getAttribute('#{html_name}')")
+    end
+
+    test "js: #{tag_name} - given the #{dom_name} attribute is set: element.attributes.#{html_name} returns the attribute" do
+      load_html_tag_with_attribute(tag_name, html_name, html_value)
+      assert_equal expect_value, window.evaluate("find_tag('#{tag_name}').attributes.#{html_name}").value
+    end
+
+    test "js: #{tag_name} - given the #{dom_name} attribute is set: element.attributes['#{html_name}'] returns the attribute" do
+      load_html_tag_with_attribute(tag_name, html_name, html_value)
+      assert_equal expect_value, window.evaluate("find_tag('#{tag_name}').attributes['#{html_name}']").value
+    end
+
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.#{dom_name} returns an empty #{empty_value.class.name}" do
+      load_html_tag_with_attribute(tag_name, html_name, '')
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').#{dom_name}")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element['#{dom_name}'] returns an empty #{empty_value.class.name}" do
+      load_html_tag_with_attribute(tag_name, html_name, '')
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}')['#{dom_name}']")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.getAttribute('#{html_name}') returns an empty #{empty_value.class.name}" do
+      load_html_tag_with_attribute(tag_name, html_name, '')
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').getAttribute('#{html_name}')")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.attributes.#{html_name} returns the attribute" do
+      load_html_tag_with_attribute(tag_name, html_name, '')
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').attributes.#{html_name}").value
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.attributes['#{html_name}'] returns the attribute" do
+      load_html_tag_with_attribute(tag_name, html_name, '')
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').attributes['#{html_name}']").value
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is not set: element.#{dom_name} returns an empty string" do
+      load_html_tag_with_attribute(tag_name)
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').#{dom_name}")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is not set: element['#{dom_name}'] returns an empty string" do
+      load_html_tag_with_attribute(tag_name)
+      assert_equal empty_value, window.evaluate("find_tag('#{tag_name}')['#{dom_name}']")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is not set: element.getAttribute('#{html_name}') returns nil" do
+      load_html_tag_with_attribute(tag_name)
+      assert_nil window.evaluate("find_tag('#{tag_name}').getAttribute('#{html_name}')")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is not set: element.attributes.#{html_name} returns nil" do
+      load_html_tag_with_attribute(tag_name)
+      assert_nil window.evaluate("find_tag('#{tag_name}').attributes.#{html_name}")
+    end
+    
+    test "js: #{tag_name} - given the #{dom_name} attribute is not set: element.attributes['#{html_name}'] returns nil" do
+      load_html_tag_with_attribute(tag_name)
+      assert_nil window.evaluate("find_tag('#{tag_name}').attributes['#{html_name}']")
+    end
+
+    # test "ruby: #{tag_name} - given the #{dom_name} attribute is set: element.attributes.#{html_name} returns the attribute" do
+    #   assert_equal expect_value, find_tag(tag_name).attributes.send(html_name).value
+    # end
   end
 
-  test 'js: given the title attribute is set: getAttribute(attr_name) the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].getAttribute("title")')
+  if TEST_ALL_ELEMENTS_PROPERTIES
+    const_names = RDom::Element.constants - %w(ATTRS_CORE ATTRS_I18N ATTRS_EVENTS html_attributeS)
+    test_tags *const_names.map { |name| name.downcase }
+  else
+    test_tag('a')
+  end
+  
+  # test_tag('a')
+  # test_attribute('script', 'src')
+  # test_attribute('a', 'className', 'class')
+  # test_attribute('a', 'style')
+
+  
+  # using a non-standard attribute
+
+  test "js: a - given the foo attribute is set: element.foo returns nil" do
+    load_html_tag_with_attribute('a', 'foo', 'foo')
+    assert_nil window.evaluate("find_tag('a').foo")
+  end
+  
+  test "js: a - given the foo attribute is set: element['foo'] returns nil" do
+    load_html_tag_with_attribute('a', 'foo', 'foo')
+    assert_nil window.evaluate("find_tag('a')['foo']")
   end
 
-  test 'ruby: given the title attribute is set: attributes.[attr_name] returns the attribute' do
-    assert_equal 'foo', links[0].attributes.title.value
+  test "js: a - given the foo attribute is set: element.getAttribute('foo') returns the string value" do
+    load_html_tag_with_attribute('a', 'foo', 'foo')
+    assert_equal "foo", window.evaluate("find_tag('a').getAttribute('foo')")
   end
 
-  test 'js: given the title attribute is set: attributes.[attr_name] returns the attribute' do
-    assert_equal 'foo', window.evaluate('links[0].attributes.title.value')
+  test "js: a - given the foo attribute is set: element.attributes.foo returns the attribute" do
+    load_html_tag_with_attribute('a', 'foo', 'foo')
+    assert_equal "foo", window.evaluate("find_tag('a').attributes.foo").value
   end
 
-  test 'js: given the title attribute is an empty string: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1]["title"]')
+  test "js: a - given the foo attribute is set: element.attributes['foo'] returns the attribute" do
+    load_html_tag_with_attribute('a', 'foo', 'foo')
+    assert_equal "foo", window.evaluate("find_tag('a').attributes['foo']").value
   end
 
-  test 'js: given the title attribute is an empty string: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1]["title"]')
+  test "js: a - given the foo attribute is an empty string: element.foo returns nil" do
+    load_html_tag_with_attribute('a', 'foo', '')
+    assert_nil window.evaluate("find_tag('a').foo")
   end
-
-  test 'js: given the title attribute is an empty string: getAttribute(attr_name) the attribute value' do
-    assert_equal '', window.evaluate('links[1].getAttribute("title")')
+  
+  test "js: a - given the foo attribute is an empty string: element['foo'] returns nil" do
+    load_html_tag_with_attribute('a', 'foo', '')
+    assert_nil window.evaluate("find_tag('a')['foo']")
   end
-
-  test 'js: given the title attribute is an empty string: attributes.[attr_name] returns the attribute' do
-    assert_equal '', window.evaluate('links[1].attributes.title.value')
+  
+  test "js: a - given the foo attribute is an empty string: element.getAttribute('foo') returns an empty string" do
+    load_html_tag_with_attribute('a', 'foo', '')
+    assert_equal "", window.evaluate("find_tag('a').getAttribute('foo')")
   end
-
-  test 'js: given the title attribute is not set: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2].title')
+  
+  test "js: a - given the foo attribute is an empty string: element.attributes.foo returns the attribute" do
+    load_html_tag_with_attribute('a', 'foo', '')
+    assert_equal "", window.evaluate("find_tag('a').attributes.foo").value
   end
-
-  test 'js: given the title attribute is not set: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2].title')
+  
+  test "js: a - given the foo attribute is an empty string: element.attributes['foo'] returns the attribute" do
+    load_html_tag_with_attribute('a', 'foo', '')
+    assert_equal "", window.evaluate("find_tag('a').attributes['foo']").value
   end
-
-  test 'js: given the title attribute is not set: getAttribute(attr_name) returns nil' do
-    assert_nil window.evaluate('links[2].getAttribute("title")')
+  
+  test "js: a - given the foo attribute is not set: element.foo returns nil" do
+    load_html_tag_with_attribute('a')
+    assert_nil window.evaluate("find_tag('a').foo")
   end
-
-  test 'js: given the title attribute is not set: attributes.[attr_name] returns nil' do
-    assert_nil window.evaluate('links[2].attributes.title')
+  
+  test "js: a - given the foo attribute is not set: element['foo'] returns nil" do
+    load_html_tag_with_attribute('a')
+    assert_nil window.evaluate("find_tag('a')['foo']")
   end
-
-  # standard html attribute, special case: name
-
-  test 'js: given the name attribute is set: read via method call syntax returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].name')
+  
+  test "js: a - given the foo attribute is not set: getAttribute('foo') returns nil" do
+    load_html_tag_with_attribute('a')
+    assert_nil window.evaluate("find_tag('a').getAttribute('foo')")
   end
-
-  test 'js: given the name attribute is set: read via hash access syntax returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0]["name"]')
+  
+  test "js: a - given the foo attribute is not set: attributes.foo returns nil" do
+    load_html_tag_with_attribute('a')
+    assert_nil window.evaluate("find_tag('a').attributes.foo")
   end
-
-  test 'js: given the name attribute is set: getAttribute(attr_name) the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].getAttribute("name")')
+  
+  test "js: a - given the foo attribute is not set: attributes['foo'] returns nil" do
+    load_html_tag_with_attribute('a')
+    assert_nil window.evaluate("find_tag('a').attributes['foo']")
   end
-
-  test 'js: given the name attribute is set: attributes.[attr_name] returns the attribute' do
-    assert_equal 'foo', window.evaluate('links[0].attributes.name.value')
-  end
-
-  test 'js: given the name attribute is an empty string: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1].name')
-  end
-
-  test 'js: given the name attribute is an empty string: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1]["name"]')
-  end
-
-  test 'js: given the name attribute is an empty string: getAttribute(attr_name) the attribute value' do
-    assert_equal '', window.evaluate('links[1].getAttribute("name")')
-  end
-
-  test 'js: given the name attribute is an empty string: attributes.[attr_name] returns the attribute' do
-    assert_equal '', window.evaluate('links[1].attributes.name.value')
-  end
-
-  test 'js: given the name attribute is not set: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2].name')
-  end
-
-  test 'js: given the name attribute is not set: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[2].name')
-  end
-
-  test 'js: given the name attribute is not set: getAttribute(attr_name) returns nil' do
-    assert_nil window.evaluate('links[2].getAttribute("name")')
-  end
-
-  test 'js: given the name attribute is not set: attributes.[attr_name] returns nil' do
-    assert_nil window.evaluate('links[2].attributes.name')
-  end
-
-  # non-standard attribute foo
-
-  test 'js: given an attribute foo is set: read via method call syntax returns nil' do
-    assert_nil window.evaluate('links[0].foo')
-  end
-
-  test 'js: given an attribute foo is set: read via hash access syntax returns nil' do
-    assert_nil window.evaluate('links[0]["foo"]')
-  end
-
-  test 'js: given an attribute foo is set: getAttribute(attr_name) the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].getAttribute("foo")')
-  end
-
-  test 'js: given an attribute foo is set: attributes.[attr_name] returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].attributes.foo.value')
-  end
-
-  test 'js: given an attribute foo is an empty string: read via method call syntax returns nil' do
-    assert_nil window.evaluate('links[1].foo')
-  end
-
-  test 'js: given an attribute foo is an empty string: read via hash access syntax returns nil' do
-    assert_nil window.evaluate('links[1]["foo"]')
-  end
-
-  test 'js: given an attribute foo is an empty string: getAttribute(attr_name) an empty string' do
-    assert_equal '', window.evaluate('links[1].getAttribute("foo")')
-  end
-
-  test 'js: given an attribute foo is an empty string: attributes.[attr_name] returns an empty string' do
-    assert_equal '', window.evaluate('links[1].attributes.foo.value')
-  end
-
-  test 'js: given an attribute foo is not set: read via method call syntax returns nil' do
-    assert_nil window.evaluate('links[2].foo')
-  end
-
-  test 'js: given an attribute foo is not set: read via hash access syntax returns nil' do
-    assert_nil window.evaluate('links[2]["foo"]')
-  end
-
-  test 'js: given an attribute foo is not set: getAttribute(attr_name) returns nil' do
-    assert_nil window.evaluate('links[2].getAttribute("name")')
-  end
-
-  test 'js: given an attribute foo is not set: attributes.[attr_name] returns nil' do
-    assert_nil window.evaluate('links[2].attributes.name')
-  end
-
+  
   # special case href
   #
   # test 'js: anchor.href returns "http://example.org/index.html#foo" for <a href="#foo"/>' do
@@ -230,52 +304,4 @@ class PropertiesTest < Test::Unit::TestCase
   #
   # test 'js: anchor["href"] returns "" for <a/>' do
   # end
-
-  test 'js: given the class attribute is set: read via method call syntax to className returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].className')
-  end
-
-  test 'js: given the class attribute is set: read via hash access syntax to className returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0]["className"]')
-  end
-
-  test 'js: given the class attribute is set: getAttribute("class") returns the attribute value' do
-    assert_equal 'foo', window.evaluate('links[0].getAttribute("class")')
-  end
-
-  test 'js: given the class attribute is set: attributes["class"] returns the attribute' do
-    assert_equal 'foo', window.evaluate('links[0].attributes.class.value')
-  end
-
-  test 'js: given the class attribute is an empty string: read via method call syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1].className')
-  end
-
-  test 'js: given the class attribute is an empty string: read via hash access syntax returns an empty string' do
-    assert_equal '', window.evaluate('links[1]["className"]')
-  end
-
-  test 'js: given the class attribute is an empty string: getAttribute(class) the attribute value' do
-    assert_equal '', window.evaluate('links[1].getAttribute("class")')
-  end
-
-  test 'js: given the class attribute is an empty string: attributes.class returns an empty string' do
-    assert_equal '', window.evaluate('links[1].attributes.class.value')
-  end
-
-  test 'js: given the class attribute is not set: read via method call syntax returns nil' do
-    assert_nil window.evaluate('links[2].className')
-  end
-
-  test 'js: given the class attribute is not set: read via hash access syntax returns nil' do
-    assert_nil window.evaluate('links[2]["className"]')
-  end
-
-  test 'js: given the class attribute is not set: getAttribute("class") returns nil' do
-    assert_nil window.evaluate('links[2].getAttribute("class")')
-  end
-
-  test 'js: given the class attribute is not set: attributes.class returns nil' do
-    assert_nil window.evaluate('links[2].attributes.class.value')
-  end
 end

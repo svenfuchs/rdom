@@ -62,7 +62,7 @@ module RDom
     end
 
     def normalize_uri(uri)
-      location.uri.normalize.merge(uri)
+      location.uri.normalize.merge(uri) rescue uri
     end
 
     def close

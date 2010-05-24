@@ -6,8 +6,9 @@ module RDom
 
     attr_accessor *property_names
     
-    def initialize(document, name)
-      @name = name
+    def initialize(document, name, value = nil)
+      @name  = name
+      @value = value
     end
     
     def nodeType
