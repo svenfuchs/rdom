@@ -7,7 +7,7 @@ module RDom
       when LibXML::XML::Attr
         object.extend(Attr)
       when LibXML::XML::Attributes
-        object.extend(Attributes)
+        object.extend(RDom::Attributes)
       when LibXML::XML::Document
         object.extend(Document)
       when LibXML::XML::Node
@@ -19,7 +19,8 @@ module RDom
       node.extend(Node)
       case node.node_type
       when LibXML::XML::Node::ELEMENT_NODE
-        extension = Element.const_get(node.nodeName.titleize) rescue Element
+        const_name = node.nodeName.titleize
+        extension = Element.const_defined?(const_name) ? Element.const_get(const_name) : Element
         node.extend(extension)
       end
     end

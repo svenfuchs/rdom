@@ -3,10 +3,10 @@ module RDom
     Dir[File.expand_path('../element/*.rb', __FILE__)].each do |file|
       autoload File.basename(file, '.rb').titleize.to_sym, file
     end
-    
+
     ATTRS_CORE   = [:id, :style, :title, :class]
     ATTRS_I18N   = [:lang, :dir]
-    ATTRS_EVENTS = [:onclick, :ondblclick, :onmousedown, :onmouseup, :onmouseover, 
+    ATTRS_EVENTS = [:onclick, :ondblclick, :onmousedown, :onmouseup, :onmouseover,
                     :onmousemove, :onkeypress, :onkeydown, :onkeyup]
 
     html_attributes :align, *ATTRS_CORE + ATTRS_I18N + ATTRS_EVENTS
@@ -28,15 +28,17 @@ module RDom
     end
 
     def style
-      getAttribute('style') || Css::StyleDeclaration.new(self, '')
+      @style ||= begin
+        node  = attributes.get_attribute('style')
+        style = Css::StyleDeclaration.new(self, node ? node.value : nil)
+      end
     end
-    
+
     def style=(value)
       raise "read-only?"
     end
 
     def innerHTML
-      # child.to_s
       inner_xml
     end
 

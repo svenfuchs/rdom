@@ -36,9 +36,11 @@ module RDom
       include Element, Node
 
       html_attributes :frameBorder, :height, :longDesc, :marginHeight, :marginWidth, :name,
-                     :scrolling, :src, :width, :contentDocument
+                     :scrolling, :src, :width
 
-      # TODO contentDocument
+      def contentWindow
+        ownerDocument.defaultView # TODO this is obviously wrong
+      end
     end
   end
 end

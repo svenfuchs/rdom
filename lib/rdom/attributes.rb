@@ -15,13 +15,12 @@ module RDom
     # retrieves a node specified by name
     def getNamedItem(name)
       item = get_attribute(name)
-      item = Attribute.new(self, 'style', Css::StyleDeclaration.new(self, item.value)) if item && name == 'style'
+      item = Attribute.new(node, 'style', node.style) if item && name == 'style'
       item
     end
 
     # adds a node using its nodeName attribute
     def setNamedItem(item)
-      raise "not implemented" unless item.is_a?(Attribute)
       node.setAttributeNode(item)
     end
 
