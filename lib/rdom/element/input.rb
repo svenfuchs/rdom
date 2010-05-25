@@ -77,7 +77,7 @@ module RDom
       # TODO blur, focus, select, click
 
       def form
-        find_parent { |node| node.tagName == 'FORM' }
+        find_parent_by_tag_name('FORM')
       end
     end
   end

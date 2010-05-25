@@ -146,6 +146,10 @@ module RDom
         ancestors
       end
 
+      def find_parent_by_tag_name(tag_name)
+        find_parent { |node| node.tagName == tag_name }
+      end
+
       def find_parent(&block)
         node = self
         return node if block.call(node) while node = node.parent

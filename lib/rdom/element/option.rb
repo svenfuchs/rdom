@@ -45,15 +45,13 @@ module RDom
       end
 
       def selected
-        # TODO define html_attribute_accessors on an included module so we can call super
-        selected = Attr.unserialize(:selected, getAttribute(:selected))
-        selected || select.selectedIndex == index
+        super || select.selectedIndex == index
       end
 
       protected
 
         def select
-          find_parent { |node| node.tagName == 'SELECT' }
+          find_parent_by_tag_name('SELECT')
         end
     end
   end
