@@ -49,22 +49,20 @@ module RDom
         option ? option.value : ''
       end
 
+      # TODO multiple select
       def selectedIndex
-        if options.size == 1
-          options.first.setAttribute('selected', 'selected')
-          0
-        else
-          # p options # .first.getAttribute('selected')
-          options.each_with_index do |option, ix|
-            return ix if option.getAttribute('selected')
-          end && -1
-        end
-        # -1
+        option = options.detect { |option| option.getAttribute('selected') }
+        option ? option.index : 0
       end
 
       def selectedIndex=(index)
-        option = options.index(index)
-        options['selected'] = 'selected' if option
+        options.each do |option|
+          if option.index == index
+            option.setAttribute('selected', 'selected') && !option.getAttribute('selected')
+          else
+            option.removeAttribute('selected')
+          end
+        end
       end
 
       def options

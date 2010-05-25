@@ -4,7 +4,7 @@ class InputTest < Test::Unit::TestCase
   attr_reader :window, :form, :input
 
   def setup
-    @window = RDom::Window.new('<html><body><form><input><form></body></html>', :url => 'http://example.org')
+    @window = RDom::Window.new('<html><body><form><input /></form></body></html>', :url => 'http://example.org')
     window.evaluate <<-js
       var form  = document.getElementsByTagName("form")[0];
       var input = document.getElementsByTagName("input")[0];

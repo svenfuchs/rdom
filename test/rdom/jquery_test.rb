@@ -102,27 +102,27 @@ class JQueryTest < Test::Unit::TestCase
     assert_equal 1,   window.evaluate('jQuery.parseJSON(\'{"test":1}\')')['test']
   end
   
-  test "jQuery.support.leadingWhitespace" do
+  test "jQuery.support.leadingWhitespace == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.leadingWhitespace')
   end
   
-  test "jQuery.support.tbody" do
+  test "jQuery.support.tbody == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.tbody')
   end
   
-  test "jQuery.support.htmlSerialize" do
+  test "jQuery.support.htmlSerialize == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.htmlSerialize')
   end
   
-  test "jQuery.support.style" do
+  test "jQuery.support.style == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.style')
   end
   
-  test "jQuery.support.hrefNormalized" do
+  test "jQuery.support.hrefNormalized == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.hrefNormalized')
   end
@@ -145,32 +145,32 @@ class JQueryTest < Test::Unit::TestCase
     assert !window.evaluate('jQuery.support.checkOn')
   end
   
-  test "jQuery.support.optSelected == false" do
+  test "jQuery.support.optSelected == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.optSelected')
   end
   
-  test "jQuery.support.parentNode" do
+  test "jQuery.support.parentNode == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.parentNode')
   end
   
-  test "jQuery.support.deleteExpando" do
+  test "jQuery.support.deleteExpando == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.deleteExpando')
   end
   
-  test "jQuery.support.checkClone == false" do
+  test "jQuery.support.checkClone == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.checkClone')
   end
   
-  test "jQuery.support.scriptEval == false" do
+  test "jQuery.support.scriptEval == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.scriptEval')
   end
   
-  test "jQuery.support.noCloneEvent" do
+  test "jQuery.support.noCloneEvent == true" do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert window.evaluate('jQuery.support.noCloneEvent')
   end
