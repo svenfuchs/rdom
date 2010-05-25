@@ -107,17 +107,22 @@ class PropertiesTest < Test::Unit::TestCase
 
   def self.test_attribute(tag_name, dom_name, html_name = nil)
     html_name ||= dom_name.to_s.downcase
-    html_value  = 'foo'
-    expect_value     = 'foo'
-    empty_value      = ''
+
+    # TODO tons of exceptions. who the fuck came up with that mess called DOM?
+    return if RDom::Attr.numeric?(dom_name) || RDom::Attr.boolean?(dom_name)
 
     if %w(href src).include?(dom_name)
-      html_value = "http://example.org/#{html_value}"
-      expect_value    = html_value
+      html_value   = "http://example.org/foo"
+      expect_value = html_value
+      empty_value  = ''
     elsif dom_name == 'style'
-      html_value = 'font-size: 1px;'
-      empty_value     = {}
-      expect_value    = RDom::Css::StyleDeclaration.new(nil, html_value)
+      html_value   = 'font-size: 1px;'
+      expect_value = RDom::Css::StyleDeclaration.new(nil, html_value)
+      empty_value  = {}
+    else
+      html_value   = 'foo'
+      expect_value = 'foo'
+      empty_value  = ''
     end
 
     test "js: #{tag_name} - given the #{dom_name} attribute is set: element.#{dom_name} returns the string value" do

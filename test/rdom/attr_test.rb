@@ -55,23 +55,67 @@ class AttrTest < Test::Unit::TestCase
     assert_nil attr.nextSibling
   end
 
-  test 'ruby: reading checked returns true if the attribute is checked="checked"' do
+  test 'ruby: reading checked (using getAttribute) returns true if the attribute is checked="checked"' do
     window.load('<html><body><input type="radio" checked="checked" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal true, input.getAttribute('checked')
   end
 
-  test 'ruby: reading checked returns false if the attribute is checked=""' do
+  test 'ruby: reading checked (using .checked) returns true if the attribute is checked="checked"' do
+    window.load('<html><body><input type="radio" checked="checked" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal true, input.checked
+  end
+
+  test 'ruby: reading checked (using getAttribute) returns false if the attribute is checked=""' do
     window.load('<html><body><input type="radio" checked="" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal false, input.getAttribute('checked')
   end
 
-  test 'ruby: reading checked returns false if the attribute is not present' do
-    window.load('<html><body><input type="radio" /></body></html>')
+  test 'ruby: reading checked (using .checked) returns false if the attribute is checked=""' do
+    window.load('<html><body><input type="radio" checked="" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal false, input.checked
   end
 
-  test 'ruby: setting checked to true results in an attribute checked="checked"' do
+  test 'ruby: reading checked (using getAttribute) returns nil if the attribute is not present' do
     window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal nil, input.getAttribute('checked')
   end
 
-  test 'ruby: setting checked to false results in an attribute checked=""' do
+  test 'ruby: reading checked (using .checked) returns false if the attribute is not present' do
     window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    assert_equal false, input.checked
+  end
+
+  test 'ruby: setting checked to true (using checked=) results in an attribute checked="checked"' do
+    window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    input.checked = true
+    assert_equal '<input type="radio" checked="checked"/>', input.to_s
+  end
+
+  test 'ruby: setting checked to true (using setAttribute) results in an attribute checked="checked"' do
+    window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    input.setAttribute('checked', true)
+    assert_equal '<input type="radio" checked="checked"/>', input.to_s
+  end
+
+  test 'ruby: setting checked to false (using checked=) results in an attribute checked="checked"' do
+    window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    input.setAttribute('checked', false)
+    assert_equal '<input type="radio" checked="checked"/>', input.to_s
+  end
+
+  test 'ruby: setting checked to false (using setAttribute) results in an attribute checked="checked"' do
+    window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    input.checked = false
+    assert_equal '<input type="radio" checked="checked"/>', input.to_s
   end
 end

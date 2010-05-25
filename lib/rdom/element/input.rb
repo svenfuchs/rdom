@@ -63,7 +63,7 @@ module RDom
 
       def self.extended(element)
         element.defaultValue = element.value
-        element.defaultChecked = element.checked if %(radio checkbox).include?(element.type)
+        element.defaultChecked = element.checked if element.type && %(radio checkbox).include?(element.type)
       end
 
       html_attributes :accept, :accessKey, :alt, :checked, :disabled,

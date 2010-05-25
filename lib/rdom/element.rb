@@ -78,7 +78,7 @@ module RDom
       value = value == 'checked' || TrueClass === value if name.to_sym == :checked
       node = getAttributeNode(name)
       node ||= setAttributeNode(ownerDocument.createAttribute(name))
-      node.value = value.to_s
+      node.value = value
     end
 
     def setAttributeNode(attribute)

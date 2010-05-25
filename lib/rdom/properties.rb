@@ -39,7 +39,7 @@ module RDom
       def define_html_attribute_accessors!
         self::HTML_ATTRIBUTES.each do |name|
           next if method_defined?(name) || method_defined?(:"#{name}=")
-          define_method(name) { getAttribute(name) || '' }
+          define_method(name) { Attr.unserialize(name, getAttribute(name)) }
           define_method(:"#{name}=") { |value| setAttribute(name, value) }
         end
       end
