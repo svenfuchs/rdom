@@ -22,7 +22,7 @@ module RDom
       include Element, Node
 
       html_attributes :background, :bgColor, :link, :text, :aLink, :vLink, 
-                     :onload, :onunload
+                      :onload, :onunload
     end
   end
 end

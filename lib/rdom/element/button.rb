@@ -13,7 +13,7 @@
 #   onfocus     %Script;       #IMPLIED  -- the element got the focus --
 #   onblur      %Script;       #IMPLIED  -- the element lost the focus --
 #   >
-# 
+#
 # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-34812697
 # interface HTMLButtonElement : HTMLElement {
 #   readonly attribute HTMLFormElement form;
@@ -30,7 +30,12 @@ module RDom
       include Element, Node
 
       html_attributes :accessKey, :disabled, :name, :tabIndex, :type, :value
+
       properties :form
+
+      def form
+        find_parent { |node| node.tagName == 'FORM' }
+      end
     end
   end
 end

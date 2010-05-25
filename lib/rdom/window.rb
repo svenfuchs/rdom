@@ -58,7 +58,9 @@ module RDom
     end
 
     def evaluate(script, file = nil, line = nil)
-      runtime.evaluate(script, file, line, self, self)
+      runtime.evaluate(script, file, line, self, self).tap do
+        RDom::Window::Timers::Task.run_all
+      end
     end
 
     def normalize_uri(uri)
@@ -105,7 +107,7 @@ module RDom
     def print(output)
       p output
     end
-    
+
     def p_inspect(object)
       puts "<#{object.class}##{object.object_id}>"
     end
@@ -131,13 +133,15 @@ module RDom
       end
 
       def load_frames
-        document.getElementsByTagName('iframe').each { |frame| load_frame(frame) }
+        document.find('//iframe|//frame').each { |frame| load_frame(frame) }
       end
 
       def load_frame(node)
-        frame = Frame.new(:parent => self, :name => node.getAttribute('name'))
-        frame.location.href = normalize_uri(node.getAttribute('src')) if node.getAttribute('src')
-        frames << frame
+        name = node.getAttribute('name')
+        src  = node.getAttribute('src')
+
+        node.contentWindow = Window.new(:parent => self, :name => name)
+        node.contentWindow.location.href = normalize_uri(src) if src
       end
 
       def trigger_load_event
@@ -145,14 +149,10 @@ module RDom
         event.initEvent('load')
         dispatchEvent(event)
       end
-      
+
       def process_script(script)
         src = script.getAttribute('src')
         src && !src.empty? ? load_script(src) : evaluate(script.textContent)
-        # if script.textContent == '1 == 1'
-        #   evaluate('p_inspect(jQuery)')
-        #   # evaluate('print(jQuery || "broken")')
-        # end
       end
 
       def uri?(arg)

@@ -59,7 +59,6 @@ module RDom
     # https://developer.mozilla.org/en/DOM:element.getAttributeNode
     # When called on an HTML element in a DOM flagged as an HTML document,
     # getAttributeNode lower-cases its argument before proceeding.
-
     def hasAttribute(name)
       !!attributes.get_attribute(name.downcase)
     end

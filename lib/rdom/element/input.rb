@@ -3,7 +3,7 @@
 #     RADIO | SUBMIT | RESET |
 #     FILE | HIDDEN | IMAGE | BUTTON)"
 #    >
-# 
+#
 # <!-- attribute name required for all but submit and reset -->
 # <!ELEMENT INPUT - O EMPTY              -- form control -->
 # <!ATTLIST INPUT
@@ -28,7 +28,7 @@
 #   onchange    %Script;       #IMPLIED  -- the element value was changed --
 #   accept      %ContentTypes; #IMPLIED  -- list of MIME types for file upload --
 #   >
-# 
+#
 # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-6043025
 # interface HTMLInputElement : HTMLElement {
 #            attribute DOMString       defaultValue;
@@ -65,16 +65,20 @@ module RDom
         element.defaultValue = element.value
         element.defaultChecked = element.checked if %(radio checkbox).include?(element.type)
       end
-      
-      html_attributes :accept, :accessKey, :alt, :checked, :disabled, 
-                     :isMap, :maxLength, :name, :readOnly, :size, :src, 
-                     :tabIndex, :type, :useMap, :value, :onfocus, :onblur, 
+
+      html_attributes :accept, :accessKey, :alt, :checked, :disabled,
+                     :isMap, :maxLength, :name, :readOnly, :size, :src,
+                     :tabIndex, :type, :useMap, :value, :onfocus, :onblur,
                      :onselect, :onchange
 
       properties :defaultValue, :defaultChecked, :form
       attr_accessor :defaultValue, :defaultChecked
-      
+
       # TODO blur, focus, select, click
+
+      def form
+        find_parent { |node| node.tagName == 'FORM' }
+      end
     end
   end
 end

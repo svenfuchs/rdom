@@ -37,8 +37,11 @@ module RDom
       html_attributes :frameBorder, :longDesc, :marginHeight, :marginWidth, :name,
                      :noResize, :scrolling, :src
 
-      def contentWindow
-        ownerDocument.defaultView # TODO this is obviously wrong
+      attr_reader :contentWindow
+
+      def contentWindow=(window)
+        @contentWindow = window
+        window.parent.frames << window
       end
     end
   end

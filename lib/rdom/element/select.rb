@@ -11,7 +11,7 @@
 #   onblur      %Script;       #IMPLIED  -- the element lost the focus --
 #   onchange    %Script;       #IMPLIED  -- the element value was changed --
 #   >
-# 
+#
 # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-94282980
 # interface HTMLSelectElement : HTMLElement {
 #   readonly attribute DOMString       type;
@@ -20,7 +20,7 @@
 #   // Modified in DOM Level 2:
 #            attribute unsigned long   length;
 #                                         // raises(DOMException) on setting
-# 
+#
 #   readonly attribute HTMLFormElement form;
 #   // Modified in DOM Level 2:
 #   readonly attribute HTMLOptionsCollection options;
@@ -29,7 +29,7 @@
 #            attribute DOMString       name;
 #            attribute long            size;
 #            attribute long            tabIndex;
-#   void               add(in HTMLElement element, 
+#   void               add(in HTMLElement element,
 #                          in HTMLElement before)
 #                                         raises(DOMException);
 #   void               remove(in long index);
@@ -54,12 +54,14 @@ module RDom
           options.first.setAttribute('selected', 'selected')
           0
         else
-          options.each_with_index do |option, ix| 
+          # p options # .first.getAttribute('selected')
+          options.each_with_index do |option, ix|
             return ix if option.getAttribute('selected')
           end && -1
         end
+        # -1
       end
-      
+
       def selectedIndex=(index)
         option = options.index(index)
         options['selected'] = 'selected' if option
@@ -68,12 +70,16 @@ module RDom
       def options
         find('.//option').to_a
       end
-      
+
       def length
         options.size
       end
-      
+
       # TODO blur, focus
+
+      def form
+        find_parent { |node| node.tagName == 'FORM' }
+      end
     end
   end
 end

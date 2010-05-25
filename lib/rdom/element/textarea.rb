@@ -42,14 +42,18 @@ module RDom
         element.defaultValue = element.value
       end
 
-      html_attributes :accessKey, :cols, :disabled, :name, :readOnly, :rows, 
-                     :tabIndex, :type, :value, :onfocus, :onblur, :onselect, 
+      html_attributes :accessKey, :cols, :disabled, :name, :readOnly, :rows,
+                     :tabIndex, :type, :value, :onfocus, :onblur, :onselect,
                      :onchange
 
       properties :form, :defaultValue
       attr_accessor :defaultValue
 
       # TODO blur, focus, select
+
+      def form
+        find_parent { |node| node.tagName == 'FORM' }
+      end
     end
   end
 end

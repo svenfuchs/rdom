@@ -2,7 +2,7 @@ module RDom
   module Attr
     properties :name, :value, :nodeType, :nodeValue, :specified, :ownerElement
 
-    # TODO gotta fix this: we need to define :name and :value to keep Properties from defining accessors
+    # TODO need to define :name and :value to keep Properties from defining accessors
     def name
       super
     end
@@ -19,6 +19,7 @@ module RDom
 
     def value=(value)
       self.specified = false
+      # value = nil if value == 'false'
       super(value.to_s)
     end
     

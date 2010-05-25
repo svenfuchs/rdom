@@ -17,7 +17,7 @@
 #   name        CDATA          #IMPLIED  -- submit as part of form --
 #   tabindex    NUMBER         #IMPLIED  -- position in tabbing order --
 #   >
-# 
+#
 # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-9893177
 # interface HTMLObjectElement : HTMLElement {
 #   readonly attribute HTMLFormElement form;
@@ -51,6 +51,10 @@ module RDom
                      :type, :useMap, :vspace, :width
 
       properties :form, :contentDocument
+
+      def form
+        find_parent { |node| node.tagName == 'FORM' }
+      end
     end
   end
 end

@@ -11,9 +11,7 @@ stub_request(:any, /./).to_return do |request|
   { :body => File.open("#{JQUERY_PATH}#{request.uri.path}") { |f| f.read } }
 end
 
-window = RDom::Window.new
-window.location.instance_variable_set(:@uri, URI.parse('http://example.org/test/'))
-window.load("http://example.org/test/index.html")
+window = RDom::Window.new("http://example.org/test/index.html", :url => 'http://example.org/test/')
 
 # puts window.document.getElementById("qunit-tests")
 result = window.evaluate("jQuery('#qunit-tests > li').toArray()")

@@ -105,7 +105,12 @@ module RDom
     # adds a node to the end of the list of children of a specified parent node
     def appendChild(child)
       self << child
-      Element::Script.process(child) if child.nodeName == 'SCRIPT'
+      case child.nodeName
+      when 'SCRIPT'
+        Element::Script.process(child)
+      when 'FRAME', 'IFRAME'
+        child.contentWindow = ownerDocument.defaultView
+      end
       child
     end
 
@@ -139,6 +144,11 @@ module RDom
         ancestors, node = [], self
         ancestors << node while node = node.parent
         ancestors
+      end
+
+      def find_parent(&block)
+        node = self
+        return node if block.call(node) while node = node.parent
       end
   end
 end

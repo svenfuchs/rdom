@@ -81,6 +81,18 @@ module RDom
       location.hostname
     end
 
+    def open
+      # TODO
+    end
+
+    def close
+      # TODO
+    end
+
+    def write(html)
+      # TODO
+    end
+
     def getElementsByTagName(tag_name)
       find("//#{tag_name}").to_a
     end
@@ -127,7 +139,7 @@ module RDom
     def importNode(node)
       import node.cloneNode(true)
     end
-    
+
     def styleSheets
       find('//style').inject([]) do |style_sheets, tag|
         style_sheets << Css::StyleSheet.parse(tag.textContent)

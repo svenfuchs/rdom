@@ -31,6 +31,18 @@ class WindowTest < Test::Unit::TestCase
     assert_equal 'foo', window.document.title
   end
 
+  test "sets the contentWindow property on frame elements" do
+    window.load('<html><body><frame /></body></html>')
+    assert !window.frames.empty?
+    assert_equal window.frames.first, window.document.getElementsByTagName('frame').first.contentWindow
+  end
+
+  test "sets the contentWindow property on iframe elements" do
+    window.load('<html><body><iframe /></body></html>')
+    assert !window.frames.empty?
+    assert_equal window.frames.first, window.document.getElementsByTagName('iframe').first.contentWindow
+  end
+
   test "uri? returns true if the given argument is a (file or http) url, otherwise false", :implementation do
     assert window.send(:uri?, 'http://google.com')
     assert window.send(:uri?, 'file://tmp/foo.txt')

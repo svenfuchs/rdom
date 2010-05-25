@@ -30,7 +30,7 @@ module RDom
       include Element, Node
 
       html_attributes :accessKey, :alt, :coords, :href, :noHref, :shape, 
-                     :tabIndex, :target, :onfocus, :onblur
+                      :tabIndex, :target, :onfocus, :onblur
     end
   end
 end
