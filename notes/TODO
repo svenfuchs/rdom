@@ -2,8 +2,6 @@ attributes:
   
   iframe, frame
   
-  is :disabled an html dom attribute?
-  
   :onfocus, :onblur, ... => :onFocus, :onBlur, ...?
 
 

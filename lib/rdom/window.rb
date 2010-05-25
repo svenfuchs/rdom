@@ -58,9 +58,7 @@ module RDom
     end
 
     def evaluate(script, file = nil, line = nil)
-      runtime.evaluate(script, file, line, self, self).tap do
-        RDom::Window::Timers::Task.run_all
-      end
+      runtime.evaluate(script, file, line, self, self)
     end
 
     def normalize_uri(uri)
@@ -144,15 +142,15 @@ module RDom
         node.contentWindow.location.href = normalize_uri(src) if src
       end
 
+      def process_script(script)
+        src = script.getAttribute('src')
+        src && !src.empty? ? load_script(src) : evaluate(script.textContent)
+      end
+
       def trigger_load_event
         event = document.createEvent('Events')
         event.initEvent('load')
         dispatchEvent(event)
-      end
-
-      def process_script(script)
-        src = script.getAttribute('src')
-        src && !src.empty? ? load_script(src) : evaluate(script.textContent)
       end
 
       def uri?(arg)
