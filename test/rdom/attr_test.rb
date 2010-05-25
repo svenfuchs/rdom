@@ -91,13 +91,6 @@ class AttrTest < Test::Unit::TestCase
     assert_equal false, input.checked
   end
 
-  test 'ruby: setting checked to true (using checked=) results in an attribute checked="checked"' do
-    window.load('<html><body><input type="radio" /></body></html>')
-    input = window.document.find('.//input').first
-    input.checked = true
-    assert_equal '<input type="radio" checked="checked"/>', input.to_s
-  end
-
   test 'ruby: setting checked to true (using setAttribute) results in an attribute checked="checked"' do
     window.load('<html><body><input type="radio" /></body></html>')
     input = window.document.find('.//input').first
@@ -105,17 +98,24 @@ class AttrTest < Test::Unit::TestCase
     assert_equal '<input type="radio" checked="checked"/>', input.to_s
   end
 
-  test 'ruby: setting checked to false (using checked=) results in an attribute checked="checked"' do
+  test 'ruby: setting checked to true (using checked=) results in an attribute checked="checked"' do
     window.load('<html><body><input type="radio" /></body></html>')
     input = window.document.find('.//input').first
-    input.setAttribute('checked', false)
+    input.checked = true
     assert_equal '<input type="radio" checked="checked"/>', input.to_s
   end
 
   test 'ruby: setting checked to false (using setAttribute) results in an attribute checked="checked"' do
     window.load('<html><body><input type="radio" /></body></html>')
     input = window.document.find('.//input').first
-    input.checked = false
+    input.setAttribute('checked', false)
     assert_equal '<input type="radio" checked="checked"/>', input.to_s
+  end
+
+  test 'ruby: setting checked to false (using checked=) removes the attribute checked' do
+    window.load('<html><body><input type="radio" /></body></html>')
+    input = window.document.find('.//input').first
+    input.checked = false
+    assert_equal '<input type="radio"/>', input.to_s
   end
 end

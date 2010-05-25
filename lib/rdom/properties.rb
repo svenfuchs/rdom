@@ -9,11 +9,11 @@ module RDom
       protected
 
         def property_names
-          @property_names ||= property_modules.map do |const| 
+          @property_names ||= property_modules.map do |const|
             const.property_names
           end.flatten.compact.uniq
         end
-        
+
         def property_modules
           consts = ruby_class.ancestors + (class << self; self; end).included_modules
           consts.uniq.select { |const| const.method_defined?(:property_names) }
@@ -25,7 +25,7 @@ module RDom
     def html_attributes(*names)
       const_set(:HTML_ATTRIBUTES, names)
       properties(*names)
-      define_html_attribute_accessors!
+      html_attribute_accessors(*names)
     end
 
     def properties(*names)
@@ -36,12 +36,27 @@ module RDom
 
     protected
 
-      def define_html_attribute_accessors!
-        self::HTML_ATTRIBUTES.each do |name|
-          next if method_defined?(name) || method_defined?(:"#{name}=")
-          define_method(name) { Attr.unserialize(name, getAttribute(name)) }
-          define_method(:"#{name}=") { |value| setAttribute(name, value) }
+      def html_attribute_accessors(*names)
+        names.each do |name|
+          html_attribute_reader(name)
+          html_attribute_writer(name)
         end
+      end
+
+      def html_attribute_reader(name)
+        define_method(name) do
+          Attr.unserialize(name, getAttribute(name))
+        end unless method_defined?(name)
+      end
+
+      def html_attribute_writer(name)
+        define_method(:"#{name}=") do |value|
+          if Attr.boolean?(name)
+            value ? setAttribute(name, name) : removeAttribute(name)
+          else
+            setAttribute(name, value)
+          end
+        end unless method_defined?(:"#{name}=")
       end
   end
 end

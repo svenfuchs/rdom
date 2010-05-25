@@ -41,8 +41,12 @@ module RDom
     module Select
       include Element, Node
 
-      properties :form, :options, :length, :selectedIndex, :value
-      html_attributes :type, :disabled, :multiple, :name, :size, :tabIndex, :onfocus, :onblur, :onchange
+      properties :form, :options, :length, :selectedIndex, :value, :type
+      html_attributes :disabled, :multiple, :name, :size, :tabIndex, :onfocus, :onblur, :onchange
+
+      def type
+        getAttribute(:multiple) ? 'select-multiple' : 'select-one'
+      end
 
       def value
         option = options[selectedIndex] if selectedIndex > -1

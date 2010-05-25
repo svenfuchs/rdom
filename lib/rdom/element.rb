@@ -60,7 +60,7 @@ module RDom
     # When called on an HTML element in a DOM flagged as an HTML document,
     # getAttributeNode lower-cases its argument before proceeding.
     def hasAttribute(name)
-      !!attributes.get_attribute(name.downcase)
+      !!attributes.get_attribute(name.to_s.downcase)
     end
 
     def getAttribute(name)
@@ -75,7 +75,6 @@ module RDom
     end
 
     def setAttribute(name, value)
-      value = value == 'checked' || TrueClass === value if name.to_sym == :checked
       node = getAttributeNode(name)
       node ||= setAttributeNode(ownerDocument.createAttribute(name))
       node.value = value
@@ -83,13 +82,13 @@ module RDom
 
     def setAttributeNode(attribute)
       removeAttributeNode(attribute.name)
-      node = LibXML::XML::Attr.new(self, attribute.name.downcase, attribute.value || '')
+      node = LibXML::XML::Attr.new(self, attribute.name.to_s.downcase, attribute.value || '')
       node.specified = false
       node
     end
 
     def removeAttribute(name)
-      attribute = removeAttributeNode(name.downcase)
+      attribute = removeAttributeNode(name.to_s.downcase)
       attribute.value if attribute
     end
 
