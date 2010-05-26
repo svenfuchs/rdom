@@ -19,7 +19,7 @@ module RDom
       properties :areas
       
       def areas
-        find('.//area').to_a
+        getElementsByTagName('area')
       end
     end
   end

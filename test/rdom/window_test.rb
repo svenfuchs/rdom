@@ -6,12 +6,10 @@ class WindowTest < Test::Unit::TestCase
   attr_reader :window
 
   def setup
-    @window = RDom::Window.new
-    window.location.set('http://example.org')
+    @window = RDom::Window.new('<html></html>', :url => 'http://example.org')
   end
 
   test "load loads an html document", :implementation do
-    window.load('<html></html>')
     assert_match /html/, window.document.to_s
   end
 
@@ -22,7 +20,7 @@ class WindowTest < Test::Unit::TestCase
 
   test "loads linked scripts", :implementation do
     stub_get('foo.js', 'document.title = "foo"')
-    window.load('<html><head><title></title><script src="/foo.js"></script></head></html>')
+    window.load('<html><head><title></title><script src="foo.js"></script></head></html>')
     assert_equal 'foo', window.document.title
   end
 

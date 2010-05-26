@@ -1,14 +1,10 @@
 require 'xml'
-require 'libxml'
-require 'treetop_css'
+require 'nokogiri'
 
 module RDom
   autoload :Attr,             'rdom/attr'
-  autoload :Attribute,        'rdom/attribute'
   autoload :Attributes,       'rdom/attributes'
-  autoload :Css,              'rdom/css'
   autoload :Document,         'rdom/document'
-  autoload :DocumentFragment, 'rdom/document_fragment'
   autoload :Decoration,       'rdom/decoration'
   autoload :Element,          'rdom/element'
   autoload :Event,            'rdom/event'
@@ -17,41 +13,64 @@ module RDom
   autoload :NodeList,         'rdom/node_list'
   autoload :Properties,       'rdom/properties'
   autoload :Window,           'rdom/window'
-
-  HTML_PARSE_OPTIONS = XML::Parser::Options::RECOVER |
-    XML::Parser::Options::NOERROR |
-    XML::Parser::Options::NOWARNING
 end
 
 Class.send :include, RDom::Properties
 Module.send :include, RDom::Properties
 Kernel.send :alias_method, :ruby_class, :class
 
-consts = [
-  LibXML::XML::Document, 
-  LibXML::XML::Node, 
-  LibXML::XML::Attr, 
-  LibXML::XML::Attributes
-]
-consts.each do |const|
-  const.class_eval do
-    include RDom::Decoration
-    undef :id, :type
+class Nokogiri::XML::Document
+  include RDom::Document
+
+  def decorate(object)
+    RDom::Decoration.decorate(object)
   end
 end
 
-LibXML::XML::Attributes.class_eval do
-  undef :[], :[]=, :class
+class Nokogiri::XML::DocumentFragment
+  # can't include this as a module?
+  def nodeName
+    '#document_fragment'
+  end
 end
 
-LibXML::XML::Node.class_eval do
-  # alias :node_text :text
+class Nokogiri::XML::NodeSet
+  include RDom::NodeList
+end
+
+class Nokogiri::XML::Attr
+  alias :nokogiri_value :value
+  remove_method :value
+  include RDom::Attr
+end
+
+class Nokogiri::XML::Node
   alias :node_name :name
-  undef :[], :[]=, :name, :class
+  alias :node_attributes :attributes
+  remove_method :attributes, :[], :[]=
+  include RDom::Node
+
+  def inspect_attributes
+    [:node_name, :namespace, :attribute_nodes, :children]
+  end
 end
 
 Exception.class_eval do
-  def js_property?(name)
-    name == :message
+  properties :message
+end
+
+module Nokogiri::XML::PP::Node
+  def inspect
+    attributes = inspect_attributes.reject { |x|
+      begin
+        attribute = send x
+        !attribute || (attribute.respond_to?(:empty?) && attribute.empty?)
+      rescue NoMethodError
+        true
+      end
+    }.map { |attribute|
+      "#{attribute.to_s.sub(/_\w+/, 's')}=#{send(attribute).inspect}"
+    }.join ' '
+    "#<#{self.ruby_class.name}:#{sprintf("0x%x", object_id)} #{attributes}>"
   end
 end

@@ -21,7 +21,7 @@ class ScriptTest < Test::Unit::TestCase
   
   test "ruby: appending a script element with a body evaluates the script", :ruby do
     script = document.createElement('script');
-    script.innerHTML = 'document.title = "FOO"';
+    script.appendChild(document.createTextNode('document.title = "FOO"'));
     head.appendChild(script);
     assert_equal 'FOO', document.title
   end

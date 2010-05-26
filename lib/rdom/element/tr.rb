@@ -52,7 +52,8 @@ module RDom
       end
 
       def cells
-        find('.//th|.//td').to_a
+        tag_names = %w(th td)
+        tag_names.map { |tag_name| getElementsByTagName(tag_name) }.flatten
       end
 
       # TODO rowIndes, sectionRowIndex, insertCell, deleteCell

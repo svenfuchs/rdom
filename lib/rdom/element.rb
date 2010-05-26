@@ -1,3 +1,5 @@
+require 'core_ext/string/titleize'
+
 module RDom
   module Element
     Dir[File.expand_path('../element/*.rb', __FILE__)].each do |file|
@@ -29,8 +31,9 @@ module RDom
 
     def style
       @style ||= begin
-        node  = attributes.get_attribute('style')
-        style = Css::StyleDeclaration.new(self, node ? node.value : nil)
+        node  = getAttributeNode('style')
+        # style = Css::StyleDeclaration.new(self, node ? node.value : nil)
+        {}
       end
     end
 
@@ -39,28 +42,29 @@ module RDom
     end
 
     def innerHTML
-      inner_xml
+      inner_html
     end
 
     def innerHTML=(html)
-      children.each { |child| child.remove! }
-      unless html.nil? || html.empty?
-        DocumentFragment.parse(html).childNodes.each do |node|
-          node = doc.import(node) if doc && doc != node.doc
-          self << node
-        end
-      end
+      children.each { |child| child.remove }
+
+      leading, trailing = html.scan(/^[\s]*|[\s]*$/m)
+      fragment = Nokogiri::HTML::DocumentFragment.parse(html)
+
+      self << document.create_text_node(leading) unless leading.blank?
+      fragment.childNodes.each { |node| self << node }
+      self << document.create_text_node(trailing) unless trailing.blank?
     end
 
     def getElementsByTagName(tag_name)
-      find(".//#{tag_name}").to_a
+      xpath(".//#{tag_name}").to_a
     end
 
     # https://developer.mozilla.org/en/DOM:element.getAttributeNode
     # When called on an HTML element in a DOM flagged as an HTML document,
     # getAttributeNode lower-cases its argument before proceeding.
     def hasAttribute(name)
-      !!attributes.get_attribute(name.to_s.downcase)
+      !!has_attribute?(name.to_s.downcase)
     end
 
     def getAttribute(name)
@@ -69,22 +73,28 @@ module RDom
     end
 
     def getAttributeNode(name)
-      node = attributes.getNamedItem(name.to_s.downcase)
-      node.decorate! if node
-      node
+      attributes.getNamedItem(name.to_s)
     end
 
     def setAttribute(name, value)
-      node = getAttributeNode(name)
-      node ||= setAttributeNode(ownerDocument.createAttribute(name))
-      node.value = value
+      set_attribute(name.to_s.downcase, value.to_s)
+      # TODO
+      # node = getAttributeNode(name)
+      # node ||= setAttributeNode(ownerDocument.createAttribute(name))
+      # node.value = value
     end
 
     def setAttributeNode(attribute)
-      removeAttributeNode(attribute.name)
-      node = LibXML::XML::Attr.new(self, attribute.name.to_s.downcase, attribute.value || '')
-      node.specified = false
-      node
+      set_attribute(attribute.name, attribute.value)
+      # segfaults
+      # add_child_node(attribute)
+      # TODO - how to set an attribute node with Nokogiri?
+      # removeAttributeNode(attribute.name)
+      # node = LibXML::XML::Attr.new(self, attribute.name.to_s.downcase, attribute.value || '')
+      # node = document.createAttribute(attribute.name)
+      # node.value = attribute.value
+      # node.specified = false
+      # node
     end
 
     def removeAttribute(name)
@@ -93,8 +103,8 @@ module RDom
     end
 
     def removeAttributeNode(name)
-      attribute = attributes.get_attribute(name.downcase)
-      attribute.remove! if attribute
+      attribute = getAttributeNode(name)
+      attribute.remove if attribute
       attribute
     end
   end

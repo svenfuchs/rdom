@@ -48,7 +48,7 @@ module RDom
       def html_attribute_reader(name)
         define_method(name) do
           Attr.unserialize(name, getAttribute(name))
-        end unless method_defined?(name)
+        end
       end
 
       def html_attribute_writer(name)
@@ -60,7 +60,7 @@ module RDom
           else
             setAttribute(name, value)
           end
-        end unless method_defined?(:"#{name}=")
+        end
       end
     end
   end

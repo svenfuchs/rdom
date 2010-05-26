@@ -26,12 +26,12 @@ class ElementTest < Test::Unit::TestCase
   
   test "ruby: innerHTML=", :ruby, :dom_0 do
     div.innerHTML = '<span>bar</span><span>baz</span>'
-    assert_equal "<div id=\"foo\">\n  <span>bar</span>\n  <span>baz</span>\n</div>", body.innerHTML
+    assert_equal "<div id=\"foo\">\n<span>bar</span><span>baz</span>\n</div>", body.innerHTML
   end
   
   test "js: innerHTML=", :js, :dom_0 do
     window.evaluate("div.innerHTML = '<span>bar</span><span>baz</span>'")
-    assert_equal "<div id=\"foo\">\n  <span>bar</span>\n  <span>baz</span>\n</div>", window.evaluate("body.innerHTML")
+    assert_equal "<div id=\"foo\">\n<span>bar</span><span>baz</span>\n</div>", window.evaluate("body.innerHTML")
   end
   
   # DOM-Level-1-Core

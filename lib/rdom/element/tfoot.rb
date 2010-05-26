@@ -46,7 +46,7 @@ module RDom
       end
       
       def rows
-        find('.//tr').to_s
+        getElementsByTagName('tr')
       end
     end
   end

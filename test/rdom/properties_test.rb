@@ -1,4 +1,5 @@
 require File.expand_path('../../test_helper', __FILE__)
+require 'core_ext/string/titleize'
 
 class PropertiesTest < Test::Unit::TestCase
   TEST_ALL_ELEMENTS_PROPERTIES = false
@@ -110,15 +111,16 @@ class PropertiesTest < Test::Unit::TestCase
 
     # TODO tons of exceptions. who the fuck came up with that mess called DOM?
     return if RDom::Attr.numeric?(dom_name) || RDom::Attr.boolean?(dom_name)
+    return if dom_name == 'style'
 
     if %w(href src).include?(dom_name)
       html_value   = "http://example.org/foo"
       expect_value = html_value
       empty_value  = ''
-    elsif dom_name == 'style'
-      html_value   = 'font-size: 1px;'
-      expect_value = RDom::Css::StyleDeclaration.new(nil, html_value)
-      empty_value  = {}
+    # elsif dom_name == 'style'
+    #   html_value   = 'font-size: 1px;'
+    #   expect_value = RDom::Css::StyleDeclaration.new(nil, html_value)
+    #   empty_value  = {}
     else
       html_value   = 'foo'
       expect_value = 'foo'
@@ -150,17 +152,17 @@ class PropertiesTest < Test::Unit::TestCase
       assert_equal expect_value, window.evaluate("find_tag('#{tag_name}').attributes['#{html_name}']").value
     end
 
-    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.#{dom_name} returns an empty #{empty_value.class.name}" do
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.#{dom_name} returns an empty #{empty_value.ruby_class.name}" do
       load_html_tag_with_attribute(tag_name, html_name, '')
       assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').#{dom_name}")
     end
 
-    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element['#{dom_name}'] returns an empty #{empty_value.class.name}" do
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element['#{dom_name}'] returns an empty #{empty_value.ruby_class.name}" do
       load_html_tag_with_attribute(tag_name, html_name, '')
       assert_equal empty_value, window.evaluate("find_tag('#{tag_name}')['#{dom_name}']")
     end
 
-    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.getAttribute('#{html_name}') returns an empty #{empty_value.class.name}" do
+    test "js: #{tag_name} - given the #{dom_name} attribute is an empty string: element.getAttribute('#{html_name}') returns an empty #{empty_value.ruby_class.name}" do
       load_html_tag_with_attribute(tag_name, html_name, '')
       assert_equal empty_value, window.evaluate("find_tag('#{tag_name}').getAttribute('#{html_name}')")
     end

@@ -1,22 +1,27 @@
 module RDom
   module Attributes
-    include Decoration
-
-    properties :length
-
-    def [](name)
-      getNamedItem(name)
+    class << self
+      def extended(base)
+        class << base
+          undef_method :id, :type, :class
+        end
+      end
     end
-
-    def key?(name)
-      !!getNamedItem(name)
+    
+    properties :length
+    
+    attr_accessor :node
+    
+    def [](name)
+      super(name.to_s.downcase)
+      # item = Attribute.new(node, 'style', node.style) if item && name == 'style'
+      # item = {} if item && name == 'style'
+      # item
     end
 
     # retrieves a node specified by name
     def getNamedItem(name)
-      item = get_attribute(name)
-      item = Attribute.new(node, 'style', node.style) if item && name == 'style'
-      item
+      self[name]
     end
 
     # adds a node using its nodeName attribute
@@ -26,12 +31,12 @@ module RDom
 
     # removes a node specified by name
     def removeNamedItem(name)
-      getNamedItem(name).remove!
+      getNamedItem(name).remove
     end
 
     # returns the indexth item in the map. If index is greater than or equal to the number of nodes in the map, this returns null
     def item(index)
-      each_with_index { |item, ix| return item if index == ix } && nil
+      values.each_with_index { |item, ix| return item if index == ix } && nil
     end
 
     # length returns the number of nodes in the list
@@ -40,7 +45,7 @@ module RDom
     end
 
     def method_missing(name, *args)
-      self.getNamedItem(name) || super
+      key?(name) ? self.getNamedItem(name) : super
     end
   end
 end

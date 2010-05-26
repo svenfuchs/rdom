@@ -57,14 +57,15 @@ module RDom
     end
 
     properties :name, :value, :nodeType, :nodeValue, :specified, :ownerElement
+    
+    attr_accessor :specified
 
-    # TODO need to define :name to keep Properties from defining a reader
     def name
-      super
+      node_name
     end
 
     def value
-      Attr.unserialize(name, super)
+      Attr.unserialize(name, nokogiri_value)
     end
 
     def value=(value)

@@ -21,8 +21,8 @@ class DocumentTest < Test::Unit::TestCase
     html
     @window = RDom::Window.new(html, :url => 'http://example.org', :referrer => 'http://referrer.com')
     @document = window.document
-    @body = document.find_first('//body')
-    @div = document.find_first('//div')
+    @body = document.getElementsByTagName('body').first
+    @div = document.getElementsByTagName('div').first
   end
 
   test "ruby: setting document.title implicitely creates head and title tags", :ruby, :dom_0, :no_standard do
@@ -43,14 +43,14 @@ class DocumentTest < Test::Unit::TestCase
   # http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html do
   test "ruby: document.createElement creates a new element with the given tag name", :ruby, :dom_1_core do
     node = document.createElement('div')
-    assert_equal '<div/>', node.to_s
+    assert_equal '<div></div>', node.to_s
     assert_equal document, node.ownerDocument
     assert_equal XML::Node::ELEMENT_NODE, node.nodeType
   end
 
   test "js: document.createElement creates a new element with the given tag name", :js, :dom_1_core do
     window.evaluate('var node = document.createElement("div")')
-    assert_equal '<div/>', window.evaluate('node').to_s
+    assert_equal '<div></div>', window.evaluate('node').to_s
     assert_equal document, window.evaluate('node.ownerDocument')
     assert_equal XML::Node::ELEMENT_NODE, window.evaluate('node.nodeType')
   end
@@ -126,12 +126,12 @@ class DocumentTest < Test::Unit::TestCase
 
   test "ruby: document.getElementsByName returns a list of elements with the given name", :ruby, :dom_1_html do
     node = document.getElementsByName('text')
-    assert_equal '<input name="text"/>', node.to_s
+    assert_equal '<input name="text">', node.to_s
   end
 
   test "js: document.getElementsByName returns a list of elements with the given name", :js, :dom_1_html do
     window.evaluate("node = document.getElementsByName('text')")
-    assert_equal '<input name="text"/>', window.evaluate("node").to_s
+    assert_equal '<input name="text">', window.evaluate("node").to_s
   end
 
   test "ruby: document.title returns the title of the current document", :ruby, :dom_1_html do

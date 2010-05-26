@@ -11,14 +11,16 @@ module RDom
     autoload :Screen,    'rdom/window/screen.rb'
     autoload :Timers,    'rdom/window/timers.rb'
 
-    include Decoration, Event::Target, Window::Timers
+    include Event::Target, Window::Timers
 
     properties :location, :navigator, :url, :console, :parent, :name, :document,
                :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth,
                :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX,
                :screenY, :screenLeft, :screenTop
-
+    
     attr_accessor *property_names
+
+    attr_reader :document
 
     def initialize(*args)
       options  = args.last.is_a?(Hash) ? args.pop : {}
@@ -131,7 +133,10 @@ module RDom
       end
 
       def load_frames
-        document.find('//iframe|//frame').each { |frame| load_frame(frame) }
+        frames = %w(iframe frame).map do|tag_name| 
+          document.getElementsByTagName(tag_name)
+        end
+        frames.flatten.each { |frame| load_frame(frame) }
       end
 
       def load_frame(node)

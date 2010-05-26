@@ -1,7 +1,7 @@
 module RDom
   module Node
-    include Element, Event::Target
-
+    include Event::Target
+    
     properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes,
                :firstChild, :lastChild, :previousSibling, :nextSibling,
                :attributes, :ownerDocument, :textContent
@@ -16,7 +16,7 @@ module RDom
 
     # returns the top-level document object for this node (null if already is the document)
     def ownerDocument
-      doc
+      document
     end
 
     # returns a node type constant (9 for document)
@@ -44,12 +44,15 @@ module RDom
 
     # returns a collection of attributes of the given element
     def attributes
-      super
+      attributes = node_attributes
+      attributes.extend(RDom::Attributes)
+      attributes.node = self
+      attributes
     end
 
     # indicates whether the node possesses attributes
     def hasAttributes
-      attributes?
+      !node_attributes.empty?
     end
 
     # returns the parent of the specified node in the DOM tree (null for document)
@@ -57,31 +60,29 @@ module RDom
       parent
     end
 
-    # returns a collection of child nodes of the given node NodeList
+    # returns a collection of child nodes of the given node
     def childNodes
-      nodes = children
-      nodes.extend(NodeList)
-      nodes
+      children
     end
 
     # returns the first node in the list of direct children of the document
     def firstChild
-      children.first
+      childNodes.first
     end
 
     # returns the last child of a node Node
     def lastChild
-      children.last
+      childNodes.last
     end
 
     # returns the node immediately preceding the specified one in its parent's childNodes list, null if the specified node is the first in that list (null for document)
     def previousSibling
-      parent.children[parent.children.index(self) - 1] if parent
+      parent.childNodes[parent.childNodes.index(self) - 1] if parent
     end
 
     # returns the node immediately following the specified one in its parent's childNodes list, or null if the specified node is the last node in that list (null for documents)
     def nextSibling
-      parent.children[parent.children.index(self) + 1] if parent
+      parent.childNodes[parent.childNodes.index(self) + 1] if parent
     end
 
     # inserts the specified node before a reference node as a child of the current node
@@ -99,7 +100,7 @@ module RDom
     # replaces one child node of the specified node with another
     def replaceChild(new_child, old_child)
       insertBefore(new_child, old_child.next)
-      old_child.remove!
+      old_child.remove
     end
 
     # adds a node to the end of the list of children of a specified parent node
@@ -125,20 +126,24 @@ module RDom
 
     # removes a child node from the DOM
     def removeChild(child)
-      child.remove!
+      child.remove
     end
 
     # returns a Boolean value indicating whether the current element has child nodes or not
     def hasChildNodes
-      !children.empty?
+      !childNodes.empty?
     end
 
     # makes a copy of a node or document
     def cloneNode(deep = false)
-      copy(deep)
+      clone(deep ? 1 : 0)
     end
 
     protected
+    
+      def document?
+        type == XML::Node::DOCUMENT_NODE
+      end
 
       def ancestors
         ancestors, node = [], self

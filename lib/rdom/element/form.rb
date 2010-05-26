@@ -44,7 +44,8 @@ module RDom
       end
 
       def elements
-        find('.//input|.//textarea|.//select|.//button').to_a
+        tag_names = %w(input textarea select button)
+        tag_names.map { |tag_name| getElementsByTagName(tag_name) }.flatten
       end
       
       def length

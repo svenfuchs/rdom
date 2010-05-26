@@ -11,16 +11,20 @@ class JQueryTest < Test::Unit::TestCase
   end
 
   test "can load and use jquery", :jquery do
+    # <script>$(document).ready(function() { log($("body").length) })</script>
     window.load <<-html
       <html>
         <head>
           <script src="http://example.org/jquery.js"></script>
-          <script>$(document).ready(function() { log($("body").length) })</script>
+          <script>
+            var foo = -1;
+            $(document).ready(function() { foo = $("body").length });
+          </script>
         </head>
         <body></body>
       </html>
     html
-    assert_equal 1, window.console.log.last.last
+    assert_equal 1, window.evaluate('foo')
   end
 
   test "jquery selectors: div", :jquery do
@@ -76,7 +80,7 @@ class JQueryTest < Test::Unit::TestCase
   test "jquery dom generation", :jquery do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     html = window.evaluate("jQuery('<div id=\"foo\"/><hr><code>code</code>').toArray()").join('')
-    assert_equal '<div id="foo"/><hr/><code>code</code>', html
+    assert_equal '<div id="foo"></div><hr><code>code</code>', html
   end
 
   test "jquery dom generation with attributes", :jquery do

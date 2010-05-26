@@ -13,8 +13,16 @@ module RDom
 
       def parse(html)
         html = '<html />' if html.nil? || html.empty?
-        LibXML::XML::HTMLParser.string(html, :options => HTML_PARSE_OPTIONS).parse
+        Nokogiri::HTML(html)
       end
+    end
+    
+    def find_first(path)
+      xpath(path).first
+    end
+    
+    def find(path)
+      xpath(path)
     end
 
     properties :nodeType, :nodeName, :nodeValue, :documentElement, :defaultView,
@@ -22,23 +30,23 @@ module RDom
                :links, :forms, :anchors, :styleSheets
 
     def createDocumentFragment
-      DocumentFragment.new(self)
+      Nokogiri::HTML::DocumentFragment.new(self)
     end
 
     def createElement(name)
-      import XML::Node.new(name.to_s)
+      Nokogiri::XML::Element.new(name.to_s, self)
     end
 
     def createAttribute(name)
-      Attribute.new(self, name.to_s)
+      Nokogiri::XML::Attr.new(self, name.to_s)
     end
 
     def createComment(data)
-      import XML::Node.new_comment(data)
+      Nokogiri::XML::Comment.new(self, data)
     end
 
     def createTextNode(data)
-      import XML::Node.new_text(data)
+      create_text_node(data)
     end
 
     def createEvent(type)
@@ -54,6 +62,10 @@ module RDom
     end
 
     def nodeValue
+      nil
+    end
+
+    def parentNode
       nil
     end
 
@@ -137,7 +149,7 @@ module RDom
     end
 
     def importNode(node)
-      import node.cloneNode(true)
+      node.cloneNode(true)
     end
 
     def styleSheets

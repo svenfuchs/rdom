@@ -70,7 +70,7 @@ module RDom
       end
 
       def options
-        find('.//option').to_a
+        getElementsByTagName('option')
       end
 
       def length
