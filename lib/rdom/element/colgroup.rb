@@ -22,7 +22,7 @@ module RDom
     module Colgroup
       include Element, Node
 
-      html_attributes :axis, :span, :vAlign, :width
+      dom_attributes :axis, :span, :vAlign, :width
       
       properties :ch, :chOff
 

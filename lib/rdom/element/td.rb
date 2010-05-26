@@ -40,7 +40,7 @@ module RDom
     module Td
       include Element, Node
 
-      html_attributes :cellIndex, :abbr, :axis, :bgColor, :colSpan, 
+      dom_attributes :cellIndex, :abbr, :axis, :bgColor, :colSpan, 
                      :headers, :height, :noWrap, :rowSpan, :scope, :vAlign, 
                      :width
       

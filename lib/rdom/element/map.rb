@@ -15,7 +15,7 @@ module RDom
     module Map
       include Element, Node
 
-      html_attributes :name
+      dom_attributes :name
       properties :areas
       
       def areas

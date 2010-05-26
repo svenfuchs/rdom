@@ -15,7 +15,7 @@ module RDom
     module Base
       include Element, Node
       
-      html_attributes :href, :target
+      dom_attributes :href, :target
     end
   end
 end

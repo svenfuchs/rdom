@@ -14,7 +14,7 @@ module RDom
     module Q
       include Element, Node
 
-      html_attributes :cite
+      dom_attributes :cite
     end
   end
 end

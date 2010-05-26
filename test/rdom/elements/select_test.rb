@@ -48,4 +48,9 @@ class SelectTest < Test::Unit::TestCase
     assert_equal 0, window.evaluate("select.selectedIndex")
     assert_equal true, window.evaluate("first.selected")
   end
+  
+  test "js: option.selected for a disconnected option element" do
+    assert_equal false, window.evaluate("document.createElement('option').selected")
+    assert_equal false, window.evaluate("document.createElement('option')['selected']")
+  end
 end

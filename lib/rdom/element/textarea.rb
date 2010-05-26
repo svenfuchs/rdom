@@ -42,7 +42,7 @@ module RDom
         element.defaultValue = element.value
       end
 
-      html_attributes :accessKey, :cols, :disabled, :name, :readOnly, :rows,
+      dom_attributes :accessKey, :cols, :disabled, :name, :readOnly, :rows,
                      :tabIndex, :type, :value, :onfocus, :onblur, :onselect,
                      :onchange
 

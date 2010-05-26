@@ -6,7 +6,7 @@ class DocumentFragmentTest < Test::Unit::TestCase
   def setup
     @window = RDom::Window.new('<html><body></body></html>')
     @document = window.document
-    @body = document.find_first('//body')
+    @body = document.getElementsByTagName('//body').first
   end
 
   test "ruby: appending a document fragment to a node", :ruby, :dom_2_core do

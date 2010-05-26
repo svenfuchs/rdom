@@ -14,7 +14,7 @@ module RDom
     module Ul
       include Element, Node
 
-      html_attributes :compact, :type
+      dom_attributes :compact, :type
     end
   end
 end

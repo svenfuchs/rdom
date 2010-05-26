@@ -6,7 +6,7 @@ class AttributesTest < Test::Unit::TestCase
   def setup
     @window = RDom::Window.new('<html><body><div id="foo">FOO</div></body></html>')
     @document = window.document
-    @div = document.find_first('//div')
+    @div = document.getElementsByTagName('//div').first
     window.evaluate("var div = document.getElementsByTagName('div')[0];")
   end
 

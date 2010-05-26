@@ -55,7 +55,7 @@ module RDom
     module Table
       include Element, Node
 
-      html_attributes :bgColor, :border, :cellPadding, :cellSpacing,
+      dom_attributes :bgColor, :border, :cellPadding, :cellSpacing,
                      :frame, :rules, :summary, :width
 
       properties :caption, :tHead, :tFoot, :rows, :tBodies

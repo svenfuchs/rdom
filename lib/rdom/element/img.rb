@@ -37,7 +37,7 @@ module RDom
     module Img
       include Element, Node
 
-      html_attributes :name, :alt, :border, :height, :hspace, :isMap,
+      dom_attributes :name, :alt, :border, :height, :hspace, :isMap,
                      :longDesc, :src, :useMap, :vspace, :width
     end
   end

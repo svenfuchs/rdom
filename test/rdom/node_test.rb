@@ -6,8 +6,8 @@ class NodeTest < Test::Unit::TestCase
   def setup
     @window = RDom::Window.new('<html><body><div id="foo">FOO</div><p class="bar">BAR</p></body></html>')
     @document = window.document
-    @body = document.find_first('//body')
-    @div = document.find_first('//div')
+    @body = document.getElementsByTagName('//body').first
+    @div = document.getElementsByTagName('//div').first
 
     window.evaluate <<-js
       var body = document.body
@@ -293,5 +293,95 @@ class NodeTest < Test::Unit::TestCase
   test "js: Node.hasAttributes indicates whether the node possesses attributes", :js, :dom_2_core do
     assert window.evaluate("div.hasAttributes()")
     assert !window.evaluate("body.hasAttributes()")
+  end
+  
+  # http://www.quirksmode.org/dom/tests/basics.html
+  test 'ruby: compareDocumentPosition quirksmode test' do
+    window.load <<-html
+      <p id="test" class="testClass">Test <code>&lt;p&gt;</code> with <code>id="test"</code> 
+        and <code>class="testClass"</code>. It contains a
+      <b id="testB"><code>&lt;b&gt;</code> with id="testB"</b>.</p> 
+      <p id="test2" class="nonsense testClass"><code>&lt;p&gt;</code> with id="test2" and 
+        class="nonsense testClass"</p> 
+    html
+    
+    x = window.document.getElementById('test')
+    y = window.document.getElementById('test2')
+    z = window.document.getElementById('testB')
+    assert_equal 4, x.compareDocumentPosition(y)
+    assert_equal 20, x.compareDocumentPosition(z)
+  end
+  
+  # http://plugins.jquery.com/project/compareDocumentPosition
+  test 'ruby: compareDocumentPosition jquery plugin test' do
+    window.load <<-html
+      <div id="div1"><p id="p1">Hello, world</p><p id="p2"></p></div><p id="p3"></p>    
+    html
+
+    div1 = window.document.getElementById('div1')
+    p1   = window.document.getElementById('p1')
+    p2   = window.document.getElementById('p2')
+    p3   = window.document.getElementById('p3')
+
+    assert_equal 20, div1.compareDocumentPosition(p1)
+    assert_equal 10, p1.compareDocumentPosition(div1)
+    assert_equal 4,  p1.compareDocumentPosition(p2)
+    assert_equal 2,  p3.compareDocumentPosition(p1)
+    assert_equal 0,  p1.compareDocumentPosition(p1)
+    assert_equal 10, p1.firstChild.compareDocumentPosition(div1)
+  end
+
+  test "ruby: Nokogiri <=>" do
+    window.load <<-html
+      <html>
+        <body>
+          <div id='a'>
+            <div id='aa'><div id='aaa'></div></div>
+            <div id='ab'></div>
+          </div>
+          <div id='b'>
+            <div id='ba'><div id='baa'></div></div>
+            <div id='bb'></div>
+          </div>
+        </body>
+      </html>
+    html
+    
+    node = lambda { |id| window.document.getElementById(id) }
+    
+    assert node.call('a')   <=> node.call('aa')
+    assert node.call('a')   <=> node.call('aaa')
+    assert node.call('a')   <=> node.call('ab')
+    assert node.call('a')   <=> node.call('b')
+    assert node.call('a')   <=> node.call('ba')
+    assert node.call('a')   <=> node.call('baa')
+    assert node.call('a')   <=> node.call('bb')
+    
+    assert node.call('aa')  <=> node.call('aaa')
+    assert node.call('aa')  <=> node.call('ab')
+    assert node.call('aa')  <=> node.call('b')
+    assert node.call('aa')  <=> node.call('ba')
+    assert node.call('aa')  <=> node.call('baa')
+    assert node.call('aa')  <=> node.call('bb')
+
+    assert node.call('aaa') <=> node.call('ab')
+    assert node.call('aaa') <=> node.call('b')
+    assert node.call('aaa') <=> node.call('ba')
+    assert node.call('aaa') <=> node.call('baa')
+    assert node.call('aaa') <=> node.call('bb')
+    
+    assert node.call('ab')  <=> node.call('b')
+    assert node.call('ab')  <=> node.call('ba')
+    assert node.call('ab')  <=> node.call('baa')
+    assert node.call('ab')  <=> node.call('bb')
+
+    assert node.call('b')   <=> node.call('ba')
+    assert node.call('b')   <=> node.call('baa')
+    assert node.call('b')   <=> node.call('bb')
+
+    assert node.call('ba')  <=> node.call('baa')
+    assert node.call('ba')  <=> node.call('bb')
+
+    assert node.call('baa') <=> node.call('bb')
   end
 end

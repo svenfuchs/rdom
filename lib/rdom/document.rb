@@ -5,9 +5,10 @@ module RDom
     class << self
       def new(window, html, options = {})
         document = parse(html)
-        document.instance_variable_set(:@window, window)
-        document.instance_variable_set(:@url, options[:url])
-        document.instance_variable_set(:@referrer, options[:referrer])
+        document.window = window
+        document.url = options[:url]
+        document.referrer = options[:referrer]
+        document.decorators(Nokogiri::XML::Element) << RDom::Element::Decoration
         document
       end
 
@@ -16,18 +17,12 @@ module RDom
         Nokogiri::HTML(html)
       end
     end
-    
-    def find_first(path)
-      xpath(path).first
-    end
-    
-    def find(path)
-      xpath(path)
-    end
 
     properties :nodeType, :nodeName, :nodeValue, :documentElement, :defaultView,
                :location, :URL, :referrer, :domain, :title, :body, :images,
                :links, :forms, :anchors, :styleSheets
+
+    attr_accessor :window, :url, :referrer
 
     def createDocumentFragment
       Nokogiri::HTML::DocumentFragment.new(self)
@@ -73,6 +68,10 @@ module RDom
       root
     end
 
+    def ownerDocument
+      nil
+    end
+
     def defaultView
       @window
     end
@@ -93,59 +92,47 @@ module RDom
       location.hostname
     end
 
-    def open
-      # TODO
-    end
-
-    def close
-      # TODO
-    end
-
-    def write(html)
-      # TODO
-    end
-
     def getElementsByTagName(tag_name)
-      find("//#{tag_name}").to_a
+      xpath("//#{tag_name}").to_a
     end
 
     def getElementById(id)
-      find_first("//*[@id='#{id}']")
+      xpath("//*[@id='#{id}']").first
     end
 
     def getElementsByName(name)
-      find_first("//*[@name='#{name}']")
+      xpath("//*[@name='#{name}']").first
     end
 
     def title
-      node = find_first('//title')
+      node = getElementsByTagName('title').first
       node ? node.content : ''
     end
 
     def title=(title)
-      node = find_first('//title')
+      node = getElementsByTagName('title').first
       node ||= create_title_tag
       node.content = title
     end
 
     def body
-      find_first('//body')
+      getElementsByTagName('body').first
     end
 
     def images
-      find('//img').to_a
+      getElementsByTagName('img')
     end
 
     def links
-      find('//a[@href]|//area[@href]').to_a
+      xpath('//a[@href]|//area[@href]').to_a
     end
 
     def forms
-      find('//form').to_a
+      getElementsByTagName('form')
     end
 
     def anchors
-      find('//a[@name]').to_a
+      xpath('//a[@name]').to_a
     end
 
     def importNode(node)
@@ -153,7 +140,7 @@ module RDom
     end
 
     def styleSheets
-      find('//style').inject([]) do |style_sheets, tag|
+      getElementsByTagName('style').inject([]) do |style_sheets, tag|
         style_sheets << Css::StyleSheet.parse(tag.textContent)
       end
     end
@@ -161,7 +148,7 @@ module RDom
     protected
 
       def create_title_tag
-        head = find_first('//head') || create_head_tag
+        head = getElementsByTagName('head').first || create_head_tag
         head.appendChild(createElement('title'))
       end
 

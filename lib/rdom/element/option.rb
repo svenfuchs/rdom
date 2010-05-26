@@ -30,10 +30,10 @@ module RDom
         element.defaultSelected = element.getAttribute(:selected)
       end
 
-      html_attributes :selected, :disabled, :label, :value
+      dom_attributes :selected, :disabled, :label, :value
 
       attr_accessor :defaultSelected
-      properties :defaultSelected, :form, :index
+      properties :defaultSelected, :form, :index, :text
 
       def setAttribute(name, value)
         select.selectedIndex = -1 if name.to_sym == :selected
@@ -45,7 +45,11 @@ module RDom
       end
 
       def selected
-        super || select.selectedIndex == index
+        super || select ? select.selectedIndex == index : false
+      end
+      
+      def text
+        textContent
       end
 
       protected

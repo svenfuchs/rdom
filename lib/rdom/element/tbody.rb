@@ -25,7 +25,7 @@ module RDom
     module Tbody
       include Element, Node
 
-      html_attributes :vAlign
+      dom_attributes :vAlign
       
       properties :ch, :chOff, :rows
 

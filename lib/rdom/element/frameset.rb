@@ -22,7 +22,7 @@ module RDom
     module Frameset
       include Element, Node
 
-      html_attributes :cols, :rows, :onload, :onunload
+      dom_attributes :cols, :rows, :onload, :onunload
     end
   end
 end

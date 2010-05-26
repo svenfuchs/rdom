@@ -17,7 +17,7 @@ module RDom
     module Ins
       include Element, Node
 
-      html_attributes :cite, :dateTime
+      dom_attributes :cite, :dateTime
     end
   end
 end

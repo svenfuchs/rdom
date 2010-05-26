@@ -31,7 +31,7 @@ module RDom
       include Element, Node
 
       # TODO :method somehow breaks jquery tests, maybe in johnson?
-      html_attributes :name, :action, :enctype, :target, :accept, :onsubmit, :onreset
+      dom_attributes :name, :action, :enctype, :target, :accept, :onsubmit, :onreset
       
       properties :elements, :length, :acceptCharset
       

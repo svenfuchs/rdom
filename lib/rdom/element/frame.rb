@@ -34,7 +34,7 @@ module RDom
     module Frame
       include Element, Node
 
-      html_attributes :frameBorder, :longDesc, :marginHeight, :marginWidth, :name,
+      dom_attributes :frameBorder, :longDesc, :marginHeight, :marginWidth, :name,
                      :noResize, :scrolling, :src
 
       attr_reader :contentWindow

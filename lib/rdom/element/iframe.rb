@@ -35,7 +35,7 @@ module RDom
     module Iframe
       include Element, Node
 
-      html_attributes :frameBorder, :height, :longDesc, :marginHeight, :marginWidth, :name,
+      dom_attributes :frameBorder, :height, :longDesc, :marginHeight, :marginWidth, :name,
                      :scrolling, :src, :width
 
       attr_reader :contentWindow

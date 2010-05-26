@@ -40,9 +40,9 @@ module RDom
     module A
       include Element, Node
 
-      html_attributes :accessKey, :charset, :coords, :href, :hreflang, :name,
-                      :rel, :rev, :shape, :tabIndex, :target, :type, :onfocus, 
-                      :onblur
+      dom_attributes :accessKey, :charset, :coords, :href, :hreflang, :name,
+                     :rel, :rev, :shape, :tabIndex, :target, :type, :onfocus, 
+                     :onblur
     end
   end
 end

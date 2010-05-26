@@ -30,7 +30,7 @@ module RDom
         end
       end
 
-      html_attributes :charset, :type, :src, :defer, :event
+      dom_attributes :charset, :type, :src, :defer, :event
       properties :htmlFor, :text
 
       # def appendChild(node)

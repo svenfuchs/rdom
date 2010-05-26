@@ -29,7 +29,7 @@ module RDom
     module Button
       include Element, Node
 
-      html_attributes :accessKey, :disabled, :name, :tabIndex, :type, :value
+      dom_attributes :accessKey, :disabled, :name, :tabIndex, :type, :value
 
       properties :form
 

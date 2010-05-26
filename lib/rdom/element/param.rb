@@ -21,7 +21,7 @@ module RDom
     module Param
       include Element, Node
 
-      html_attributes :name, :type, :value, :valueType
+      dom_attributes :name, :type, :value, :valueType
     end
   end
 end

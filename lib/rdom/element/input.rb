@@ -66,7 +66,7 @@ module RDom
         element.defaultChecked = element.checked if element.type && %(radio checkbox).include?(element.type)
       end
 
-      html_attributes :accept, :accessKey, :alt, :checked, :disabled,
+      dom_attributes :accept, :accessKey, :alt, :checked, :disabled,
                      :isMap, :maxLength, :name, :readOnly, :size, :src,
                      :tabIndex, :type, :useMap, :value, :onfocus, :onblur,
                      :onselect, :onchange

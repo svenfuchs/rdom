@@ -14,7 +14,7 @@ module RDom
     module Head
       include Element, Node
 
-      html_attributes :profile
+      dom_attributes :profile
     end
   end
 end

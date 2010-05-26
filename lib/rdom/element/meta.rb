@@ -20,7 +20,7 @@ module RDom
     module Meta
       include Element, Node
 
-      html_attributes :name, :content, :scheme, *ATTRS_I18N
+      dom_attributes :name, :content, :scheme, *ATTRS_I18N
       properties :httpEquiv
       
       def httpEquiv

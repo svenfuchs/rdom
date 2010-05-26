@@ -2,14 +2,14 @@ require 'core_ext/object/blank'
 
 module RDom
   module Attr
-    BOOLEAN_ATTRIBUTES  = [ :compact, :checked, :declare, :readonly, :disabled,
+    BOOLEAN_ATTRIBUTES  = [ :compact, :checked, :declare, :readOnly, :disabled,
                             :selected, :defer, :ismap, :noHref, :noShade,
                             :noWrap, :multiple, :noResize ]
 
     NUMERIC_ATTRIBUTES  = [ :cellIndex, :cols, :colSpan, :height, :hspace,
                             :index, :length, :maxLength, :rowIndex, :rows,
                             :rowSpan, :sectionRowIndex, :selectedIndex, :size,
-                            :span, :start, :tabIndex, :value, :vspace, :width ]
+                            :span, :start, :tabIndex, :vspace, :width ]
 
     READONLY_ATTRIBUTES = [ :anchors, :applets, :areas, :cellIndex, :cells,
                             :contentDocument, :ction, :options, :domain,

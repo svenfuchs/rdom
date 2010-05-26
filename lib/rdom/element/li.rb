@@ -14,7 +14,7 @@ module RDom
     module Li
       include Element, Node
 
-      html_attributes :type, :value
+      dom_attributes :type, :value
     end
   end
 end

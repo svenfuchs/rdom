@@ -42,7 +42,7 @@ module RDom
       include Element, Node
 
       properties :form, :options, :length, :selectedIndex, :value, :type
-      html_attributes :disabled, :multiple, :name, :size, :tabIndex, :onfocus, :onblur, :onchange
+      dom_attributes :disabled, :multiple, :name, :size, :tabIndex, :onfocus, :onblur, :onchange
 
       def type
         getAttribute(:multiple) ? 'select-multiple' : 'select-one'

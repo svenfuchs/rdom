@@ -1,7 +1,7 @@
 module RDom
   module Node
     include Event::Target
-    
+
     properties :nodeType, :nodeName, :nodeValue, :parentNode, :childNodes,
                :firstChild, :lastChild, :previousSibling, :nextSibling,
                :attributes, :ownerDocument, :textContent
@@ -139,16 +139,65 @@ module RDom
       clone(deep ? 1 : 0)
     end
 
+    def contains(other)
+      other.ancestors.include?(self)
+    end
+
+    # The specified and the current nodes have no common container node (e.g.
+    # they belong to different documents, or one of them is appended to any
+    # document, etc.).
+    DOCUMENT_POSITION_DISCONNECTED = 1
+
+    # The specified node precedes the current node.
+    DOCUMENT_POSITION_PRECEDING    = 2
+
+    # The specified node follows the current node.
+    DOCUMENT_POSITION_FOLLOWING    = 4
+
+    # The specified node contains the current node.
+    DOCUMENT_POSITION_CONTAINS     = 8
+
+    # The specified node is contained by the current node.
+    DOCUMENT_POSITION_CONTAINED_BY = 16
+
+    # The specified and the current nodes have no common container node or the
+    # specified and the current nodes are different attributes of the same
+    # node. It means that when the DOCUMENT_POSITION_DISCONNECTED flag is set
+    # then the DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC flag is also set,
+    # furthermore the DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC flag is
+    # specified for two different attribute nodes of an element.
+    DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 32
+
+    def compareDocumentPosition(other)
+      position = 0
+
+      if ownerDocument != other.ownerDocument
+        position |= DOCUMENT_POSITION_DISCONNECTED | DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC
+      elsif attribute? && other.attribute? && parent != other.parent
+        position |= DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC
+      elsif other.contains(self)
+        position |= DOCUMENT_POSITION_CONTAINS
+      elsif contains(other)
+        position |= DOCUMENT_POSITION_CONTAINED_BY
+      end
+
+      if compare(other) == 1
+        position |= DOCUMENT_POSITION_PRECEDING
+      elsif compare(other) == -1
+        position |= DOCUMENT_POSITION_FOLLOWING
+      end
+
+      position
+    end
+
     protected
-    
+
       def document?
         type == XML::Node::DOCUMENT_NODE
       end
 
-      def ancestors
-        ancestors, node = [], self
-        ancestors << node while node = node.parent
-        ancestors
+      def attribute?
+        type == XML::Node::ATTRIBUTE_NODE
       end
 
       def find_parent_by_tag_name(tag_name)

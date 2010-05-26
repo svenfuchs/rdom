@@ -16,7 +16,7 @@ module RDom
     module Optgroup
       include Element, Node
 
-      html_attributes :disabled, :label
+      dom_attributes :disabled, :label
     end
   end
 end

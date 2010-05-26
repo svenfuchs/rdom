@@ -13,7 +13,7 @@ module RDom
     module Fieldset
       include Element, Node
 
-      html_attributes :form
+      dom_attributes :form
     end
   end
 end

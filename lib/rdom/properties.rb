@@ -22,46 +22,10 @@ module RDom
 
     attr_accessor :property_names
 
-    def html_attributes(*names)
-      const_set(:HTML_ATTRIBUTES, names)
-      properties(*names)
-      include Module.new {
-        extend(HtmlAttributeAccessors)
-        html_attribute_accessors(*names)
-      }
-    end
-
     def properties(*names)
       self.property_names ||= []
       self.property_names += names
       include InstanceMethods
-    end
-
-    module HtmlAttributeAccessors
-      def html_attribute_accessors(*names)
-        names.each do |name|
-          html_attribute_reader(name)
-          html_attribute_writer(name)
-        end
-      end
-
-      def html_attribute_reader(name)
-        define_method(name) do
-          Attr.unserialize(name, getAttribute(name))
-        end
-      end
-
-      def html_attribute_writer(name)
-        define_method(:"#{name}=") do |value|
-          if Attr.boolean?(name)
-            # JQuery sets selected to true/false in attributes.js #218
-            # no idea where this stuff is defined in the dom specs ...
-            value ? setAttribute(name, name) : removeAttribute(name)
-          else
-            setAttribute(name, value)
-          end
-        end
-      end
     end
   end
 end

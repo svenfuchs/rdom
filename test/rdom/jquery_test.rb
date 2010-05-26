@@ -99,6 +99,16 @@ class JQueryTest < Test::Unit::TestCase
     assert_equal 'test', tag.textContent
   end
 
+  # test "jquery can click on an element generated through dom generation with attributes", :jquery do
+  #   window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
+  #   tag = window.evaluate <<-js
+  #     var clicked = false
+  #     var element = jQuery("<div/>", { click: function(){ clicked = true; } })[0];
+  #     element.click();
+  #   js
+  #   assert_equal true, window.evaluate("clicked")
+  # end
+
   test "jquery parseJSON", :jquery do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
     assert_equal nil, window.evaluate('jQuery.parseJSON()')

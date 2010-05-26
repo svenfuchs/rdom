@@ -19,7 +19,7 @@ module RDom
     module Label
       include Element, Node
 
-      html_attributes :form, :accessKey
+      dom_attributes :form, :accessKey
       properties :htmlFor
 
       # # http://www.w3.org/TR/DOM-Level-2-HTML/html.html#ID-213157251

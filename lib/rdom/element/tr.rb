@@ -31,7 +31,7 @@ module RDom
     module Tr
       include Element, Node
 
-      html_attributes :bgColor, :vAlign
+      dom_attributes :bgColor, :vAlign
 
       properties :rowIndex, :sectionRowIndex, :cells, :ch, :chOff
 

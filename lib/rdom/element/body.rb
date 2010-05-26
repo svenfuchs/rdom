@@ -21,8 +21,8 @@ module RDom
     module Body
       include Element, Node
 
-      html_attributes :background, :bgColor, :link, :text, :aLink, :vLink, 
-                      :onload, :onunload
+      dom_attributes :background, :bgColor, :link, :text, :aLink, :vLink, 
+                     :onload, :onunload
     end
   end
 end

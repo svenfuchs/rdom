@@ -17,7 +17,7 @@ module RDom
     module Legend
       include Element, Node
 
-      html_attributes :form, :accessKey, :align
+      dom_attributes :form, :accessKey, :align
     end
   end
 end

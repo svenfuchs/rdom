@@ -13,15 +13,16 @@ module RDom
     attr_accessor :node
     
     def [](name)
-      super(name.to_s.downcase)
-      # item = Attribute.new(node, 'style', node.style) if item && name == 'style'
-      # item = {} if item && name == 'style'
-      # item
+      node.getAttributeNode(name)
+    end
+
+    def []=(name, value)
+      node.setAttribute(name, value)
     end
 
     # retrieves a node specified by name
     def getNamedItem(name)
-      self[name]
+      node.getAttributeNode(name)
     end
 
     # adds a node using its nodeName attribute
@@ -39,13 +40,8 @@ module RDom
       values.each_with_index { |item, ix| return item if index == ix } && nil
     end
 
-    # length returns the number of nodes in the list
-    def length
-      super
-    end
-
     def method_missing(name, *args)
-      key?(name) ? self.getNamedItem(name) : super
+      key?(name) ? self[name] : super
     end
   end
 end

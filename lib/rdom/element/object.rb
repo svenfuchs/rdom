@@ -46,7 +46,7 @@ module RDom
     module Object
       include Element, Node
 
-      html_attributes :archive, :border, :classid, :code, :codeBase, :codeType,
+      dom_attributes :archive, :border, :classid, :code, :codeBase, :codeType,
                      :data, :declare, :height, :hspace, :name, :standby, :tabIndex,
                      :type, :useMap, :vspace, :width
 

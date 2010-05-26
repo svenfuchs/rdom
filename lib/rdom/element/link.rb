@@ -28,7 +28,7 @@ module RDom
     module Link
       include Element, Node
 
-      html_attributes :disabled, :charset, :href, :hreflang, :media, :rel, :rev,
+      dom_attributes :disabled, :charset, :href, :hreflang, :media, :rel, :rev,
                      :target, :type
     end
   end

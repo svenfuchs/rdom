@@ -15,7 +15,7 @@ module RDom
     module Ol
       include Element, Node
 
-      html_attributes :compact, :start, :type
+      dom_attributes :compact, :start, :type
     end
   end
 end

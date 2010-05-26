@@ -6,8 +6,8 @@ class ElementTest < Test::Unit::TestCase
   def setup
     @window = RDom::Window.new('<html><body><div id="foo">FOO</div></body></html>')
     @document = window.document
-    @body = document.find_first('//body')
-    @div = document.find_first('//div')
+    @body = document.getElementsByTagName('//body').first
+    @div = document.getElementsByTagName('//div').first
     window.evaluate <<-js
       var body = document.body;
       var div  = document.getElementsByTagName('div')[0];

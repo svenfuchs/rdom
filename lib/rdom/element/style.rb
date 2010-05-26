@@ -18,7 +18,7 @@ module RDom
     module Style
       include Element, Node
 
-      html_attributes :type, :media, :title, :disabled, *ATTRS_I18N
+      dom_attributes :type, :media, :title, :disabled, *ATTRS_I18N
     end
   end
 end

@@ -2,6 +2,16 @@ require 'core_ext/string/titleize'
 
 module RDom
   module Element
+    module Decoration
+      def self.extended(node)
+        case node.node_type
+        when Nokogiri::XML::Node::ELEMENT_NODE
+          const_name = node.nodeName.titleize
+          node.extend(Element.const_get(const_name)) if Element.const_defined?(const_name)
+        end
+      end
+    end
+
     Dir[File.expand_path('../element/*.rb', __FILE__)].each do |file|
       autoload File.basename(file, '.rb').titleize.to_sym, file
     end
@@ -11,7 +21,7 @@ module RDom
     ATTRS_EVENTS = [:onclick, :ondblclick, :onmousedown, :onmouseup, :onmouseover,
                     :onmousemove, :onkeypress, :onkeydown, :onkeyup]
 
-    html_attributes :align, *ATTRS_CORE + ATTRS_I18N + ATTRS_EVENTS
+    dom_attributes :align, *ATTRS_CORE + ATTRS_I18N + ATTRS_EVENTS
     properties :tagName, :className, :innerHTML
 
     def tagName
@@ -73,28 +83,16 @@ module RDom
     end
 
     def getAttributeNode(name)
-      attributes.getNamedItem(name.to_s)
+      attribute(name.to_s.downcase)
     end
 
     def setAttribute(name, value)
-      set_attribute(name.to_s.downcase, value.to_s)
-      # TODO
-      # node = getAttributeNode(name)
-      # node ||= setAttributeNode(ownerDocument.createAttribute(name))
-      # node.value = value
+      set_attribute(name.to_s.downcase, Attr.serialize(name, value))
     end
 
     def setAttributeNode(attribute)
-      set_attribute(attribute.name, attribute.value)
-      # segfaults
-      # add_child_node(attribute)
-      # TODO - how to set an attribute node with Nokogiri?
-      # removeAttributeNode(attribute.name)
-      # node = LibXML::XML::Attr.new(self, attribute.name.to_s.downcase, attribute.value || '')
-      # node = document.createAttribute(attribute.name)
-      # node.value = attribute.value
-      # node.specified = false
-      # node
+      # TODO - how to set an actual attribute node with Nokogiri?
+      setAttribute(attribute.name, attribute.value)
     end
 
     def removeAttribute(name)
