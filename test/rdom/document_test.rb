@@ -45,58 +45,58 @@ class DocumentTest < Test::Unit::TestCase
     node = document.createElement('div')
     assert_equal '<div></div>', node.to_s
     assert_equal document, node.ownerDocument
-    assert_equal XML::Node::ELEMENT_NODE, node.nodeType
+    assert_equal Nokogiri::XML::Node::ELEMENT_NODE, node.nodeType
   end
 
   test "js: document.createElement creates a new element with the given tag name", :js, :dom_1_core do
     window.evaluate('var node = document.createElement("div")')
     assert_equal '<div></div>', window.evaluate('node').to_s
     assert_equal document, window.evaluate('node.ownerDocument')
-    assert_equal XML::Node::ELEMENT_NODE, window.evaluate('node.nodeType')
+    assert_equal Nokogiri::XML::Node::ELEMENT_NODE, window.evaluate('node.nodeType')
   end
 
   test "ruby: document.createDocumentFragment creates a new document fragment", :ruby, :dom_1_core do
     node = document.createDocumentFragment
-    assert_equal XML::Node::DOCUMENT_FRAG_NODE, node.nodeType
+    assert_equal Nokogiri::XML::Node::DOCUMENT_FRAG_NODE, node.nodeType
   end
 
   test "js: document.createDocumentFragment creates a new document fragment", :js, :dom_1_core do
     window.evaluate('var node = document.createDocumentFragment()')
-    assert_equal XML::Node::DOCUMENT_FRAG_NODE, window.evaluate('node.nodeType')
+    assert_equal Nokogiri::XML::Node::DOCUMENT_FRAG_NODE, window.evaluate('node.nodeType')
   end
 
   test "ruby: document.createTextNode creates a text node", :ruby, :dom_1_core do
     node = document.createTextNode('text')
     assert_equal 'text', node.to_s
-    assert_equal XML::Node::TEXT_NODE, node.nodeType
+    assert_equal Nokogiri::XML::Node::TEXT_NODE, node.nodeType
   end
 
   test "js: document.createTextNode creates a text node", :js, :dom_1_core do
     window.evaluate("node = document.createTextNode('text')")
     assert_equal 'text', window.evaluate('node').to_s
-    assert_equal XML::Node::TEXT_NODE, window.evaluate('node.nodeType')
+    assert_equal Nokogiri::XML::Node::TEXT_NODE, window.evaluate('node.nodeType')
   end
 
   test "ruby: document.createComment creates a new comment node and returns it", :ruby, :dom_1_core do
     node = document.createComment('comment')
     assert_equal '<!--comment-->', node.to_s
-    assert_equal XML::Node::COMMENT_NODE, node.nodeType
+    assert_equal Nokogiri::XML::Node::COMMENT_NODE, node.nodeType
   end
 
   test "js: document.createComment creates a new comment node and returns it", :js, :dom_1_core do
     window.evaluate("node = document.createComment('comment')")
     assert_equal '<!--comment-->', window.evaluate("node").to_s
-    assert_equal XML::Node::COMMENT_NODE, window.evaluate("node.nodeType")
+    assert_equal Nokogiri::XML::Node::COMMENT_NODE, window.evaluate("node.nodeType")
   end
 
   test "ruby: document.createAttribute creates a new attribute node and returns it", :ruby, :dom_1_core do
     node = document.createAttribute('foo')
-    assert_equal XML::Node::ATTRIBUTE_NODE, node.nodeType
+    assert_equal Nokogiri::XML::Node::ATTRIBUTE_NODE, node.nodeType
   end
 
   test "js: document.createAttribute creates a new attribute node and returns it", :js, :dom_1_core do
     window.evaluate("node = document.createAttribute('foo')")
-    assert_equal XML::Node::ATTRIBUTE_NODE, window.evaluate('node.nodeType')
+    assert_equal Nokogiri::XML::Node::ATTRIBUTE_NODE, window.evaluate('node.nodeType')
   end
 
   test "ruby: document.getElementsByTagName returns a list of elements with the given tag name", :ruby, :dom_1_core do

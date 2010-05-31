@@ -49,7 +49,7 @@ module RDom
     end
 
     def nodeType
-      XML::Node::DOCUMENT_NODE
+      Nokogiri::XML::Node::DOCUMENT_NODE
     end
 
     def nodeName

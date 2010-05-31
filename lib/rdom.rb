@@ -1,4 +1,3 @@
-require 'xml'
 require 'nokogiri'
 require 'nokogiri/xml_pp_node_patch'
 

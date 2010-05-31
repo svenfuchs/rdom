@@ -193,11 +193,11 @@ module RDom
     protected
 
       def document?
-        type == XML::Node::DOCUMENT_NODE
+        type == Nokogiri::XML::Node::DOCUMENT_NODE
       end
 
       def attribute?
-        type == XML::Node::ATTRIBUTE_NODE
+        type == Nokogiri::XML::Node::ATTRIBUTE_NODE
       end
 
       def find_parent_by_tag_name(tag_name)

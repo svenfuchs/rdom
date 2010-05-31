@@ -74,7 +74,7 @@ module RDom
     end
 
     def nodeType
-      LibXML::XML::Node::ATTRIBUTE_NODE
+      Nokogiri::XML::Node::ATTRIBUTE_NODE
     end
 
     def nodeValue
