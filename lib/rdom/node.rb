@@ -11,7 +11,7 @@ module RDom
     end
 
     def createDocumentFragment
-      doc.import LibXML::XML::Node.new('#document_fragment')
+      doc.import Nokogiri::XML::Node.new('#document_fragment')
     end
 
     # returns the top-level document object for this node (null if already is the document)
@@ -116,7 +116,7 @@ module RDom
     end
 
     def <<(child)
-      if child.nodeType == XML::Node::DOCUMENT_FRAG_NODE
+      if child.nodeType == Nokogiri::XML::Node::DOCUMENT_FRAG_NODE
         child.childNodes.each { |child| appendChild(child) }
       else
         child = doc.import(child) if doc && doc != child.doc # gosh. importing seems to alter the tree, somehow.
