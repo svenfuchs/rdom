@@ -1,4 +1,5 @@
 require 'core_ext/string/titleize'
+require 'nokogiri/xml_node_inner_html_patch'
 
 module RDom
   module Element
@@ -56,14 +57,17 @@ module RDom
     end
 
     def innerHTML=(html)
-      children.each { |child| child.remove }
+      self.inner_html = html
+      # self.inner_html = Nokogiri::XML::DocumentFragment.parse(html)
 
-      leading, trailing = html.scan(/^[\s]*|[\s]*$/m)
-      fragment = Nokogiri::HTML::DocumentFragment.parse(html)
-
-      self << document.create_text_node(leading) unless leading.blank?
-      fragment.childNodes.each { |node| self << node }
-      self << document.create_text_node(trailing) unless trailing.blank?
+      # children.each { |child| child.remove }
+      #
+      # leading, trailing = html.scan(/^[\s]*|[\s]*$/m)
+      # fragment = Nokogiri::HTML::DocumentFragment.parse(html)
+      #
+      # self << document.create_text_node(leading) unless leading.blank?
+      # fragment.childNodes.each { |node| self << node }
+      # self << document.create_text_node(trailing) unless trailing.blank?
     end
 
     def getElementsByTagName(tag_name)
