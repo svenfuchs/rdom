@@ -2,6 +2,8 @@ require 'open-uri'
 require 'johnson/tracemonkey'
 require 'johnson/js_land_proxy_patch'
 
+STDOUT.sync = true
+
 module RDom
   class Window
     autoload :Console,   'rdom/window/console.rb'
@@ -17,7 +19,7 @@ module RDom
                :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth,
                :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX,
                :screenY, :screenLeft, :screenTop
-    
+
     attr_accessor *property_names
 
     attr_reader :document
@@ -104,12 +106,16 @@ module RDom
       console.log(line)
     end
 
-    def print(output)
-      p output
+    def p(output)
+      puts(output.inspect)
     end
 
-    def p_inspect(object)
-      puts "<#{object.class}##{object.object_id}>"
+    def puts(output)
+      STDOUT.puts(output)
+    end
+
+    def print(output)
+      STDOUT.print(output.to_s)
     end
 
     protected
@@ -133,7 +139,7 @@ module RDom
       end
 
       def load_frames
-        frames = %w(iframe frame).map do|tag_name| 
+        frames = %w(iframe frame).map do|tag_name|
           document.getElementsByTagName(tag_name)
         end
         frames.flatten.each { |frame| load_frame(frame) }
