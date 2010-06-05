@@ -12,26 +12,3 @@ stub_request(:any, /./).to_return do |request|
 end
 
 window = RDom::Window.new("http://example.org/test/index.html", :url => 'http://example.org/test/')
-
-# puts window.document.getElementById("qunit-tests")
-result = window.evaluate("jQuery('#qunit-tests > li').toArray()")
-tests = result.size
-assertions = 0
-errors = []
-
-result.each do |tag|
-  _module = tag.firstChild.innerHTML =~ /^([^<]*)/ && $1.strip
-  tag.getElementsByTagName('li').each do |assertion|
-    assertions += 1
-    if assertion.className == 'fail'
-      errors << "#{_module}: #{assertion.textContent}" 
-      putc 'E'
-    else
-      putc '.'
-    end
-  end
-end
-
-puts "\n\n#{tests} tests, #{assertions} assertions, #{errors.size} errors\n\n"
-errors.each { |message| puts message }
-puts

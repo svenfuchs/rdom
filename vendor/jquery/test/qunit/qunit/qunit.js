@@ -369,7 +369,7 @@ var QUnit = {
 	is: function( type, obj ) {
 		return Object.prototype.toString.call( obj ) === "[object "+ type +"]";
 	},
-	
+
 	// Logging callbacks
 	done: function(failures, total) {},
 	log: function(result, message) {},
@@ -378,6 +378,7 @@ var QUnit = {
 	moduleStart: function(name, testEnvironment) {},
 	moduleDone: function(name, failures, total) {}
 };
+
 
 // Backwards compatibility, deprecated
 QUnit.equals = QUnit.equal;
@@ -938,7 +939,6 @@ QUnit.jsDump = (function() {
 		parse:function( obj, type ) { //type is used mostly internally, you can fix a (custom)type in advance
 			var	parser = this.parsers[ type || this.typeOf(obj) ];
 			type = typeof parser;			
-			
 			return type == 'function' ? parser.call( this, obj ) :
 				   type == 'string' ? parser :
 				   this.parsers.error;
@@ -953,18 +953,18 @@ QUnit.jsDump = (function() {
 				type = "regexp";
 			} else if (QUnit.is("Date", obj)) {
 				type = "date";
-			} else if (QUnit.is("Function", obj)) {
-				type = "function";
-			} else if (obj.setInterval && obj.document && !obj.nodeType) {
-				type = "window";
-			} else if (obj.nodeType === 9) {
-				type = "document";
-			} else if (obj.nodeType) {
-				type = "node";
-			} else if (typeof obj === "object" && typeof obj.length === "number" && obj.length >= 0) {
-				type = "array";
-			} else {
-				type = typeof obj;
+      } else if (QUnit.is("Function", obj)) {
+       type = "function";
+      } else if (obj.setInterval && obj.document && !obj.nodeType) {
+       type = "window";
+      } else if (obj.nodeType === 9) {
+       type = "document";
+      } else if (obj.nodeType) {
+       type = "node";
+      } else if (typeof obj === "object" && typeof obj.length === "number" && obj.length >= 0) {
+       type = "array";
+      } else {
+       type = typeof obj;
 			}
 			return type;
 		},
@@ -1016,12 +1016,13 @@ QUnit.jsDump = (function() {
 			nodelist: array,
 			arguments: array,
 			object:function( map ) {
-				var ret = [ ];
-				this.up();
-				for ( var key in map )
-					ret.push( this.parse(key,'key') + ': ' + this.parse(map[key]) );
-				this.down();
-				return join( '{', ret, '}' );
+        var ret = [ ];
+        this.up();
+        for ( var key in map ) {
+          ret.push( this.parse(key,'key') + ': ' + this.parse(map[key]) );
+        }
+        this.down();
+        return join( '{', ret, '}' );
 			},
 			node:function( node ) {
 				var open = this.HTML ? '&lt;' : '<',
