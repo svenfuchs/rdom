@@ -24,9 +24,15 @@ class ElementTest < Test::Unit::TestCase
     assert_equal 'FOO', window.evaluate("div.innerHTML")
   end
   
-  test "ruby: innerHTML=", :ruby, :dom_0 do
+  test "ruby: innerHTML= (1)", :ruby, :dom_0 do
     div.innerHTML = '<span>bar</span><span>baz</span>'
     assert_equal "<div id=\"foo\">\n<span>bar</span><span>baz</span>\n</div>", body.innerHTML
+  end
+
+  test "ruby: innerHTML= (2)", :ruby, :dom_0 do
+    div = document.getElementsByTagName('//div').first
+    div.innerHTML = '<div><span>hi</span> there</div>'
+    assert_equal "<div><span>hi</span> there</div>", div.innerHTML
   end
   
   test "js: innerHTML=", :js, :dom_0 do

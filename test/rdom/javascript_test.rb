@@ -51,4 +51,13 @@ class JavascriptTest < Test::Unit::TestCase
       js
     end
   end
+
+  test "using for on the global object" do
+    keys = window.evaluate <<-js
+      var keys = []
+      for(var key in this) { keys.push(key) }
+      keys
+    js
+    assert keys.include?('document')
+  end
 end
