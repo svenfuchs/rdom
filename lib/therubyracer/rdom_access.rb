@@ -1,6 +1,10 @@
 require 'v8/to'
 
 module V8
+  def self.js_property?(obj, name)
+    obj.respond_to?(:js_property?) && obj.js_property?(name)
+  end
+
   module To
     # got to use ruby_class, not class, therefor overwrite the whole thing
     def self.v8(value)
@@ -48,33 +52,16 @@ module V8
       end
     end
   end
-  
-  def self.callable_name(obj, name)
-    camel_name = To.camel_case(name)
-    perl_name = To.perl_case(name)
 
-    if V8.callable?(obj, camel_name)
-      camel_name
-    elsif V8.callable?(obj, perl_name)
-      perl_name
-    end
-  end
-  
-  def self.callable?(obj, name)
-    obj.respond_to?(name) || obj.respond_to?(:js_property?)
-  end
-    
   class NamedPropertyGetter
     def self.call(property, info)
-      obj = To.rb(info.This())
-
+      obj  = To.rb(info.This())
       name = To.rb(property)
-      method_name = V8.callable_name(obj, name)
-      
-      if obj.respond_to?(:js_property?) && obj.js_property?(method_name)
-        Function.rubycall(obj.method(method_name))
-      elsif obj.respond_to?(method_name)
-        To.v8(obj.method(method_name))
+
+      if V8.js_property?(obj, name)
+        Function.rubycall(obj.method(name))
+      elsif obj.respond_to?(name)
+        To.v8(obj.method(name))
       else
         C::Empty
       end
@@ -83,23 +70,17 @@ module V8
 
   class NamedPropertySetter
     def self.call(property, value, info)
-      obj = To.rb(info.This())
-      
+      obj  = To.rb(info.This())
       name = To.rb(property)
-      method_name = V8.callable_name(obj, name)
 
-      if method_name
-        camel_name = To.camel_case(name)
-        unless obj.respond_to?(camel_name + '=')
-          (class << obj; self; end).class_eval do
-            attr_accessor camel_name
-            include RDom::Properties unless ruby_class.included_modules.include?(RDom::Properties)
-            properties name
-          end
-        end
-        obj.send(camel_name + '=', To.rb(value))
-      else
-         C::Empty
+      define_property(obj, name) unless obj.respond_to?("#{name}=")
+      obj.send("#{name}=", To.rb(value))
+    end
+
+    def self.define_property(obj, attr_name)
+      (class << obj; self; end).class_eval do
+        include RDom::Properties unless ruby_class.included_modules.include?(RDom::Properties)
+        property attr_name
       end
     end
   end
