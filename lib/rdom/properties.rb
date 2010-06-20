@@ -1,6 +1,27 @@
 module RDom
   module Properties
+    attr_accessor :property_names
+
+    def properties(*names)
+      @property_names ||= []
+      @property_names += names.map { |name| name.to_sym }
+      include InstanceMethods
+      names.each { |name| define_property(name) unless method_defined?(name) }
+    end
+    alias :property :properties
+
+    private
+
+      def define_property(name)
+        define_method(name) { || properties[name] }
+        define_method(:"#{name}=") { |value| properties[name] = value }
+      end
+
     module InstanceMethods
+      def properties
+        @properties ||= {}
+      end
+
       def property?(name)
         property_names.include?(name.to_sym)
       end
@@ -12,21 +33,13 @@ module RDom
         end.flatten.compact.uniq
       end
 
-      protected
+      private
 
         def property_modules
           meta_class = (class << self; self; end)
           consts = [meta_class] + ruby_class.ancestors + meta_class.included_modules
           consts.uniq.select { |const| const.method_defined?(:property_names) }
         end
-    end
-
-    attr_accessor :property_names
-
-    def properties(*names)
-      self.property_names ||= []
-      self.property_names += names.map { |name| name.to_sym }
-      include InstanceMethods
     end
   end
 end
