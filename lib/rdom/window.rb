@@ -1,8 +1,11 @@
 require 'open-uri'
-require 'johnson/tracemonkey'
-require 'johnson/js_land_proxy_patch'
+# require 'johnson/tracemonkey'
+# require 'johnson/js_land_proxy_patch'
+require 'v8'
 
 STDOUT.sync = true
+require 'therubyracer/rdom_access'
+
 
 module RDom
   class Window
@@ -37,9 +40,9 @@ module RDom
 
       load(html, options) if html
     end
-
+    
     def runtime
-      @runtime ||= Johnson::Runtime.new.tap do |runtime|
+      @runtime ||= V8::Context.new.tap do |runtime|
         runtime['window']    = self
         runtime['document']  = document
         runtime['location']  = location
@@ -62,7 +65,7 @@ module RDom
     end
 
     def evaluate(script, file = nil, line = nil)
-      runtime.evaluate(script, file, line, self, self)
+      runtime.eval(script) # , file, line, self, self
     end
 
     def normalize_uri(uri)

@@ -18,9 +18,13 @@ module RDom
       end
 
       def dom_attribute_reader(name)
-        define_method(name) do
-          Attr.unserialize(name, getAttribute(name))
-        end
+        # methods defined with a block and no block args get an arity of -1
+        # which does not work well with therubyracer's assumptions
+        module_eval <<-rb
+          def #{name}
+            Attr.unserialize(:#{name}, getAttribute(:#{name}))
+          end
+        rb
       end
 
       def dom_attribute_writer(name)

@@ -26,7 +26,7 @@ class DocumentFragmentTest < Test::Unit::TestCase
       body = document.body
       div = document.createElement('div')
       span = document.createElement('span')
-
+    
       fragment = document.createDocumentFragment()
       fragment.appendChild(div)
       fragment.insertBefore(span, div)

@@ -6,16 +6,17 @@ module RDom
       end
       alias_method :js_property?, :property?
 
+      def property_names
+        @property_names ||= property_modules.map do |const|
+          const.property_names
+        end.flatten.compact.uniq
+      end
+
       protected
 
-        def property_names
-          @property_names ||= property_modules.map do |const|
-            const.property_names
-          end.flatten.compact.uniq
-        end
-
         def property_modules
-          consts = ruby_class.ancestors + (class << self; self; end).included_modules
+          meta_class = (class << self; self; end)
+          consts = [meta_class] + ruby_class.ancestors + meta_class.included_modules
           consts.uniq.select { |const| const.method_defined?(:property_names) }
         end
     end
@@ -24,7 +25,7 @@ module RDom
 
     def properties(*names)
       self.property_names ||= []
-      self.property_names += names
+      self.property_names += names.map { |name| name.to_sym }
       include InstanceMethods
     end
   end

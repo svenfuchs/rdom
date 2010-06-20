@@ -44,10 +44,7 @@ module RDom
 
     # returns a collection of attributes of the given element
     def attributes
-      attributes = node_attributes
-      attributes.extend(RDom::Attributes)
-      attributes.node = self
-      attributes
+      RDom::Attributes.new(self, node_attributes)
     end
 
     # indicates whether the node possesses attributes

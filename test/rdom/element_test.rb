@@ -32,7 +32,7 @@ class ElementTest < Test::Unit::TestCase
   test "ruby: innerHTML= (2)", :ruby, :dom_0 do
     div = document.getElementsByTagName('//div').first
     div.innerHTML = '<div><span>hi</span> there</div>'
-    assert_equal "<div><span>hi</span> there</div>", div.innerHTML
+    assert_equal "<div>\n<span>hi</span> there</div>", div.innerHTML
   end
   
   test "js: innerHTML=", :js, :dom_0 do
