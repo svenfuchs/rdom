@@ -42,7 +42,7 @@ module RDom
     end
     
     def runtime
-      @runtime ||= V8::Context.new.tap do |runtime|
+      @runtime ||= V8::Context.new do |runtime|
         runtime['window']    = self
         runtime['document']  = document
         runtime['location']  = location
@@ -67,6 +67,7 @@ module RDom
     def evaluate(script, file = nil, line = nil)
       runtime.eval(script) # , file, line, self, self
     end
+    alias :eval :evaluate
 
     def normalize_uri(uri)
       location.uri.normalize.merge(uri) rescue uri
