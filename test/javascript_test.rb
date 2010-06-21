@@ -19,7 +19,7 @@ class JavascriptTest < Test::Unit::TestCase
     
     PROPERTY_NAMES = [:name, :location, :hash, :array, :hash_like, :array_like]
     
-    attr_accessor *PROPERTY_NAMES
+    attr_accessor(*PROPERTY_NAMES)
     
     def log(arg)
       "#{arg} logged"
