@@ -3,6 +3,7 @@ module RDom
     def dom_attributes(*names)
       const_set(:HTML_ATTRIBUTES, names)
       properties(*names)
+
       include Module.new {
         extend(DomAttributeAccessors)
         dom_attribute_accessors(*names)

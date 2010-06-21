@@ -5,12 +5,20 @@ module RDom
     def properties(*names)
       @property_names ||= []
       @property_names += names.map { |name| name.to_sym }
+
       include InstanceMethods
-      names.each { |name| define_property(name) unless method_defined?(name) }
+      include Module.new {
+        extend(Properties)
+        property_accessors(*names)
+      }
     end
     alias :property :properties
 
     private
+
+      def property_accessors(*names)
+        names.each { |name| define_property(name) unless method_defined?(name) }
+      end
 
       def define_property(name)
         define_method(name) { || properties[name] }

@@ -62,6 +62,8 @@ module V8
         Function.rubycall(obj.method(name))
       elsif obj.respond_to?(name)
         To.v8(obj.method(name))
+      elsif obj.respond_to?(:[])
+        To.v8(obj[name])
       else
         C::Empty
       end

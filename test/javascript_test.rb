@@ -1,7 +1,7 @@
 require File.expand_path('../test_helper', __FILE__)
 
-# require 'v8'
-# require 'therubyracer/rdom_access'
+require 'v8'
+require 'therubyracer/rdom_access'
 
 require 'johnson/tracemonkey'
 require 'johnson/js_land_proxy_patch.rb'
@@ -40,7 +40,7 @@ class JavascriptTest < Test::Unit::TestCase
 
   def setup
     @window = Window.new
-    @js = johnson
+    @js = v8
   end
   
   def v8
