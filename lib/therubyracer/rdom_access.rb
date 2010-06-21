@@ -77,6 +77,7 @@ module V8
 
       define_property(obj, name) unless obj.respond_to?("#{name}=")
       obj.send("#{name}=", To.rb(value))
+      value
     end
 
     def self.define_property(obj, attr_name)
