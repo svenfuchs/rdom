@@ -74,9 +74,16 @@ module V8
     def self.call(property, value, info)
       obj  = To.rb(info.This())
       name = To.rb(property)
-
-      define_property(obj, name) unless obj.respond_to?("#{name}=")
-      obj.send("#{name}=", To.rb(value))
+      rbvalue = To.rb(value)
+      if obj.respond_to?("#{name}=")
+        obj.send("#{name}=", rbvalue)
+      elsif obj.respond_to?(:[]=)
+        obj.send(:[]=, rbvalue)
+      else
+        # define_property(obj, name) unless obj.respond_to?("#{name}=")
+        define_property(obj, name)
+        obj.send("#{name}=", rbvalue)
+      end
       value
     end
 
