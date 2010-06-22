@@ -60,10 +60,10 @@ module V8
 
       if V8.js_property?(obj, name)
         Function.rubycall(obj.method(name))
-      elsif obj.respond_to?(name)
-        To.v8(obj.method(name))
       elsif obj.respond_to?(:[])
         To.v8(obj[name])
+      elsif obj.respond_to?(name)
+        To.v8(obj.method(name))
       else
         C::Empty
       end
