@@ -9,7 +9,7 @@ require 'johnson/js_land_proxy_patch.rb'
 class JavascriptTest < Test::Unit::TestCase
   class Window
     def initialize
-      @name       = 'window name'
+      @name  = 'window name'
       @ivar  = 1
       @hash  = { 'key' => 'value' }
       @array = ['value']
