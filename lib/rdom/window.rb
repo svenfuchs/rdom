@@ -70,7 +70,6 @@ module RDom
     end
 
     def evaluate(script, file = nil, line = nil)
-      puts runtime.eval('document.addEventListener', 'some-crap')
       runtime.eval(script, file) # , file, line, self, self
     end
     alias :eval :evaluate
