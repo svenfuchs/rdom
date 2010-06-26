@@ -25,7 +25,7 @@ module RDom
 
     attr_accessor *property_names
 
-    attr_reader :document
+    attr_reader :window, :document
 
     def initialize(*args)
       options  = args.last.is_a?(Hash) ? args.pop : {}
@@ -37,17 +37,13 @@ module RDom
       @frames  = []
       @screen  = Screen.new(self)
       @history = History.new
+      @window = self
 
       load(html, options) if html
     end
     
     def runtime
-      @runtime ||= V8::Context.new do |runtime|
-        runtime['window']    = self
-        runtime['document']  = document
-        runtime['location']  = location
-        runtime['navigator'] = navigator
-        runtime['console']   = console
+      @runtime ||= V8::Context.new(:with => self) do |runtime|
         class << runtime
           def p(*args)
             window.p(*args)
@@ -74,7 +70,8 @@ module RDom
     end
 
     def evaluate(script, file = nil, line = nil)
-      runtime.eval(script) # , file, line, self, self
+      puts runtime.eval('document.addEventListener', 'some-crap')
+      runtime.eval(script, file) # , file, line, self, self
     end
     alias :eval :evaluate
 
@@ -168,7 +165,7 @@ module RDom
 
       def process_script(script)
         src = script.getAttribute('src')
-        src && !src.empty? ? load_script(src) : evaluate(script.textContent)
+        src && !src.empty? ? load_script(src) : evaluate(script.textContent, src)
       end
 
       def trigger_load_event
