@@ -15,9 +15,10 @@ class JavascriptTest < Test::Unit::TestCase
       @array = ['value']
       @hash_like  = Accessible.new
       @array_like = Accessible.new
+      @attributes = Attributes.new
     end
     
-    PROPERTY_NAMES = [:name, :location, :hash, :array, :hash_like, :array_like]
+    PROPERTY_NAMES = [:name, :location, :hash, :array, :hash_like, :array_like, :attributes]
     
     attr_accessor(*PROPERTY_NAMES)
     
@@ -36,6 +37,16 @@ class JavascriptTest < Test::Unit::TestCase
     end
   end
   
+  class Attributes
+    def [](name)
+      "attribute named '#{name}'"
+    end
+    
+    def getNamedItem(name)
+      self[name]
+    end
+  end
+  
   attr_reader :js, :window
 
   def setup
@@ -49,6 +60,25 @@ class JavascriptTest < Test::Unit::TestCase
   
   def johnson
     Johnson::Runtime.new.tap { |js| js['window'] = window }
+  end
+  
+  test "js engine: attributes.getNamedItem returns the function getNamedItem" do
+    assert_equal "function () { [native code] }", js.evaluate('window.attributes.getNamedItem').to_s
+  end
+  
+  test "js engine: attributes.getNamedItem('name') returns the attribute 'name'" do
+    assert_equal "attribute named 'name'", js.evaluate('window.attributes.getNamedItem("name")')
+  end
+  
+  test "js engine: attributes.name returns the attribute 'name'" do
+    assert_equal "attribute named 'name'", js.evaluate('window.attributes.name')
+  end
+  
+  test "js engine: attributes['name'] returns the attribute 'name'" do
+    assert_equal "attribute named 'name'", js.evaluate('window.attributes["name"]')
+  end
+  
+  test "js engine: attributes[0] returns the first attribute" do
   end
   
   test "js engine: calling a method that is not a property returns a javascript function" do
@@ -113,6 +143,11 @@ class JavascriptTest < Test::Unit::TestCase
   test "js engine: index access on an array like object" do
     assert_equal 'value', js.evaluate('window.array_like')[0]
     assert_equal 'value', js.evaluate('window.array_like[0]')
+  end
+  
+  test "js engine: variables persist of several calls to #evaluate" do
+    js.evaluate('var foo = 1;')
+    assert_equal 1, js.evaluate('foo')
   end
   
   test "js engine: global $ variable" do

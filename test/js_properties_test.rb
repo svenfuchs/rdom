@@ -7,7 +7,7 @@ require 'rdom/properties'
 
 Module.send(:include, RDom::Properties)
 
-class JavascriptTest < Test::Unit::TestCase
+class JsPropertiesTest < Test::Unit::TestCase
   module Element
     properties :tagName
     

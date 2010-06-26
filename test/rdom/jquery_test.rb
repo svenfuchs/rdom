@@ -10,8 +10,19 @@ class JQueryTest < Test::Unit::TestCase
     stub_get('jquery.js', File.open(File.expand_path('../../fixtures/jquery-1.4.2.js', __FILE__), 'r') { |f| f.read })
   end
 
-  test "can load and use jquery", :jquery do
-    # <script>$(document).ready(function() { log($("body").length) })</script>
+  test "can load jquery", :jquery do
+    assert_nothing_raised do
+      window.load <<-html
+        <html>
+          <head>
+            <script src="http://example.org/jquery.js"></script>
+          </head>
+        </html>
+      html
+    end
+  end
+
+  test "can use jquery", :jquery do
     window.load <<-html
       <html>
         <head>

@@ -20,13 +20,15 @@ class PropertiesTest < Test::Unit::TestCase
   end
 
   test "js: attribute values written using . show up in the markup" do
-    window.evaluate 'links[0].href = "bar"'
-    assert_match /href="bar"/, window.evaluate('links[0].toString()')
+    window.evaluate('links[0].href = "bar"')
+    assert_match /href="bar"/, window.evaluate('links[0]').to_s
+    # assert_match /href="bar"/, window.evaluate('links[0].toString()') # TODO
   end
 
   test "js: attribute values written using [] show up in the markup" do
-    window.evaluate 'links[0]["href"] = "bar"'
-    assert_match /href="bar"/, window.evaluate('links[0].toString()')
+    window.evaluate('links[0]["href"] = "bar"')
+    assert_match /href="bar"/, window.evaluate('links[0]').to_s
+    # assert_match /href="bar"/, window.evaluate('links[0].toString()') # TODO
   end
 
   test "js: setting a non-standard property: can be read via method call syntax" do

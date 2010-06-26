@@ -379,7 +379,9 @@ jQuery.extend({
 		if ( !jQuery.isReady ) {
 			// Make sure body exists, at least, in case IE gets a little overzealous (ticket #5443).
 			if ( !document.body ) {
-				return setTimeout( jQuery.ready, 13 );
+				return window.setTimeout( jQuery.ready, 13 );
+// TODO Sven
+//				return setTimeout( jQuery.ready, 13 );
 			}
 
 			// Remember that the DOM is ready
