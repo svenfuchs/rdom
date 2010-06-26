@@ -48,6 +48,15 @@ module RDom
         runtime['location']  = location
         runtime['navigator'] = navigator
         runtime['console']   = console
+        class << runtime
+          def p(*args)
+            window.p(*args)
+          end
+
+          def setTimeout(*args)
+            window.setTimeout(*args)
+          end
+        end
       end
     end
 
