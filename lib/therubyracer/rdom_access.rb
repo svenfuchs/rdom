@@ -72,26 +72,24 @@ module V8
 
   class NamedPropertySetter
     def self.call(property, value, info)
-      obj  = To.rb(info.This())
-      name = To.rb(property)
+      obj     = To.rb(info.This())
+      name    = To.rb(property)
       rbvalue = To.rb(value)
+
       if obj.respond_to?("#{name}=")
         obj.send("#{name}=", rbvalue)
       elsif obj.respond_to?(:[]=)
         obj.send(:[]=, rbvalue)
       else
-        # define_property(obj, name) unless obj.respond_to?("#{name}=")
         define_property(obj, name)
         obj.send("#{name}=", rbvalue)
       end
-      value
+
+      To.v8(value)
     end
 
-    def self.define_property(obj, attr_name)
-      (class << obj; self; end).class_eval do
-        include RDom::Properties unless ruby_class.included_modules.include?(RDom::Properties)
-        property attr_name
-      end
+    def self.define_property(obj, name)
+      (class << obj; self; end).property(name)
     end
   end
 end
