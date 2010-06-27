@@ -6,7 +6,38 @@ class WindowTest < Test::Unit::TestCase
   attr_reader :window
 
   def setup
-    @window = RDom::Window.new('<html></html>', :url => 'http://example.org')
+    @window = RDom::Window.new('<html id="foo"></html>', :url => 'http://example.org')
+  end
+
+  test "js engine: can access global window property" do
+    assert RDom::Window === window.eval('window')
+  end
+
+  test "js engine: can access global document property" do
+    assert RDom::Document === window.eval('document')
+  end
+
+  test "js engine: global scope is a Window object" do
+    assert RDom::Window === window.eval('this')
+  end
+
+  test "js engine: can access properties from the global Window object" do
+    assert RDom::Document === window.eval('document')
+  end
+
+  test "js engine: can call methods on objects returned from properties on the global Window object" do
+    div = window.eval('document.getElementById("foo")')
+
+    assert_equal Nokogiri::XML::Element, div.ruby_class
+    assert_equal 'HTML', div.tagName
+  end
+
+  test "js engine: can assign values returned from methods called on objects returned from properties on the global Window object" do
+    div = window.eval('this.div = document.getElementById("foo")')
+    div = window.eval('this.div')
+
+    assert_equal Nokogiri::XML::Element, div.ruby_class
+    assert_equal 'HTML', div.tagName
   end
 
   test "load loads an html document", :implementation do
