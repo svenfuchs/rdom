@@ -1,5 +1,15 @@
 require 'v8/to'
 
+class Object
+  def ==(other)
+    if @native && @native.respond_to?(:Equals) && other_native = other.instance_variable_get(:@native)
+      @native.Equals(other_native)
+    else
+      super
+    end
+  end
+end
+
 module V8
   def self.js_property?(obj, name)
     obj.respond_to?(:js_property?) && obj.js_property?(name)
