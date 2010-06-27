@@ -2,17 +2,19 @@ h1. RDom
 
 It's a stupid name. If you come up with a cool one, please let me know :)
 
-RDom is an experimental headless browser in Ruby. It is similar to "Taka":..., and based on Nokogiri and Johnson.
+RDom is an experimental headless browser in Ruby. It is similar to "Taka":..., and based on "Nokogiri":http://nokogiri.org/ and "Johnson":http://github.com/jbarnette/johnson / "Therubyracer":http://github.com/cowboyd/therubyracer.
 
-A simple headless browser does not require much more than a DOM implementation and a Javascript engine. Nokogiri provides the DOM (using libxml) while Johnson is a great Ruby-Javascript bridge that allows to evaluate Javascript in Ruby (and even call back to Ruby from Javascript).
+A simple headless browser does not require much more than a DOM implementation and a Javascript engine. Nokogiri provides the DOM (using libxml) while Johnson and Therubyracer both are great Ruby-Javascript bridges that allow to evaluate Javascript in Ruby (and call back to Ruby from Javascript). Johnson wraps Tracemonkey (Mozilla) while Therubyracer wraps V8 (Chrome).
 
 h2. Goals
 
-The first goal is to be able to run the JQuery test suite. This is an in-browser test suite using QUnit. I figure that when RDom can run (and pass) most of this test suite then it should probably work fine for most simple full-stack testing scenarios.
+The first goal is to be able to run the "JQuery test suite":http://github.com/svenfuchs/rdom/blob/master/vendor/jquery/test/index.html. This is an in-browser test suite using QUnit. I figure that when RDom can run (and pass) most of this test suite then it should probably work fine for most simple full-stack testing scenarios.
 
 The ultimate goal would be to get a solid (although certainly limited) ruby-based browser going that can run in-process with classical Rails integration tests.
 
 h2. Current State
 
-RDom currently can run a good part of the JQuery test suite (core, data, queue, event etc. but not css, ajax, effects etc.) if one runs the QUnit test files individually. Running all QUnit files together results in segfaults somehow related to GC in Johnson collecting Nokogiri DOM nodes.
+[June 27, 2010] After I've hit a wall with Johnson seqfaults "Charles":http://github.com/cowboyd has helped me get started with "Therubyracer":http://github.com/cowboyd/therubyracer which wraps V8 in Ruby. Because Charles has had a completely different initial usecase there were a few things to sort out. Currently RDom can run almost all of the unit test suite on V8. One tiny thing will need to be fixed in Therubyracer and there are 3 segfaulting unit tests in test/rdom/jquery_test.rb.
+
+[June 05, 2010] RDom currently can run a good part of the JQuery test suite (core, data, queue, event etc. but not css, ajax, effects etc.) if one runs the QUnit test files individually. Running all QUnit files together results in segfaults somehow related to GC in Johnson collecting Nokogiri DOM nodes.
 
