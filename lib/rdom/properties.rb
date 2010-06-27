@@ -36,17 +36,17 @@ module RDom
       alias_method :js_property?, :property?
 
       def property_names
-        @property_names ||= property_modules.map do |const|
-          const.property_names
-        end.flatten.compact.uniq
+        property_modules.map { |m| m.property_names }.flatten.compact.uniq
       end
 
       private
 
         def property_modules
-          meta_class = (class << self; self; end)
-          consts = [meta_class] + ruby_class.ancestors + meta_class.included_modules
-          consts.uniq.select { |const| const.method_defined?(:property_names) }
+          @property_modules ||= begin
+            meta_class = (class << self; self; end)
+            consts = [meta_class] + ruby_class.ancestors + meta_class.included_modules
+            consts.uniq.select { |const| const.method_defined?(:property_names) }
+          end
         end
     end
   end
