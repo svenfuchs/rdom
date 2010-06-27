@@ -18,42 +18,35 @@ module RDom
 
     include Event::Target, Window::Timers
 
-    properties :location, :navigator, :url, :console, :parent, :name, :document,
-               :defaultStatus, :history, :opener, :frames, :innerHeight, :innerWidth,
-               :outerHeight, :outerWidth, :pageXOffset, :pageYOffset, :screenX,
-               :screenY, :screenLeft, :screenTop
-
-    attr_accessor *property_names
-
-    attr_reader :window, :document
+    properties :window, :document, :screen, :location, :navigator, :url, :console,
+               :parent, :name, :document, :defaultStatus, :history, :opener, :frames,
+               :innerHeight, :innerWidth, :outerHeight, :outerWidth, :screenX, :screenY,
+               :pageXOffset, :pageYOffset, :screenLeft, :screenTop
 
     def initialize(*args)
       options  = args.last.is_a?(Hash) ? args.pop : {}
       html     = args.pop
 
-      @name    = options[:name]
-      @parent  = options[:parent] || self
-      @opener  = options[:opener]
-      @frames  = []
-      @screen  = Screen.new(self)
-      @history = History.new
-      @window = self
+      self.name    = options[:name]
+      self.parent  = options[:parent] || self
+      self.opener  = options[:opener]
+      self.frames  = []
+      self.screen  = Screen.new(self)
+      self.history = History.new
+      self.window = self
 
       load(html, options) if html
     end
-    
-    def runtime
-      @runtime ||= V8::Context.new(:with => self) do |runtime|
-        class << runtime
-          def p(*args)
-            window.p(*args)
-          end
 
-          def setTimeout(*args)
-            window.setTimeout(*args)
-          end
-        end
-      end
+    # def runtime
+    #   @runtime ||= V8::Context.new do |runtime|
+    #     runtime['window']   = self
+    #     runtime['document'] = document
+    #   end
+    # end
+
+    def runtime
+      @runtime ||= V8::Context.new(:with => self)
     end
 
     def load(*args)
@@ -81,16 +74,18 @@ module RDom
     def close
     end
 
-    def location
-      @location ||= Location.new(self)
-    end
-
     def url
       location.href
     end
 
+    def location
+      @location ||= Location.new(self)
+    end
+
     def location=(uri)
-      if location.href == uri
+      if Location === uri
+        @location = uri
+      elsif location.href == uri
         location.reload
       elsif location.href == 'about:blank'
         location.assign(uri)
@@ -131,7 +126,7 @@ module RDom
 
       def load_document(html, url, options = {})
         flags = 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 5 | 1 << 6
-        @document = Document.new(self, html, options.merge(:url => url))
+        self.document = Document.new(self, html, options.merge(:url => url))
       end
 
       def load_scripts
