@@ -1,5 +1,12 @@
 require 'v8/to'
 
+module Kernel
+  def display_exception(exception)
+    puts "#{exception.class}: #{exception.message}"
+    exception.backtrace.each { |line| puts ' ' * 4 + line }
+  end
+end
+
 class Object
   def ==(other)
     if @native && @native.respond_to?(:Equals) && other_native = other.instance_variable_get(:@native)
@@ -57,9 +64,11 @@ module V8
       else
         args = C::Array::New(1)
         args.Set(0, C::External::New(value))
-        obj = Access[value.ruby_class].GetFunction().NewInstance(args)
-        return obj
+        Access[value.ruby_class].GetFunction().NewInstance(args)
       end
+    rescue Exception => exception
+      display_exception(exception)
+      C::Empty
     end
   end
 
@@ -73,10 +82,15 @@ module V8
       elsif obj.respond_to?(name)
         To.v8(obj.method(name))
       elsif obj.respond_to?(:[])
-        To.v8(obj[name])
+        # rescue: workaround for "TypeError: can't convert String into Integer"
+        # on Nokogiri::XML::Nodeset being called with, e.g., obj['nodeType']
+        To.v8(obj[name]) rescue nil
       else
         C::Empty
       end
+    rescue Exception => exception
+      display_exception(exception)
+      C::Empty
     end
   end
 
@@ -96,6 +110,9 @@ module V8
       end
 
       To.v8(value)
+    rescue Exception => exception
+      display_exception(exception)
+      C::Empty
     end
 
     def self.define_property(obj, name)
