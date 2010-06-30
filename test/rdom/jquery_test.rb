@@ -88,13 +88,13 @@ class JQueryTest < Test::Unit::TestCase
     assert_equal 1, window.evaluate('$("ol:nth-child(1)").length')
   end
 
-  # TODO segfaults
-
-  # test "jquery dom generation", :jquery do
-  #   window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
-  #   html = window.evaluate("jQuery('<div id=\"foo\"/><hr><code>code</code>').toArray()").join('')
-  #   assert_equal '<div id="foo"></div><hr><code>code</code>', html
-  # end
+  test "jquery dom generation", :jquery do
+    window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
+    html = window.evaluate("$('<div id=\"foo\"/>').toArray()")
+    # p html
+    # html = window.evaluate("jQuery('<div id=\"foo\"/><hr><code>code</code>').toArray()").join('')
+    # assert_equal '<div id="foo"></div><hr><code>code</code>', html
+  end
 
   test "jquery dom generation with attributes", :jquery do
     window.load('<html><head><script src="http://example.org/jquery.js"></script></head><body></body></html>')
@@ -236,52 +236,48 @@ class JQueryTest < Test::Unit::TestCase
     assert_equal 'value', value
   end
 
-  # TODO segfaults
+  test "jquery replaceWith" do
+    window.load <<-html
+      <html>
+        <head><script src="http://example.org/jquery.js"></script></head>
+        <body><div id="main"><a id="yahoo" href="http://www.yahoo.com/">Yahoo</a></div></body>
+      </html>
+    html
 
-  # test "jquery replaceWith" do
-  #   window.load <<-html
-  #     <html>
-  #       <head><script src="http://example.org/jquery.js"></script></head>
-  #       <body><div id="main"><a id="yahoo" href="http://www.yahoo.com/">Yahoo</a></div></body>
-  #     </html>
-  #   html
-  #
-  #   window.evaluate <<-js
-  #     var fixture = $('#main')[0].innerHTML;
-  #     var reset = function() { $("#main").html(fixture); }
-  #
-  #     var functionReturningObj = function(value) {
-  #       return (function() { return value; });
-  #     };
-  #     var testReplaceWith = function(val) {
-  #      jQuery('#yahoo').replaceWith(val('<b id="replace">buga</b>'));
-  #     };
-  #     testReplaceWith(functionReturningObj);
-  #     reset();
-  #
-  #     var y = jQuery("#yahoo")[0];
-  #     var context = undefined;
-  #     jQuery(y).replaceWith(function() { context = this; });
-  #   js
-  #
-  #   assert_equal window.evaluate('y'), window.evaluate('context');
-  # end
+    window.evaluate <<-js
+      var fixture = $('#main')[0].innerHTML;
+      var reset = function() { $("#main").html(fixture); }
 
-  # TODO segfaults
+      var functionReturningObj = function(value) {
+        return (function() { return value; });
+      };
+      var testReplaceWith = function(val) {
+       jQuery('#yahoo').replaceWith(val('<b id="replace">buga</b>'));
+      };
+      testReplaceWith(functionReturningObj);
+      reset();
 
-  # test 'jquery foo' do
-  #   window.load <<-html
-  #     <html>
-  #       <head><script src="http://example.org/jquery.js"></script></head>
-  #       <body><div id="main"><a id="yahoo" href="http://www.yahoo.com/">Yahoo</a></div></body>
-  #     </html>
-  #   html
-  #
-  #   window.evaluate <<-js
-  #     var div = jQuery("<div class='replacewith'></div>").appendTo("body");
-  #     jQuery('.replacewith').remove();
-  #     var y = jQuery("#yahoo")[0];
-  #     jQuery(y).replaceWith(function(){});
-  #   js
-  # end
+      var y = jQuery("#yahoo")[0];
+      var context = undefined;
+      jQuery(y).replaceWith(function() { context = this; });
+    js
+
+    assert_equal window.evaluate('y'), window.evaluate('context');
+  end
+
+  test 'jquery foo' do
+    window.load <<-html
+      <html>
+        <head><script src="http://example.org/jquery.js"></script></head>
+        <body><div id="main"><a id="yahoo" href="http://www.yahoo.com/">Yahoo</a></div></body>
+      </html>
+    html
+
+    window.evaluate <<-js
+      var div = jQuery("<div class='replacewith'></div>").appendTo("body");
+      jQuery('.replacewith').remove();
+      var y = jQuery("#yahoo")[0];
+      jQuery(y).replaceWith(function(){});
+    js
+  end
 end

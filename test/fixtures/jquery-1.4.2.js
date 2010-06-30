@@ -154,7 +154,6 @@ jQuery.fn = jQuery.prototype = {
 				this.selector = selector;
 				this.context = document;
 				selector = document.getElementsByTagName( selector );
-				// print(selector)
 				return jQuery.merge( this, selector );
 
 			// HANDLE: $(expr, $(...))
@@ -4081,6 +4080,7 @@ jQuery.fn.extend({
 
 	prepend: function() {
 		return this.domManip(arguments, true, function( elem ) {
+		window.p(elem)
 			if ( this.nodeType === 1 ) {
 				this.insertBefore( elem, this.firstChild );
 			}
@@ -4441,10 +4441,10 @@ jQuery.extend({
 					wrap = wrapMap[ tag ] || wrapMap._default,
 					depth = wrap[0],
 					div = context.createElement("div");
-// print(tag)
-// print(wrapMap[tag])
-// print(typeof wrapMap._default)
-// print(wrap[1])
+// p(tag)
+// p(wrapMap[tag])
+// p(typeof wrapMap._default)
+// p(wrap[1])
 				// Go to html and back, then peel off extra wrappers
 				div.innerHTML = wrap[1] + elem + wrap[2];
 
