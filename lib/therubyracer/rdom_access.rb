@@ -59,7 +59,7 @@ module V8
         Constructors[value].GetFunction().tap do |f|
           f.SetHiddenValue(C::String::NewSymbol("TheRubyRacer::RubyObject"), C::External::New(value))
         end
-      when nil,Numeric,TrueClass,FalseClass, C::Value
+      when nil, Numeric, TrueClass, FalseClass, C::Value
         value
       else
         args = C::Array::New(1)
